@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sky Bridge</title>
+    <meta charset="utf-8" name="viewport" content= "width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade {
+            position: relative;
+            z-index: 0;
+        }
+
+        .fade:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 0%, transparent 100%);
+            background-image: url("/banner.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="h-[200px] fade flex items-center justify-center">
+        <h1 class="text-white text-5xl font-bold -mt-1 -ml-1 [text-shadow:_2px_2px_0_rgb(0_0_0_/_60%)]">Sky Bridge</h1>
+    </div>
+    <main>
+        <form class="p-4" action="/oauth/authorize" method="POST">
+            <h2 class="text-2xl font-bold mb-4">Sign In</h2>
+            <input type="hidden" name="stuff" value="##form_data##">
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2" for="username">
+                    Username
+                </label>
+                <input class="appearance-none border-2 border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 font-bold mb-2" for="password">
+                    Password
+                </label>
+                <input class="appearance-none border-2 border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Password">
+            </div>
+            <div class="flex items-center justify-between">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Sign In
+                </button>
+                <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+
+                </a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
