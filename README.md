@@ -46,6 +46,7 @@ Once that's done you can start a development server with the following command:
 # 📥 Clone the repo
 git clone https://github.com/videah/skybridge.git
 cd skybridge
+dart pub get
 
 # 🏁 Start the dev server
 dart_frog dev
