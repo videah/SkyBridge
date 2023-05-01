@@ -19,11 +19,6 @@ MastodonAccount _$MastodonAccountFromJson(Map<String, dynamic> json) =>
       url: json['url'] as String,
       avatar: json['avatar'] as String,
       avatarStatic: json['avatar_static'] as String,
-      header: json['header'] as String?,
-      headerStatic: json['header_static'] as String?,
-      followersCount: json['followers_count'] as int?,
-      followingCount: json['following_count'] as int?,
-      statusesCount: json['statuses_count'] as int?,
       lastStatusAt: dateTimeFromEpoch(json['last_status_at'] as int),
       source: json['source'] as Map<String, dynamic>,
       emojis: (json['emojis'] as List<dynamic>)
@@ -32,6 +27,11 @@ MastodonAccount _$MastodonAccountFromJson(Map<String, dynamic> json) =>
       fields: (json['fields'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
           .toList(),
+      header: json['header'] as String?,
+      headerStatic: json['header_static'] as String?,
+      followersCount: json['followers_count'] as int?,
+      followingCount: json['following_count'] as int?,
+      statusesCount: json['statuses_count'] as int?,
     );
 
 Map<String, dynamic> _$MastodonAccountToJson(MastodonAccount instance) =>

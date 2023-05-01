@@ -1,10 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:path/path.dart' as path;
 import 'package:sky_bridge/crypto.dart';
+import 'package:sky_bridge/models/forms/sign_in_form.dart';
+import 'package:sky_bridge/models/oauth/oauth_authorize_params.dart';
 import 'package:sky_bridge/models/oauth/oauth_token_code.dart';
-import 'package:sky_bridge/models/oauth/sign_in_form_data.dart';
 import 'package:sky_bridge/util.dart';
 
 Future<Response> onRequest(RequestContext context) async {
@@ -24,11 +26,9 @@ Future<Response> onRequest(RequestContext context) async {
 
 Future<Response> _get(RequestContext context) async {
   final params = context.request.uri.queryParameters;
-  final adjustedParams = {
-    'purpose': 'auth',
-  }..addAll(params);
+  final encodedParams = OAuthAuthorizeParams.fromJson(params);
 
-  final signedData = packObject(adjustedParams);
+  final signedData = packObject(encodedParams.toJson());
 
   final file = File(path.join(Directory.current.path, 'public', 'auth.html'));
   final authHtml = await file.readAsString();
@@ -45,19 +45,35 @@ Future<Response> _get(RequestContext context) async {
 
 Future<Response> _post(RequestContext context) async {
   final request = context.request;
-  final form = await request.formData();
-  final data = form.fields['stuff']!;
+  final data = await request.formData();
+  print(data);
+  final form = SignInForm.fromJson(data);
 
-  final stuff = await unpackObject(data);
-  final auth = SignInFormData.fromJson(stuff!);
+  final stuff = unpackObject(form.stuff);
+  final auth = OAuthAuthorizeParams.fromJson(stuff!);
+
+  final authPassword = env.getOrElse(
+    'SKYBRIDGE_AUTH_PASSWORD',
+    () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
+  );
+
+  // Check if what the user entered matches the password we have on file.
+  if (form.password != authPassword) {
+    return Response.json(
+      statusCode: HttpStatus.unauthorized,
+      body: {
+        'error': 'Password does not match.',
+      },
+    );
+  }
 
   final code = OAuthTokenCode(
-    purpose: 'token',
-    token: 'gay',
-    tokenSecret: 'gay',
+    token: base64.encode(randomBytes(32)),
+    tokenSecret: base64.encode(randomBytes(48)),
     clientId: auth.clientId,
     scope: auth.scope,
   );
+
   final signedCode = packObject(code.toJson());
 
   final redirectUri = Uri.parse(auth.redirectUri);

@@ -36,8 +36,14 @@ Future<void> init(InternetAddress ip, int port) async {
     print('No .env file found, continuing without one.');
   }
 
-  // Make sure we have a password set.
-  final password = env.getOrElse(
+  // Make sure we have an auth password set, used on the login page.
+  env.getOrElse(
+    'SKYBRIDGE_AUTH_PASSWORD',
+    () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
+  );
+
+  // Make sure we have an app password set.
+  final appPassword = env.getOrElse(
     'SKYBRIDGE_APP_PASSWORD',
     () => throw Exception('SKYBRIDGE_APP_PASSWORD not set!'),
   );
@@ -46,7 +52,7 @@ Future<void> init(InternetAddress ip, int port) async {
   // This is just a bonus check to make sure the user isn't using their
   // main account password. This only holds if the users password doesn't
   // follow the same format but it's better than nothing.
-  isValidAppPassword(password);
+  isValidAppPassword(appPassword);
 
   // Make sure we have a secret key set.
   final secret = env.getOrElse(

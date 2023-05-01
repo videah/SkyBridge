@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:crypto/crypto.dart';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_application.dart';
@@ -26,8 +24,7 @@ Future<Response> onRequest(RequestContext context) async {
     final clientId = btoa(app.clientName);
 
     // Construct client secret.
-    final data = utf8.encode(clientId);
-    final hash = sha1.convert(data);
+    final clientSecret = makeClientSecret(clientId);
 
     // Return fake registered application.
     final registered = RegisteredMastodonApplication(
@@ -36,7 +33,7 @@ Future<Response> onRequest(RequestContext context) async {
       website: app.website,
       redirectUri: app.redirectUris,
       clientId: clientId,
-      clientSecret: hash.toString(),
+      clientSecret: clientSecret,
       vapidKey: '', // Some clients want this field to exist
     );
 

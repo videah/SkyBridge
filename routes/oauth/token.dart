@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
+import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/models/oauth/oauth_token.dart';
 import 'package:sky_bridge/models/oauth/oauth_token_request.dart';
 
 Future<Response> onRequest(RequestContext context) async {
-  // All tokens we generate right now are totally fake.
-  // TODO(videah): Do this properly and use real cryptographic OAuth tokens.
-
   if (context.request.method == HttpMethod.post) {
     final request = context.request;
 
@@ -21,7 +19,7 @@ Future<Response> onRequest(RequestContext context) async {
 
     final oauth = OAuthTokenRequest.fromJson(body);
 
-    if (oauth.grantType == 'client_credentials') {
+    if (oauth.grantType == GrantType.clientCredentials) {
       final token = OAuthToken(
         accessToken: 'ZA-Yj3aBD8U8Cm7lKUp-lm9O9BmDgdhHzDeqsY8tlL0',
         tokenType: 'Bearer',
@@ -32,17 +30,40 @@ Future<Response> onRequest(RequestContext context) async {
       return Response.json(
         body: token.toJson(),
       );
-    } else if (oauth.grantType == 'authorization_code') {
-      final token = OAuthToken(
-        accessToken: 'ZA-Yj3aBD8U8Cm7lKUp-lm9O9BmDgdhHzDeqsY8tlL0',
-        tokenType: 'Bearer',
-        scope: 'read write follow push',
-        createdAt: DateTime.now(),
-      );
+    } else if (oauth.grantType == GrantType.authorizationCode) {
+      final code = oauth.code;
+      // If we don't have a code, we can't do anything.
+      if (code == null) {
+        return Response(statusCode: HttpStatus.badRequest);
+      }
 
-      return Response.json(
-        body: token.toJson(),
-      );
+
+      if (code.purpose == 'token') {
+        final clientSecret = makeClientSecret(code.clientId);
+
+        print(oauth.clientSecret);
+        print(clientSecret);
+
+        if (oauth.clientId == code.clientId &&
+            oauth.clientSecret == clientSecret) {
+
+          final accessToken = packObject({
+            'a': code.token,
+            's': code.tokenSecret,
+          });
+
+          final token = OAuthToken(
+            accessToken: accessToken,
+            tokenType: 'Bearer',
+            scope: code.scope,
+            createdAt: DateTime.now(),
+          );
+
+          return Response.json(
+            body: token.toJson(),
+          );
+        }
+      }
     }
 
     return Response(statusCode: HttpStatus.unauthorized);

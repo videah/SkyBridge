@@ -8,11 +8,11 @@ part of 'oauth_token_code.dart';
 
 OAuthTokenCode _$OAuthTokenCodeFromJson(Map<String, dynamic> json) =>
     OAuthTokenCode(
-      purpose: json['purpose'] as String,
       token: json['token'] as String,
       tokenSecret: json['token_secret'] as String,
       clientId: json['client_id'] as String,
       scope: json['scope'] as String,
+      purpose: json['purpose'] as String? ?? 'token',
     );
 
 Map<String, dynamic> _$OAuthTokenCodeToJson(OAuthTokenCode instance) =>
