@@ -13,6 +13,7 @@ class PostRecord {
   PostRecord({
     required this.cid,
     required this.uri,
+    required this.author,
   });
 
   /// The unique 64bit ID of this entry.
@@ -25,6 +26,10 @@ class PostRecord {
   /// ATP URI pointing to the post.
   /// See: https://atproto.com/specs/at-uri-scheme
   final String uri;
+
+  /// The DID of the author of this post.
+  /// See: https://atproto.com/specs/did-plc
+  final String author;
 
   /// Inserts a new [PostRecord] into the database with a unique, 64bit
   /// time-sortable ID somewhat similar to Twitter/Mastodon's Snowflake IDs.

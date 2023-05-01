@@ -35,8 +35,12 @@ Future<int> checkPost(bsky.Post post) async {
   final existing =
       await db.postRecords.filter().cidEqualTo(post.cid).findFirst();
   if (existing == null) {
-    final pair = PostRecord(cid: post.cid, uri: post.uri.toString());
-    final saved = await pair.insert(post.indexedAt);
+    final record = PostRecord(
+      cid: post.cid,
+      uri: post.uri.toString(),
+      author: post.author.did,
+    );
+    final saved = await record.insert(post.indexedAt);
     return saved.id;
   } else {
     return existing.id;
@@ -48,8 +52,8 @@ Future<int> checkPost(bsky.Post post) async {
 Future<int> checkDID(String did) async {
   final existing = await db.userRecords.filter().didEqualTo(did).findFirst();
   if (existing == null) {
-    final pair = UserRecord(did: did);
-    final saved = await pair.insert();
+    final record = UserRecord(did: did);
+    final saved = await record.insert();
     return saved.id;
   } else {
     return existing.id;

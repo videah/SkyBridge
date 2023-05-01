@@ -17,13 +17,18 @@ const PostRecordSchema = CollectionSchema(
   name: r'PostRecord',
   id: 8484889957082775527,
   properties: {
-    r'cid': PropertySchema(
+    r'author': PropertySchema(
       id: 0,
+      name: r'author',
+      type: IsarType.string,
+    ),
+    r'cid': PropertySchema(
+      id: 1,
       name: r'cid',
       type: IsarType.string,
     ),
     r'uri': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'uri',
       type: IsarType.string,
     )
@@ -62,6 +67,7 @@ int _postRecordEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.author.length * 3;
   bytesCount += 3 + object.cid.length * 3;
   bytesCount += 3 + object.uri.length * 3;
   return bytesCount;
@@ -73,8 +79,9 @@ void _postRecordSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.cid);
-  writer.writeString(offsets[1], object.uri);
+  writer.writeString(offsets[0], object.author);
+  writer.writeString(offsets[1], object.cid);
+  writer.writeString(offsets[2], object.uri);
 }
 
 PostRecord _postRecordDeserialize(
@@ -84,8 +91,9 @@ PostRecord _postRecordDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = PostRecord(
-    cid: reader.readString(offsets[0]),
-    uri: reader.readString(offsets[1]),
+    author: reader.readString(offsets[0]),
+    cid: reader.readString(offsets[1]),
+    uri: reader.readString(offsets[2]),
   );
   object.id = id;
   return object;
@@ -101,6 +109,8 @@ P _postRecordDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -297,6 +307,137 @@ extension PostRecordQueryWhere
 
 extension PostRecordQueryFilter
     on QueryBuilder<PostRecord, PostRecord, QFilterCondition> {
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'author',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'author',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'author',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> authorIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'author',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition>
+      authorIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'author',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<PostRecord, PostRecord, QAfterFilterCondition> cidEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -619,6 +760,18 @@ extension PostRecordQueryLinks
 
 extension PostRecordQuerySortBy
     on QueryBuilder<PostRecord, PostRecord, QSortBy> {
+  QueryBuilder<PostRecord, PostRecord, QAfterSortBy> sortByAuthor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterSortBy> sortByAuthorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.desc);
+    });
+  }
+
   QueryBuilder<PostRecord, PostRecord, QAfterSortBy> sortByCid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'cid', Sort.asc);
@@ -646,6 +799,18 @@ extension PostRecordQuerySortBy
 
 extension PostRecordQuerySortThenBy
     on QueryBuilder<PostRecord, PostRecord, QSortThenBy> {
+  QueryBuilder<PostRecord, PostRecord, QAfterSortBy> thenByAuthor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PostRecord, PostRecord, QAfterSortBy> thenByAuthorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'author', Sort.desc);
+    });
+  }
+
   QueryBuilder<PostRecord, PostRecord, QAfterSortBy> thenByCid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'cid', Sort.asc);
@@ -685,6 +850,13 @@ extension PostRecordQuerySortThenBy
 
 extension PostRecordQueryWhereDistinct
     on QueryBuilder<PostRecord, PostRecord, QDistinct> {
+  QueryBuilder<PostRecord, PostRecord, QDistinct> distinctByAuthor(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'author', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<PostRecord, PostRecord, QDistinct> distinctByCid(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -705,6 +877,12 @@ extension PostRecordQueryProperty
   QueryBuilder<PostRecord, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<PostRecord, String, QQueryOperations> authorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'author');
     });
   }
 
