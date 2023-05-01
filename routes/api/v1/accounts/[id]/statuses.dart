@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/id_pairs.dart';
+import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:sky_bridge/models/params/statuses_params.dart';
@@ -19,7 +19,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
     connection,
   );
 
-  final user = await db.dIDPairs.get(int.parse(id));
+  final user = await db.userRecords.get(int.parse(id));
   if (user == null) {
     return Response(statusCode: HttpStatus.notFound);
   }

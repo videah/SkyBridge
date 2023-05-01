@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/id_pairs.dart';
+import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/util.dart';
 
@@ -17,7 +17,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final bluesky = bsky.Bluesky.fromSession(connection);
 
   final idNumber = int.parse(id);
-  final user = await db.dIDPairs.get(idNumber);
+  final user = await db.userRecords.get(idNumber);
   if (user == null) {
     return Response(statusCode: HttpStatus.notFound);
   }

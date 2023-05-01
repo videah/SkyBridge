@@ -1,17 +1,41 @@
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:isar/isar.dart';
-import 'package:sky_bridge/models/database/id_pairs.dart';
+import 'package:sky_bridge/models/database/post_record.dart';
+import 'package:sky_bridge/models/database/user_record.dart';
 
 /// Global Isar database instance. Initialized in main.dart on startup.
 /// Used to store 64-bit integer IDs for posts and accounts.
 late final Isar db;
 
+/// Generates a 64bit time-sortable ID similar to Twitter/Mastodon's Snowflake
+/// IDs. This is used to generate unique IDs for [CIDPair] and [DIDPair].
+int generateSnowflake({
+  required DateTime date,
+  required int workerId,
+  required int sequence,
+}) {
+  final epoch = DateTime(2010).millisecondsSinceEpoch;
+  final timestamp = date.millisecondsSinceEpoch - epoch;
+
+  // 42 bits for time in milliseconds
+  // 5 bits for a worker id (gives us up to 32 workers)
+  // 5 bits for a custom value (0 in our case)
+  // 12 bits for an auto-incrementing sequence
+  var id = timestamp << 22;
+  id |= workerId << 17;
+  id |= 0 << 12;
+  id |= sequence;
+
+  return id;
+}
+
 /// Checks if a post has been assigned a 64-bit integer ID, and if not, gives
 /// it one. The newly assigned ID is returned.
 Future<int> checkPost(bsky.Post post) async {
-  final existing = await db.cIDPairs.filter().cidEqualTo(post.cid).findFirst();
+  final existing =
+      await db.postRecords.filter().cidEqualTo(post.cid).findFirst();
   if (existing == null) {
-    final pair = CIDPair()..cid = post.cid;
+    final pair = PostRecord(cid: post.cid, uri: post.uri.toString());
     final saved = await pair.insert(post.indexedAt);
     return saved.id;
   } else {
@@ -22,9 +46,9 @@ Future<int> checkPost(bsky.Post post) async {
 /// Checks if a DID has been assigned a 64-bit integer ID, and if not, gives
 /// it one. The newly assigned ID is returned.
 Future<int> checkDID(String did) async {
-  final existing = await db.dIDPairs.filter().didEqualTo(did).findFirst();
+  final existing = await db.userRecords.filter().didEqualTo(did).findFirst();
   if (existing == null) {
-    final pair = DIDPair()..did = did;
+    final pair = UserRecord(did: did);
     final saved = await pair.insert();
     return saved.id;
   } else {
