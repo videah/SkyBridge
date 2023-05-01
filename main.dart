@@ -117,6 +117,11 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) {
             buildApiV1Accounts$idHandler(id)(context),
       )
       ..mount(
+        '/api/v1/statuses/<id>',
+        (RequestContext context, String id) =>
+            buildApiV1Statuses$idHandler(id)(context),
+      )
+      ..mount(
         '/api/v1/timelines',
         (RequestContext context) => buildApiV1TimelinesHandler()(context),
       )
