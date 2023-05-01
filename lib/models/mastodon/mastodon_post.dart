@@ -96,6 +96,12 @@ class MastodonPost {
       }
     }
 
+    // Construct URL/URI
+    // will need to change this when federation is a thing probably?
+    final postId = post.uri.toString().split('/').last;
+    const base = 'https://staging.bsky.app';
+    final url = '$base/profile/${account.username}/post/$postId';
+
     return MastodonPost(
       id: (pairs[post.cid] ?? -1).toString(),
       createdAt: post.indexedAt,
@@ -103,8 +109,8 @@ class MastodonPost {
       spoilerText: '',
       visibility: PostVisibility.public,
       language: language,
-      uri: 'https://mastodon.social/users/Gargron/statuses/103270115826048975',
-      url: 'https://mastodon.social/@Gargron/103270115826048975',
+      uri: url,
+      url: url,
       repliesCount: replyCount,
       reblogsCount: repostCount,
       favouritesCount: likeCount,
@@ -131,6 +137,7 @@ class MastodonPost {
   /// Converts a [bsky.Post] to a [MastodonPost].
   factory MastodonPost.fromBlueSkyPost(bsky.Post post, Map<String, int> pairs) {
     final mediaAttachments = <MastodonMediaAttachment>[];
+    final account = MastodonAccount.fromActor(post.author, pairs);
 
     if (post.embed != null) {
       if (post.embed!.data is bsky.EmbedViewImages) {
@@ -143,16 +150,22 @@ class MastodonPost {
       }
     }
 
+    // Construct URL/URI
+    // will need to change this when federation is a thing probably?
+    final postId = post.uri.toString().split('/').last;
+    const base = 'https://staging.bsky.app';
+    final url = '$base/profile/${account.username}/post/$postId';
+
     final randomId = Random().nextInt(1000000000);
     return MastodonPost(
-      id: randomId.toString(),
+      id: randomId.toString(), // FIXME: temporary hack
       createdAt: post.indexedAt,
       sensitive: false,
       spoilerText: '',
       visibility: PostVisibility.public,
       language: 'en',
-      uri: 'https://mastodon.social/users/Gargron/statuses/103270115826048975',
-      url: 'https://mastodon.social/@Gargron/103270115826048975',
+      uri: url,
+      url: url,
       repliesCount: post.replyCount,
       reblogsCount: post.repostCount,
       favouritesCount: post.likeCount,
@@ -166,7 +179,7 @@ class MastodonPost {
         'name': 'BlueSky',
         'website': '',
       },
-      account: MastodonAccount.fromActor(post.author, pairs),
+      account: account,
       mediaAttachments: mediaAttachments,
       mentions: [],
       tags: [],

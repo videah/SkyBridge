@@ -20,6 +20,8 @@ class OAuthTokenCode {
   /// Converts JSON into an [OAuthTokenCode] instance.
   factory OAuthTokenCode.fromJson(Map<String, dynamic> json) =>
       _$OAuthTokenCodeFromJson(json);
+
+  /// Converts the [OAuthTokenCode] to JSON.
   Map<String, dynamic> toJson() => _$OAuthTokenCodeToJson(this);
 
   /// Converts a signed string into an [OAuthTokenCode] instance.
