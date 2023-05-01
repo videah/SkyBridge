@@ -101,7 +101,7 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) {
   //
   // See: https://github.com/VeryGoodOpenSource/dart_frog/issues/631
   //
-  // It's likely you will get analysis errors at first if dart_server.dart
+  // It's likely you will get analysis errors at first if .dart_frog/server.dart
   // hasn't been generated yet.
   Handler buildRootHandler() {
     final pipeline = const Pipeline().addMiddleware(middleware);
