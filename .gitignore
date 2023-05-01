@@ -3,7 +3,6 @@
 # Files and directories created by pub
 .dart_tool/
 .packages
-pubspec.lock
 
 # Files and directories created by dart_frog
 build/
@@ -14,3 +13,12 @@ coverage/
 
 # .env file
 .env
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Mac
+.DS_Store
