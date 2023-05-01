@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
-  bluesky: ^0.4.0
+  bluesky: ^0.4.1
   collection: ^1.17.1
   crypto: ^3.0.2
   dart_frog: ^0.3.0
