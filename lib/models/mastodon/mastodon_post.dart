@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_mention.dart';
@@ -58,6 +57,7 @@ class MastodonPost {
 
     // Bit of a mess right now, could use some cleaning up...
     MastodonAccount account;
+    var id = (pairs[post.cid] ?? -1).toString();
     var content = post.record.text;
     var text = content;
     var likeCount = post.likeCount;
@@ -67,12 +67,19 @@ class MastodonPost {
     String? language = 'en';
 
     if (isRepost) {
+      // Clear out the content, since this is a repost.
       content = '';
       text = '';
       likeCount = 0;
       repostCount = 0;
       replyCount = 0;
       language = null;
+
+      // Reconstruct the hash ID for the repost.
+      final reposterDid = view.reason!.by.did;
+      final cid = post.cid;
+      final hashId = constructRepostHash(reposterDid, cid);
+      id = (pairs[hashId] ?? -1).toString();
 
       // Since this is a repost, we need to get person who reposted it.
       account = MastodonAccount.fromActor(view.reason!.by, pairs);
@@ -103,7 +110,7 @@ class MastodonPost {
     final url = '$base/profile/${account.username}/post/$postId';
 
     return MastodonPost(
-      id: (pairs[post.cid] ?? -1).toString(),
+      id: id,
       createdAt: post.indexedAt,
       sensitive: false,
       spoilerText: '',
@@ -156,9 +163,8 @@ class MastodonPost {
     const base = 'https://staging.bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
-    final randomId = Random().nextInt(1000000000);
     return MastodonPost(
-      id: randomId.toString(), // FIXME: temporary hack
+      id: (pairs[post.cid] ?? -1).toString(),
       createdAt: post.indexedAt,
       sensitive: false,
       spoilerText: '',

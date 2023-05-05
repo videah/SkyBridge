@@ -9,6 +9,7 @@ import 'package:isar/isar.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
+import 'package:sky_bridge/models/database/repost_record.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/util.dart';
 
@@ -23,7 +24,7 @@ Future<void> init(InternetAddress ip, int port) async {
   // Open the ID database, we just use /tmp/ for now which puts non-unix
   // systems out of the picture. This will be fixed in the future.
   db = await Isar.open(
-    [PostRecordSchema, UserRecordSchema],
+    [PostRecordSchema, UserRecordSchema, RepostRecordSchema],
     directory: '/tmp',
   );
 

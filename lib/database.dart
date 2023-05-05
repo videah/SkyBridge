@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:bluesky/bluesky.dart' as bsky;
+import 'package:crypto/crypto.dart';
 import 'package:isar/isar.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
+import 'package:sky_bridge/models/database/repost_record.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
 
 /// Global Isar database instance. Initialized in main.dart on startup.
@@ -47,6 +51,25 @@ Future<int> checkPost(bsky.Post post) async {
   }
 }
 
+Future<RepostRecord> checkRepost(bsky.FeedView view) async {
+  // Double check that this is a repost, bail if not.
+  final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
+  if (!isRepost) {
+    throw ArgumentError('FeedView is not a repost');
+  }
+
+  final cid = view.post.cid;
+  // Get the original post, we are assuming we already have it in our database.
+  final original = await db.postRecords.filter().cidEqualTo(cid).findFirst();
+  if (original == null) {
+    throw ArgumentError('Original post not found in database!');
+  }
+
+  final reposterDid = view.reason!.by.did;
+  final createdAt = view.reason!.indexedAt;
+  return original.repost(createdAt, reposterDid);
+}
+
 /// Checks if a DID has been assigned a 64-bit integer ID, and if not, gives
 /// it one. The newly assigned ID is returned.
 Future<int> checkDID(String did) async {
@@ -66,8 +89,19 @@ Future<Map<String, int>> markDownFeedView(List<bsky.FeedView> views) async {
   final pairs = <String, int>{};
   await db.writeTxn(() async {
     for (final view in views) {
+      // Is this view a repost? If so we need to assign two different unique IDs
+      // one for the repost itself and one for the original post.
+      // Bluesky reposts don't natively get assigned IDs so we need to be
+      // clever to assign one.
+      final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
+
       final id = await checkPost(view.post);
       pairs[view.post.cid] = id;
+
+      if (isRepost) {
+        final repost = await checkRepost(view);
+        pairs[repost.hashId] = repost.id;
+      }
     }
   });
 
@@ -112,4 +146,10 @@ Future<Map<String, int>> markDownAccounts(List<bsky.Actor> accounts) async {
   });
 
   return pairs;
+}
+
+/// Constructs a SHA256 hash of the reposter's DID and the original post's CID
+/// to create a reproducible ID used to query for a [RepostRecord].
+String constructRepostHash(String reposterDid, String cid) {
+  return sha256.convert(utf8.encode(reposterDid + cid)).toString();
 }
