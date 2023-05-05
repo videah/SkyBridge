@@ -24,8 +24,6 @@ Future<Response> onRequest(RequestContext context) async {
     return MastodonPost.fromFeedView(view, pairs);
   }).toList();
 
-  print(posts.first.toJson());
-
   return Response.json(
     body: posts,
   );

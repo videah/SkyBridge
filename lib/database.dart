@@ -12,7 +12,7 @@ import 'package:sky_bridge/models/database/user_record.dart';
 late final Isar db;
 
 /// Generates a 64bit time-sortable ID similar to Twitter/Mastodon's Snowflake
-/// IDs. This is used to generate unique IDs for [CIDPair] and [DIDPair].
+/// IDs. This is used to generate unique IDs for various records.
 int generateSnowflake({
   required DateTime date,
   required int workerId,
@@ -51,6 +51,8 @@ Future<int> checkPost(bsky.Post post) async {
   }
 }
 
+/// Checks if a repost has been assigned a 64-bit integer ID, and if not, gives
+/// it one.
 Future<RepostRecord> checkRepost(bsky.FeedView view) async {
   // Double check that this is a repost, bail if not.
   final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
@@ -110,12 +112,16 @@ Future<Map<String, int>> markDownFeedView(List<bsky.FeedView> views) async {
 
 /// Processes [bsky.Post]'s to assign them 64-bit integer IDs if they don't
 /// already have them. Returns a map of the original CID to the new ID.
-Future<void> markDownPosts(List<bsky.Post> posts) async {
+Future<Map<String, int>> markDownPosts(List<bsky.Post> posts) async {
+  final pairs = <String, int>{};
   await db.writeTxn(() async {
     for (final post in posts) {
-      await checkPost(post);
+      final id = await checkPost(post);
+      pairs[post.cid] = id;
     }
   });
+
+  return pairs;
 }
 
 /// Processes [bsky.ActorProfile]'s to assign them 64-bit integer IDs if they
