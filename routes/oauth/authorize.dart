@@ -46,11 +46,19 @@ Future<Response> _get(RequestContext context) async {
 Future<Response> _post(RequestContext context) async {
   final request = context.request;
   final data = await request.formData();
-  print(data);
   final form = SignInForm.fromJson(data);
 
   final stuff = unpackObject(form.stuff);
-  final auth = OAuthAuthorizeParams.fromJson(stuff!);
+  if (stuff == null) {
+    return Response.json(
+      statusCode: HttpStatus.badRequest,
+      body: {
+        'error': 'Missing signed form object.',
+      },
+    );
+  }
+
+  final auth = OAuthAuthorizeParams.fromJson(stuff);
 
   final authPassword = env.getOrElse(
     'SKYBRIDGE_AUTH_PASSWORD',
