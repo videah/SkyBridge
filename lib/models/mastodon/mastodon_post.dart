@@ -255,7 +255,7 @@ class MastodonPost {
 
   /// How many likes this post has received.
   @JsonKey(name: 'favourites_count')
-  final int favouritesCount;
+  int favouritesCount;
 
   /// How many replies this post has received.
   @JsonKey(name: 'replies_count')
@@ -296,7 +296,7 @@ class MastodonPost {
   final DateTime? editedAt;
 
   /// Whether the current user has liked this post.
-  final bool? favourited;
+  bool? favourited;
 
   /// Whether the current user has reblogged this post.
   final bool? reblogged;

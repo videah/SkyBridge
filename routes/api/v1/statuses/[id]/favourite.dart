@@ -52,6 +52,9 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   // Like the post now that we have everything in order.
   await bluesky.feeds.createLike(cid: post.cid, uri: post.uri);
+  mastodonPost
+    ..favourited = true
+    ..favouritesCount += 1;
 
   // Return the post that we just liked.
   return Response.json(
