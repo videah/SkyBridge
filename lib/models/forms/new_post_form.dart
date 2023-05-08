@@ -1,3 +1,4 @@
+import 'package:bluesky_text/bluesky_text.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'new_post_form.g.dart';
@@ -20,10 +21,14 @@ class NewPostForm {
 
   /// The text content of the post.
   /// If [mediaIds] is provided, this becomes optional.
-  final String? status;
+  @JsonKey(toJson: blueskyToString, fromJson: stringToBluesky)
+  final BlueskyText? status;
 
   /// Include Attachment IDs to be attached as media.
   /// If provided, [status] becomes optional.
   @JsonKey(name: 'media_ids')
   final List<String>? mediaIds;
 }
+
+BlueskyText stringToBluesky(String? value) => BlueskyText(value ?? '');
+String blueskyToString(BlueskyText? text) => text?.value ?? '';

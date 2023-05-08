@@ -1,4 +1,5 @@
 import 'package:bluesky/bluesky.dart' as bsky;
+import 'package:bluesky_text/bluesky_text.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:template_expressions/template_expressions.dart';
 
@@ -66,4 +67,23 @@ Future<bsky.Session> get session async {
   );
 
   return session.data;
+}
+
+/// Get the DID's for mentioned handles in a post.
+Future<Map<String, String>> findDIDsForPost(
+    bsky.Bluesky bluesky,
+    List<Entity> entities,
+    ) async {
+  final dids = <String, String>{};
+  for (final entity in entities) {
+    if (entity.type == EntityType.handle) {
+      // Remove `@`
+      final did = await bluesky.identities.findDID(
+        handle: entity.value.substring(1),
+      );
+      dids[entity.value] = did.data.did;
+    }
+  }
+
+  return dids;
 }

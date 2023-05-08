@@ -7,7 +7,7 @@ part of 'new_post_form.dart';
 // **************************************************************************
 
 NewPostForm _$NewPostFormFromJson(Map<String, dynamic> json) => NewPostForm(
-      status: json['status'] as String?,
+      status: stringToBluesky(json['status'] as String?),
       mediaIds: (json['media_ids'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -15,6 +15,6 @@ NewPostForm _$NewPostFormFromJson(Map<String, dynamic> json) => NewPostForm(
 
 Map<String, dynamic> _$NewPostFormToJson(NewPostForm instance) =>
     <String, dynamic>{
-      'status': instance.status,
+      'status': blueskyToString(instance.status),
       'media_ids': instance.mediaIds,
     };
