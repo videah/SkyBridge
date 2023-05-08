@@ -141,6 +141,10 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) {
         (RequestContext context) => buildApiV1TimelinesHandler()(context),
       )
       ..mount(
+        '/api/v1/trends',
+        (RequestContext context) => buildApiV1TrendsHandler()(context),
+      )
+      ..mount(
         '/api/v1',
         (RequestContext context) => buildApiV1Handler()(context),
       )
