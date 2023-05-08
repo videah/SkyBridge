@@ -104,8 +104,7 @@ Future<UserRecord> actorProfileToDatabase(bsky.ActorProfile actor) async {
 /// Checks if a DID has been assigned a [UserRecord], and if not, gives
 /// it one. Either the existing or the newly created [UserRecord] is returned.
 Future<UserRecord> didToDatabase(String did) async {
-  final existing =
-  await db.userRecords.filter().didEqualTo(did).findFirst();
+  final existing = await db.userRecords.filter().didEqualTo(did).findFirst();
   if (existing == null) {
     final record = UserRecord(did: did, profileInfo: ProfileInfo());
     final saved = await record.insert();
