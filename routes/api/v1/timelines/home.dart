@@ -12,17 +12,12 @@ Future<Response> onRequest(RequestContext context) async {
 
   final feed = await bluesky.feeds.findTimeline(limit: 40);
 
-  // Get all accounts that are in the feed and add them to the database.
-  final accounts = feed.data.feed.map((view) => view.post.author).toList();
-
-  // Mark down any new posts we see in the database.
-  final pairs = await markDownFeedView(feed.data.feed)
-    ..addAll(await markDownAccounts(accounts));
-
   // Take all the posts and convert them to Mastodon ones
-  final posts = feed.data.feed.map((view) {
-    return MastodonPost.fromFeedView(view, pairs);
-  }).toList();
+  // Await all the futures, getting any necessary data from the database.
+  final posts = await db.writeTxn(() async {
+    final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
+    return Future.wait(futures);
+  });
 
   return Response.json(
     body: posts,

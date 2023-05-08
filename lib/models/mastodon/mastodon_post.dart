@@ -47,17 +47,16 @@ class MastodonPost {
   });
 
   /// Converts a [bsky.FeedView] to a [MastodonPost].
-  factory MastodonPost.fromFeedView(
-    bsky.FeedView view,
-    Map<String, int> pairs, {
+  static Future<MastodonPost> fromFeedView(
+    bsky.FeedView view, {
     ProfileInfo? profile,
-  }) {
+  }) async {
     final post = view.post;
     final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
 
     // Bit of a mess right now, could use some cleaning up...
     MastodonAccount account;
-    var id = (pairs[post.cid] ?? -1).toString();
+    var id = (await postToDatabase(post)).id;
     var content = post.record.text;
     var text = content;
     var likeCount = post.likeCount;
@@ -75,18 +74,13 @@ class MastodonPost {
       replyCount = 0;
       language = null;
 
-      // Reconstruct the hash ID for the repost.
-      final reposterDid = view.reason!.by.did;
-      final cid = post.cid;
-      final hashId = constructRepostHash(reposterDid, cid);
-      id = (pairs[hashId] ?? -1).toString();
-
-      // Since this is a repost, we need to get person who reposted it.
-      account = MastodonAccount.fromActor(view.reason!.by, pairs);
+      // Since this is a repost, we need to assign a unique ID and get
+      // the account that reposted it.
+      id = (await repostToDatabase(view)).id;
+      account = await MastodonAccount.fromActor(view.reason!.by);
     } else {
-      account = MastodonAccount.fromActor(
+      account = await MastodonAccount.fromActor(
         post.author,
-        pairs,
         profileInfo: profile,
       );
     }
@@ -110,7 +104,7 @@ class MastodonPost {
     final url = '$base/profile/${account.username}/post/$postId';
 
     return MastodonPost(
-      id: id,
+      id: id.toString(),
       createdAt: post.indexedAt,
       sensitive: false,
       spoilerText: '',
@@ -127,7 +121,7 @@ class MastodonPost {
       bookmarked: false,
       content: content,
       text: text,
-      reblog: isRepost ? MastodonPost.fromBlueSkyPost(view.post, pairs) : null,
+      reblog: isRepost ? await MastodonPost.fromBlueSkyPost(view.post) : null,
       application: {
         'name': 'BlueSky',
         'website': '',
@@ -142,9 +136,9 @@ class MastodonPost {
   }
 
   /// Converts a [bsky.Post] to a [MastodonPost].
-  factory MastodonPost.fromBlueSkyPost(bsky.Post post, Map<String, int> pairs) {
+  static Future<MastodonPost> fromBlueSkyPost(bsky.Post post) async {
     final mediaAttachments = <MastodonMediaAttachment>[];
-    final account = MastodonAccount.fromActor(post.author, pairs);
+    final account = await MastodonAccount.fromActor(post.author);
 
     if (post.embed != null) {
       if (post.embed!.data is bsky.EmbedViewImages) {
@@ -164,7 +158,7 @@ class MastodonPost {
     final url = '$base/profile/${account.username}/post/$postId';
 
     return MastodonPost(
-      id: (pairs[post.cid] ?? -1).toString(),
+      id: (await postToDatabase(post)).id.toString(),
       createdAt: post.indexedAt,
       sensitive: false,
       spoilerText: '',
@@ -227,7 +221,7 @@ class MastodonPost {
   /// Whether this post is marked as sensitive.
   final bool sensitive;
 
-  /// Sibject or summary line, below which post content is collapsed
+  /// Subject or summary line, below which post content is collapsed
   /// until expanded.
   @JsonKey(name: 'spoiler_text')
   final String spoilerText;

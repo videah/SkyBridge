@@ -19,6 +19,14 @@ Future<Response> onRequest(RequestContext context, String id) async {
     connection,
   );
 
+  // If we're being asked for pinned posts we return nothing because
+  // Bluesky does not have a concept of pinned posts.
+  if (options.pinned) {
+    return Response.json(
+      body: {},
+    );
+  }
+
   final user = await db.userRecords.get(int.parse(id));
   if (user == null) {
     return Response(statusCode: HttpStatus.notFound);
@@ -31,17 +39,14 @@ Future<Response> onRequest(RequestContext context, String id) async {
   // Get the users posts.
   final feed = await bluesky.feeds.findFeed(actor: user.did, limit: 40);
 
-  // Get all accounts that are in the feed and add them to the database.
-  final accounts = feed.data.feed.map((view) => view.post.author).toList();
-
-  // Mark down any new posts we see in the database.
-  final pairs = await markDownFeedView(feed.data.feed)
-  ..addAll(await markDownAccounts(accounts));
-
-  // Take all the posts and convert them to Mastodon ones
-  final posts = feed.data.feed.map((view) {
-    return MastodonPost.fromFeedView(view, pairs, profile: profileInfo);
-  }).toList();
+  // Take all the posts and convert them to MastodonPost futures
+  // Await all the futures, getting any necessary data from the database.
+  final posts = await db.writeTxn(() {
+    final futures = feed.data.feed.map((view) {
+      return MastodonPost.fromFeedView(view, profile: profileInfo);
+    }).toList();
+    return Future.wait(futures);
+  });
 
   final exclude = options.excludeReblogs;
   if (exclude) {

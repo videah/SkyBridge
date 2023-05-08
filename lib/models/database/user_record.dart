@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:isar/isar.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 
 part 'user_record.g.dart';
 
@@ -14,6 +15,7 @@ class UserRecord {
   /// Constructs a new [UserRecord] with the given [did].
   UserRecord({
     required this.did,
+    required this.profileInfo,
   });
 
   /// The unique 64bit ID of this entry.
@@ -21,7 +23,14 @@ class UserRecord {
 
   /// The DID used to identify Bluesky users.
   /// See: https://atproto.com/specs/did-plc
-  late String did;
+  final String did;
+
+  /// The last seen profile information of the user.
+  ///
+  /// Clients like Ivory expect posts to always have profile information
+  /// attached to them, but Bluesky does not do this. We store the last seen
+  /// profile information here so we can attach it to posts.
+  final ProfileInfo profileInfo;
 
   /// Inserts a new [UserRecord] into the database with a unique, 64bit
   /// time-sortable ID.

@@ -6,6 +6,7 @@ import 'package:isar/isar.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/database/repost_record.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
+import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 
 /// Global Isar database instance. Initialized in main.dart on startup.
 /// Used to store 64-bit integer IDs for posts and accounts.
@@ -33,9 +34,9 @@ int generateSnowflake({
   return id;
 }
 
-/// Checks if a post has been assigned a 64-bit integer ID, and if not, gives
-/// it one. The newly assigned ID is returned.
-Future<int> checkPost(bsky.Post post) async {
+/// Checks if a repost has been a [PostRecord], and if not, gives
+/// it one. Either the existing or the newly created [PostRecord] is returned.
+Future<PostRecord> postToDatabase(bsky.Post post) async {
   final existing =
       await db.postRecords.filter().cidEqualTo(post.cid).findFirst();
   if (existing == null) {
@@ -45,15 +46,15 @@ Future<int> checkPost(bsky.Post post) async {
       author: post.author.did,
     );
     final saved = await record.insert(post.indexedAt);
-    return saved.id;
+    return saved;
   } else {
-    return existing.id;
+    return existing;
   }
 }
 
-/// Checks if a repost has been assigned a 64-bit integer ID, and if not, gives
-/// it one.
-Future<RepostRecord> checkRepost(bsky.FeedView view) async {
+/// Checks if a repost has been a [RepostRecord], and if not, gives
+/// it one. Either the existing or the newly created [RepostRecord] is returned.
+Future<RepostRecord> repostToDatabase(bsky.FeedView view) async {
   // Double check that this is a repost, bail if not.
   final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
   if (!isRepost) {
@@ -72,86 +73,32 @@ Future<RepostRecord> checkRepost(bsky.FeedView view) async {
   return original.repost(createdAt, reposterDid);
 }
 
-/// Checks if a DID has been assigned a 64-bit integer ID, and if not, gives
-/// it one. The newly assigned ID is returned.
-Future<int> checkDID(String did) async {
-  final existing = await db.userRecords.filter().didEqualTo(did).findFirst();
+/// Checks if a DID has been assigned a [UserRecord], and if not, gives
+/// it one. Either the existing or the newly created [UserRecord] is returned.
+Future<UserRecord> actorToDatabase(bsky.Actor actor) async {
+  final existing =
+      await db.userRecords.filter().didEqualTo(actor.did).findFirst();
   if (existing == null) {
-    final record = UserRecord(did: did);
+    final record = UserRecord(did: actor.did, profileInfo: ProfileInfo());
     final saved = await record.insert();
-    return saved.id;
+    return saved;
   } else {
-    return existing.id;
+    return existing;
   }
 }
 
-/// Processes [bsky.FeedView]'s to assign them 64-bit integer IDs if they don't
-/// already have them. Returns a map of the original CID to the new ID.
-Future<Map<String, int>> markDownFeedView(List<bsky.FeedView> views) async {
-  final pairs = <String, int>{};
-  await db.writeTxn(() async {
-    for (final view in views) {
-      // Is this view a repost? If so we need to assign two different unique IDs
-      // one for the repost itself and one for the original post.
-      // Bluesky reposts don't natively get assigned IDs so we need to be
-      // clever to assign one.
-      final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
-
-      final id = await checkPost(view.post);
-      pairs[view.post.cid] = id;
-
-      if (isRepost) {
-        final repost = await checkRepost(view);
-        pairs[repost.hashId] = repost.id;
-      }
-    }
-  });
-
-  return pairs;
-}
-
-/// Processes [bsky.Post]'s to assign them 64-bit integer IDs if they don't
-/// already have them. Returns a map of the original CID to the new ID.
-Future<Map<String, int>> markDownPosts(List<bsky.Post> posts) async {
-  final pairs = <String, int>{};
-  await db.writeTxn(() async {
-    for (final post in posts) {
-      final id = await checkPost(post);
-      pairs[post.cid] = id;
-    }
-  });
-
-  return pairs;
-}
-
-/// Processes [bsky.ActorProfile]'s to assign them 64-bit integer IDs if they
-/// don't already have them. Returns a map of the original DID to the new ID.
-Future<Map<String, int>> markDownAccountProfiles(
-  List<bsky.ActorProfile> profiles,
-) async {
-  final pairs = <String, int>{};
-  await db.writeTxn(() async {
-    for (final profile in profiles) {
-      final id = await checkDID(profile.did);
-      pairs[profile.did] = id;
-    }
-  });
-
-  return pairs;
-}
-
-/// Processes [bsky.Actor]'s to assign them 64-bit integer IDs if they
-/// don't already have them. Returns a map of the original DID to the new ID.
-Future<Map<String, int>> markDownAccounts(List<bsky.Actor> accounts) async {
-  final pairs = <String, int>{};
-  await db.writeTxn(() async {
-    for (final account in accounts) {
-      final id = await checkDID(account.did);
-      pairs[account.did] = id;
-    }
-  });
-
-  return pairs;
+/// Checks if a DID has been assigned a [UserRecord], and if not, gives
+/// it one. Either the existing or the newly created [UserRecord] is returned.
+Future<UserRecord> actorProfileToDatabase(bsky.ActorProfile actor) async {
+  final existing =
+      await db.userRecords.filter().didEqualTo(actor.did).findFirst();
+  if (existing == null) {
+    final record = UserRecord(did: actor.did, profileInfo: ProfileInfo());
+    final saved = await record.insert();
+    return saved;
+  } else {
+    return existing;
+  }
 }
 
 /// Constructs a SHA256 hash of the reposter's DID and the original post's CID

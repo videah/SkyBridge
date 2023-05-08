@@ -1,5 +1,7 @@
 import 'package:bluesky/bluesky.dart';
+import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/util.dart';
 
 part 'mastodon_account.g.dart';
@@ -7,7 +9,6 @@ part 'mastodon_account.g.dart';
 /// Representation for a Mastodon account.
 @JsonSerializable()
 class MastodonAccount {
-
   /// Constructs an instance of [MastodonAccount].
   MastodonAccount({
     required this.id,
@@ -33,12 +34,12 @@ class MastodonAccount {
   });
 
   /// Creates a [MastodonAccount] from an [ActorProfile].
-  factory MastodonAccount.fromActorProfile(
+  static Future<MastodonAccount> fromActorProfile(
     ActorProfile profile,
-    Map<String, int> pairs,
-  ) {
+  ) async {
+    final user = await actorProfileToDatabase(profile);
     return MastodonAccount(
-      id: (pairs[profile.did] ?? -1).toString(),
+      id: user.id.toString(),
       username: profile.handle,
       acct: profile.handle,
       displayName: profile.displayName ?? profile.handle,
@@ -62,13 +63,13 @@ class MastodonAccount {
   }
 
   /// Creates a [MastodonAccount] from an [Actor].
-  factory MastodonAccount.fromActor(
-    Actor profile,
-    Map<String, int> pairs, {
+  static Future<MastodonAccount> fromActor(
+    Actor profile, {
     ProfileInfo? profileInfo,
-  }) {
+  }) async {
+    final user = await actorToDatabase(profile);
     return MastodonAccount(
-      id: (pairs[profile.did] ?? -1).toString(),
+      id: user.id.toString(),
       username: profile.handle,
       acct: profile.handle,
       displayName: profile.displayName ?? profile.handle,
@@ -180,8 +181,8 @@ class MastodonAccount {
 /// Bluesky posts don't contain profile information, so we have to
 /// fetch it separately. This class is used to pass around that information
 /// with type safety.
+@embedded
 class ProfileInfo {
-
   /// Creates a new [ProfileInfo] instance.
   ProfileInfo({
     this.banner,

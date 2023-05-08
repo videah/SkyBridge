@@ -21,6 +21,12 @@ const UserRecordSchema = CollectionSchema(
       id: 0,
       name: r'did',
       type: IsarType.string,
+    ),
+    r'profileInfo': PropertySchema(
+      id: 1,
+      name: r'profileInfo',
+      type: IsarType.object,
+      target: r'ProfileInfo',
     )
   },
   estimateSize: _userRecordEstimateSize,
@@ -30,7 +36,7 @@ const UserRecordSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'ProfileInfo': ProfileInfoSchema},
   getId: _userRecordGetId,
   getLinks: _userRecordGetLinks,
   attach: _userRecordAttach,
@@ -44,6 +50,9 @@ int _userRecordEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.did.length * 3;
+  bytesCount += 3 +
+      ProfileInfoSchema.estimateSize(
+          object.profileInfo, allOffsets[ProfileInfo]!, allOffsets);
   return bytesCount;
 }
 
@@ -54,6 +63,12 @@ void _userRecordSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.did);
+  writer.writeObject<ProfileInfo>(
+    offsets[1],
+    allOffsets,
+    ProfileInfoSchema.serialize,
+    object.profileInfo,
+  );
 }
 
 UserRecord _userRecordDeserialize(
@@ -64,6 +79,12 @@ UserRecord _userRecordDeserialize(
 ) {
   final object = UserRecord(
     did: reader.readString(offsets[0]),
+    profileInfo: reader.readObjectOrNull<ProfileInfo>(
+          offsets[1],
+          ProfileInfoSchema.deserialize,
+          allOffsets,
+        ) ??
+        ProfileInfo(),
   );
   object.id = id;
   return object;
@@ -78,6 +99,13 @@ P _userRecordDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readString(offset)) as P;
+    case 1:
+      return (reader.readObjectOrNull<ProfileInfo>(
+            offset,
+            ProfileInfoSchema.deserialize,
+            allOffsets,
+          ) ??
+          ProfileInfo()) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -359,7 +387,14 @@ extension UserRecordQueryFilter
 }
 
 extension UserRecordQueryObject
-    on QueryBuilder<UserRecord, UserRecord, QFilterCondition> {}
+    on QueryBuilder<UserRecord, UserRecord, QFilterCondition> {
+  QueryBuilder<UserRecord, UserRecord, QAfterFilterCondition> profileInfo(
+      FilterQuery<ProfileInfo> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'profileInfo');
+    });
+  }
+}
 
 extension UserRecordQueryLinks
     on QueryBuilder<UserRecord, UserRecord, QFilterCondition> {}
@@ -427,6 +462,13 @@ extension UserRecordQueryProperty
   QueryBuilder<UserRecord, String, QQueryOperations> didProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'did');
+    });
+  }
+
+  QueryBuilder<UserRecord, ProfileInfo, QQueryOperations>
+      profileInfoProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'profileInfo');
     });
   }
 }

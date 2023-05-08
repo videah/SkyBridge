@@ -37,11 +37,11 @@ Future<Response> onRequest<T>(RequestContext context) async {
   final response = await bluesky.feeds.findPosts(uris: [newPost.data.uri]);
   final postData = response.data.posts.first;
 
-  // Mark down the new posts in our database.
-  final pairs = await markDownPosts([postData]);
-
   // Construct and return the new post as a [MastodonPost].
-  final mastodonPost = MastodonPost.fromBlueSkyPost(postData, pairs);
+  final mastodonPost = await db.writeTxn(
+    () => MastodonPost.fromBlueSkyPost(postData),
+  );
+
   return Response.json(
     body: mastodonPost,
   );

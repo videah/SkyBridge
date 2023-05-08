@@ -46,9 +46,9 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
     throw Exception('User not found, this should not happen!: $did');
   }
 
-  // Construct DID pair by hand.
-  final pairs = {user.did: user.id};
-  final mastodonPost = MastodonPost.fromBlueSkyPost(post, pairs);
+  final mastodonPost = await db.writeTxn(
+    () => MastodonPost.fromBlueSkyPost(post),
+  );
 
   // Like the post now that we have everything in order.
   await bluesky.feeds.createLike(cid: post.cid, uri: post.uri);

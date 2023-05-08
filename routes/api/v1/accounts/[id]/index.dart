@@ -24,8 +24,9 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   final profile = await bluesky.actors.findProfile(actor: user.did);
 
-  final pairs = {user.did: idNumber};
-  final account = MastodonAccount.fromActorProfile(profile.data, pairs);
+  final account = await db.writeTxn(
+    () => MastodonAccount.fromActorProfile(profile.data),
+  );
 
   return Response.json(
     body: account,

@@ -9,6 +9,7 @@ class StatusesParams {
   StatusesParams({
     this.excludeReblogs = false,
     this.limit = 20,
+    this.pinned = false,
   });
 
   /// Converts JSON into a [StatusesParams].
@@ -25,6 +26,10 @@ class StatusesParams {
   /// Maximum number of statuses to get (default: 20).
   @JsonKey(toJson: _intToString, fromJson: _stringToInt)
   final int limit;
+
+  /// Should we filter for pinned posts only?
+  @JsonKey(toJson: _boolToInt, fromJson: _intToBool)
+  final bool pinned;
 }
 
 String _boolToInt(bool? value) => value ?? true ? '1' : '0';
