@@ -101,6 +101,20 @@ Future<UserRecord> actorProfileToDatabase(bsky.ActorProfile actor) async {
   }
 }
 
+/// Checks if a DID has been assigned a [UserRecord], and if not, gives
+/// it one. Either the existing or the newly created [UserRecord] is returned.
+Future<UserRecord> didToDatabase(String did) async {
+  final existing =
+  await db.userRecords.filter().didEqualTo(did).findFirst();
+  if (existing == null) {
+    final record = UserRecord(did: did, profileInfo: ProfileInfo());
+    final saved = await record.insert();
+    return saved;
+  } else {
+    return existing;
+  }
+}
+
 /// Constructs a SHA256 hash of the reposter's DID and the original post's CID
 /// to create a reproducible ID used to query for a [RepostRecord].
 String constructRepostHash(String reposterDid, String cid) {

@@ -1,6 +1,7 @@
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/facets.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_mention.dart';
@@ -54,11 +55,17 @@ class MastodonPost {
     final post = view.post;
     final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
 
+    // Process facets such as mentions and links.
+    final processed = await processFacets(
+      view.post.record.facets ?? [],
+      post.record.text,
+    );
+
     // Bit of a mess right now, could use some cleaning up...
     MastodonAccount account;
     var id = (await postToDatabase(post)).id;
-    var content = post.record.text;
-    var text = content;
+    var content = processed.htmlText;
+    var text = post.record.text;
     var likeCount = post.likeCount;
     var repostCount = post.repostCount;
     var replyCount = post.replyCount;
@@ -128,7 +135,7 @@ class MastodonPost {
       },
       account: account,
       mediaAttachments: mediaAttachments,
-      mentions: [],
+      mentions: processed.mentions,
       tags: [],
       emojis: [],
       pinned: false,
@@ -150,6 +157,12 @@ class MastodonPost {
         }
       }
     }
+
+    // Process facets such as mentions and links.
+    final processed = await processFacets(
+      post.record.facets ?? [],
+      post.record.text,
+    );
 
     // Construct URL/URI
     // will need to change this when federation is a thing probably?
@@ -173,7 +186,7 @@ class MastodonPost {
       reblogged: post.viewer.repost != null,
       muted: false,
       bookmarked: false,
-      content: post.record.text,
+      content: processed.htmlText,
       text: post.record.text,
       application: {
         'name': 'BlueSky',
@@ -181,7 +194,7 @@ class MastodonPost {
       },
       account: account,
       mediaAttachments: mediaAttachments,
-      mentions: [],
+      mentions: processed.mentions,
       tags: [],
       emojis: [],
       pinned: false,
