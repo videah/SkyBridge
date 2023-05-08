@@ -87,3 +87,17 @@ Future<Map<String, String>> findDIDsForPost(
 
   return dids;
 }
+
+/// Parameter conversion functions.
+
+/// Convert a bool to an int. Used for converting parameter values.
+String boolToInt(bool? value) => value ?? true ? '1' : '0';
+
+/// Convert an int to a bool. Used for converting parameter values.
+bool intToBool(String? value) => int.parse(value ?? '0') == 1;
+
+/// Convert a string to an int. Used for converting parameter values.
+int stringToInt(String? value) => int.parse(value ?? '0');
+
+/// Convert an int to a string. Used for converting parameter values.
+String intToString(int? value) => value?.toString() ?? '0';

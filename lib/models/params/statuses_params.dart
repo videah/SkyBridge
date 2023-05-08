@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sky_bridge/util.dart';
 
 part 'statuses_params.g.dart';
 
@@ -20,20 +21,14 @@ class StatusesParams {
   Map<String, dynamic> toJson() => _$StatusesParamsToJson(this);
 
   /// Filters out statuses that are reblogs if set to true (default: false).
-  @JsonKey(name: 'exclude_reblogs', toJson: _boolToInt, fromJson: _intToBool)
+  @JsonKey(name: 'exclude_reblogs', toJson: boolToInt, fromJson: intToBool)
   final bool excludeReblogs;
 
   /// Maximum number of statuses to get (default: 20).
-  @JsonKey(toJson: _intToString, fromJson: _stringToInt)
+  @JsonKey(toJson: intToString, fromJson: stringToInt)
   final int limit;
 
   /// Should we filter for pinned posts only?
-  @JsonKey(toJson: _boolToInt, fromJson: _intToBool)
+  @JsonKey(toJson: boolToInt, fromJson: intToBool)
   final bool pinned;
 }
-
-String _boolToInt(bool? value) => value ?? true ? '1' : '0';
-bool _intToBool(String? value) => int.parse(value ?? '0') == 1;
-
-int _stringToInt(String? value) => int.parse(value ?? '0');
-String _intToString(int? value) => value?.toString() ?? '0';

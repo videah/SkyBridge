@@ -38,6 +38,12 @@ Future<void> init(InternetAddress ip, int port) async {
     print('No .env file found, continuing without one.');
   }
 
+  // Make sure we have a base URL set.
+  env.getOrElse(
+    'SKYBRIDGE_BASEURL',
+    () => throw Exception('SKYBRIDGE_BASEURL not set!'),
+  );
+
   // Make sure we have an auth password set, used on the login page.
   env.getOrElse(
     'SKYBRIDGE_AUTH_PASSWORD',
