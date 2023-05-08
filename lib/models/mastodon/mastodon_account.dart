@@ -37,7 +37,18 @@ class MastodonAccount {
   static Future<MastodonAccount> fromActorProfile(
     ActorProfile profile,
   ) async {
+    // Assign/get a user ID from the database.
     final user = await actorProfileToDatabase(profile);
+
+    // Get the fallback URL for the avatar.
+    final base = env.getOrElse(
+      'SKYBRIDGE_BASEURL',
+      () => throw Exception('SKYBRIDGE_BASEURL not set!'),
+    );
+
+    final avatarFallback = 'https://$base/pfp_fallback.png';
+    final bannerFallback = 'https://$base/bnr_fallback.png';
+
     return MastodonAccount(
       id: user.id.toString(),
       username: profile.handle,
@@ -48,10 +59,10 @@ class MastodonAccount {
       createdAt: DateTime.now(),
       note: profile.description ?? '',
       url: 'https://bsky.social/${profile.handle}',
-      avatar: profile.avatar ?? '',
-      avatarStatic: profile.avatar ?? '',
-      header: profile.banner ?? '',
-      headerStatic: profile.banner ?? '',
+      avatar: profile.avatar ?? avatarFallback,
+      avatarStatic: profile.avatar ?? avatarFallback,
+      header: profile.banner ?? bannerFallback,
+      headerStatic: profile.banner ?? bannerFallback,
       followersCount: profile.followersCount,
       followingCount: profile.followsCount,
       statusesCount: profile.postsCount,
@@ -67,7 +78,18 @@ class MastodonAccount {
     Actor profile, {
     ProfileInfo? profileInfo,
   }) async {
+    // Assign/get a user ID from the database.
     final user = await actorToDatabase(profile);
+
+    // Get the fallback URL for the avatar.
+    final base = env.getOrElse(
+      'SKYBRIDGE_BASEURL',
+      () => throw Exception('SKYBRIDGE_BASEURL not set!'),
+    );
+
+    final avatarFallback = 'https://$base/pfp_fallback.png';
+    final bannerFallback = 'https://$base/bnr_fallback.png';
+
     return MastodonAccount(
       id: user.id.toString(),
       username: profile.handle,
@@ -78,10 +100,10 @@ class MastodonAccount {
       createdAt: DateTime.now(),
       note: profileInfo?.description ?? '',
       url: 'https://bsky.social/${profile.handle}',
-      avatar: profile.avatar ?? '',
-      avatarStatic: profile.avatar ?? '',
-      header: profileInfo?.banner,
-      headerStatic: profileInfo?.banner,
+      avatar: profile.avatar ?? avatarFallback,
+      avatarStatic: profile.avatar ?? avatarFallback,
+      header: profileInfo?.banner ?? bannerFallback,
+      headerStatic: profileInfo?.banner ?? bannerFallback,
       followersCount: profileInfo?.followersCount,
       followingCount: profileInfo?.followsCount,
       statusesCount: profileInfo?.postsCount,
