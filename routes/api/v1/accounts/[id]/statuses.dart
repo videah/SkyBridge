@@ -23,7 +23,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
   // Bluesky does not have a concept of pinned posts.
   if (options.pinned) {
     return Response.json(
-      body: {},
+      body: [],
     );
   }
 

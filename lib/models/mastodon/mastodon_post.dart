@@ -30,6 +30,7 @@ class MastodonPost {
     required this.tags,
     required this.emojis,
     required this.application,
+    required this.filtered,
     this.inReplyToId,
     this.inReplyToAccountId,
     this.language,
@@ -44,8 +45,14 @@ class MastodonPost {
     this.text,
     this.editedAt,
     this.pinned,
-    this.filtered,
   });
+
+  /// Converts JSON into a Mastodon Post instance.
+  factory MastodonPost.fromJson(Map<String, dynamic> json) =>
+      _$MastodonPostFromJson(json);
+
+  /// Converts the Mastodon Post to JSON.
+  Map<String, dynamic> toJson() => _$MastodonPostToJson(this);
 
   /// Converts a [bsky.FeedView] to a [MastodonPost].
   static Future<MastodonPost> fromFeedView(
@@ -126,7 +133,7 @@ class MastodonPost {
       reblogged: post.viewer.repost != null,
       muted: false,
       bookmarked: false,
-      content: content,
+      content: '<p>$content</p>',
       text: text,
       reblog: isRepost ? await MastodonPost.fromBlueSkyPost(view.post) : null,
       application: {
@@ -139,6 +146,7 @@ class MastodonPost {
       tags: [],
       emojis: [],
       pinned: false,
+      filtered: [],
     );
   }
 
@@ -186,7 +194,7 @@ class MastodonPost {
       reblogged: post.viewer.repost != null,
       muted: false,
       bookmarked: false,
-      content: processed.htmlText,
+      content: '<p>${processed.htmlText}</p>',
       text: post.record.text,
       application: {
         'name': 'BlueSky',
@@ -198,15 +206,9 @@ class MastodonPost {
       tags: [],
       emojis: [],
       pinned: false,
+      filtered: [],
     );
   }
-
-  /// Converts JSON into a Mastodon Post instance.
-  factory MastodonPost.fromJson(Map<String, dynamic> json) =>
-      _$MastodonPostFromJson(json);
-
-  /// Converts the Mastodon Post to JSON.
-  Map<String, dynamic> toJson() => _$MastodonPostToJson(this);
 
   /// The ID of the post. Is a 64-bit integer cast to a string.
   final String id;
@@ -244,7 +246,7 @@ class MastodonPost {
   final List<MastodonMediaAttachment> mediaAttachments;
 
   /// The application used to create this post.
-  final Map<String, String> application;
+  final Map<String, String?> application;
 
   /// Mentions of users within the post content.
   final List<MastodonMention> mentions;
@@ -272,9 +274,11 @@ class MastodonPost {
   final String? url;
 
   /// The ID of the post this post is a reply to.
+  @JsonKey(name: 'in_reply_to_id')
   final String? inReplyToId;
 
   /// The 64-bit ID of the account this post is a reply to.
+  @JsonKey(name: 'in_reply_to_account_id')
   final String? inReplyToAccountId;
 
   /// The post being reblogged.
@@ -318,7 +322,7 @@ class MastodonPost {
   final bool? pinned;
 
   /// The filter and keywords used to match this post by the current user.
-  final List<Map<String, dynamic>>? filtered;
+  final List<String> filtered;
 }
 
 /// The visibility of a post.

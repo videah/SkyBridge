@@ -50,12 +50,12 @@ class UserRecord {
     print('Successfully inserted UserRecord with ID $id');
 
     // Check if the ID already exists. Very unlikely, but possible.
-    final exists = await db.userRecords.get(id) != null;
+    final exists = await db.userRecords.get(id);
 
-    if (exists) {
+    if (exists != null) {
       // Entry with this ID already exists, bailing out.
       throw Exception(
-        'UserRecord with ID $id already exists! SHA256 collision?',
+        'UserRecord with ID $id already exists! SHA256 collision?\n  $did : ${exists.did}',
       );
     }
     await db.userRecords.put(this);

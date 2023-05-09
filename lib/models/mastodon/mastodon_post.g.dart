@@ -33,8 +33,10 @@ MastodonPost _$MastodonPostFromJson(Map<String, dynamic> json) => MastodonPost(
           .map((e) => e as Map<String, dynamic>)
           .toList(),
       application: Map<String, String>.from(json['application'] as Map),
-      inReplyToId: json['inReplyToId'] as String?,
-      inReplyToAccountId: json['inReplyToAccountId'] as String?,
+      filtered:
+          (json['filtered'] as List<dynamic>).map((e) => e as String).toList(),
+      inReplyToId: json['in_reply_to_id'] as String?,
+      inReplyToAccountId: json['in_reply_to_account_id'] as String?,
       language: json['language'] as String?,
       url: json['url'] as String?,
       favourited: json['favourited'] as bool?,
@@ -49,9 +51,6 @@ MastodonPost _$MastodonPostFromJson(Map<String, dynamic> json) => MastodonPost(
       text: json['text'] as String?,
       editedAt: dateTimeFromISO8601(json['edited_at'] as String),
       pinned: json['pinned'] as bool?,
-      filtered: (json['filtered'] as List<dynamic>?)
-          ?.map((e) => e as Map<String, dynamic>)
-          .toList(),
     );
 
 Map<String, dynamic> _$MastodonPostToJson(MastodonPost instance) =>
@@ -73,8 +72,8 @@ Map<String, dynamic> _$MastodonPostToJson(MastodonPost instance) =>
       'favourites_count': instance.favouritesCount,
       'replies_count': instance.repliesCount,
       'url': instance.url,
-      'inReplyToId': instance.inReplyToId,
-      'inReplyToAccountId': instance.inReplyToAccountId,
+      'in_reply_to_id': instance.inReplyToId,
+      'in_reply_to_account_id': instance.inReplyToAccountId,
       'reblog': instance.reblog,
       'poll': instance.poll,
       'card': instance.card,

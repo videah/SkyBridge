@@ -18,9 +18,9 @@ Future<Response> onRequest(RequestContext context, String id) async {
   // If the user is not in the database we return 404.
   final idNumber = int.parse(id);
   final userRecord = await db.userRecords.get(idNumber);
-  if (userRecord == null) Response(statusCode: HttpStatus.notFound);
+  if (userRecord == null) return Response(statusCode: HttpStatus.notFound);
 
-  final response = await bluesky.graphs.findFollows(actor: userRecord!.did);
+  final response = await bluesky.graphs.findFollows(actor: userRecord.did);
   final follows = await db.writeTxn(() {
     return Future.wait(
       response.data.follows.map(MastodonAccount.fromActor),

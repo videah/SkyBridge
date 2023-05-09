@@ -23,7 +23,6 @@ class MastodonAccount {
     required this.avatar,
     required this.avatarStatic,
     required this.lastStatusAt,
-    required this.source,
     required this.emojis,
     required this.fields,
     this.header,
@@ -67,7 +66,6 @@ class MastodonAccount {
       followingCount: profile.followsCount,
       statusesCount: profile.postsCount,
       lastStatusAt: DateTime.now(),
-      source: {},
       emojis: [],
       fields: [],
     );
@@ -108,7 +106,6 @@ class MastodonAccount {
       followingCount: profileInfo?.followsCount,
       statusesCount: profileInfo?.postsCount,
       lastStatusAt: DateTime.now(),
-      source: {},
       emojis: [],
       fields: [],
     );
@@ -143,8 +140,8 @@ class MastodonAccount {
   /// The date and time the user's account was created.
   @JsonKey(
     name: 'created_at',
-    fromJson: dateTimeFromEpoch,
-    toJson: dateTimeToEpoch,
+    fromJson: dateTimeFromISO8601,
+    toJson: dateTimeToISO8601,
   )
   final DateTime createdAt;
 
@@ -183,14 +180,10 @@ class MastodonAccount {
   /// The date and time the user's last status was posted.
   @JsonKey(
     name: 'last_status_at',
-    fromJson: dateTimeFromEpoch,
-    toJson: dateTimeToEpoch,
+    fromJson: dateTimeFromISO8601,
+    toJson: dateTimeToISO8601,
   )
   final DateTime lastStatusAt;
-
-  /// An extra attribute that contains source values to be used with API methods
-  /// that verify credentials and update credentials.
-  final Map<String, dynamic> source;
 
   /// Custom emoji entities to be used when rendering the profile.
   final List<Map<String, dynamic>> emojis;
