@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/facets.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
+import 'package:sky_bridge/models/mastodon/mastodon_card.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_mention.dart';
 import 'package:sky_bridge/util.dart';
@@ -47,7 +48,7 @@ class MastodonPost {
     this.pinned,
   });
 
-  /// Converts JSON into a Mastodon Post instance.
+  /// Converts JSON into a [MastodonPost] instance.
   factory MastodonPost.fromJson(Map<String, dynamic> json) =>
       _$MastodonPostFromJson(json);
 
@@ -111,6 +112,8 @@ class MastodonPost {
     const base = 'https://staging.bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
+    final card = MastodonCard.fromEmbed(post.embed);
+
     return MastodonPost(
       id: id.toString(),
       createdAt: post.indexedAt,
@@ -141,6 +144,7 @@ class MastodonPost {
       emojis: [],
       pinned: false,
       filtered: [],
+      card: card,
     );
   }
 
@@ -172,6 +176,8 @@ class MastodonPost {
     const base = 'https://staging.bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
+    final card = MastodonCard.fromEmbed(post.embed);
+
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),
       createdAt: post.indexedAt,
@@ -201,6 +207,7 @@ class MastodonPost {
       emojis: [],
       pinned: false,
       filtered: [],
+      card: card,
     );
   }
 
@@ -282,7 +289,7 @@ class MastodonPost {
   final Map<String, dynamic>? poll;
 
   /// Preview card for links included in the post content.
-  final Map<String, dynamic>? card;
+  final MastodonCard? card;
 
   /// Primary language of this post.
   final String? language;

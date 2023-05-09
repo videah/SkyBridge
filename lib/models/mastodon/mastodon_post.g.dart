@@ -32,7 +32,7 @@ MastodonPost _$MastodonPostFromJson(Map<String, dynamic> json) => MastodonPost(
       emojis: (json['emojis'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
           .toList(),
-      application: Map<String, String>.from(json['application'] as Map),
+      application: Map<String, String?>.from(json['application'] as Map),
       filtered:
           (json['filtered'] as List<dynamic>).map((e) => e as String).toList(),
       inReplyToId: json['in_reply_to_id'] as String?,
@@ -46,7 +46,9 @@ MastodonPost _$MastodonPostFromJson(Map<String, dynamic> json) => MastodonPost(
       reblog: json['reblog'] == null
           ? null
           : MastodonPost.fromJson(json['reblog'] as Map<String, dynamic>),
-      card: json['card'] as Map<String, dynamic>?,
+      card: json['card'] == null
+          ? null
+          : MastodonCard.fromJson(json['card'] as Map<String, dynamic>),
       poll: json['poll'] as Map<String, dynamic>?,
       text: json['text'] as String?,
       editedAt: dateTimeFromISO8601(json['edited_at'] as String),
