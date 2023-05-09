@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   bluesky: ^0.4.2
-  bluesky_text: ^0.0.1
+  bluesky_text: ^0.1.0
   collection: ^1.17.1
   crypto: ^3.0.2
   dart_frog: ^0.3.0

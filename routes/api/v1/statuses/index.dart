@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bluesky/bluesky.dart' as bsky;
-import 'package:bluesky_text/bluesky_text.dart';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/forms/new_post_form.dart';
@@ -32,43 +31,19 @@ Future<Response> onRequest<T>(RequestContext context) async {
   }
 
   final form = NewPostForm.fromJson(body);
+  var facets = <Map<String, dynamic>>[];
 
   // Find any linked entities like mentions or links.
-  final entities = form.status?.entities ?? [];
-  final dids = await findDIDsForPost(bluesky, entities);
+  final status = form.status;
+  if (status != null) {
+    facets = await status.entities.toFacets();
+  }
 
   // Create a new post with attached entities.
   // TODO(videah): Add media support.
   final newPost = await bluesky.feeds.createPost(
     text: form.status?.value ?? '',
-    facets: entities.map((e) {
-      switch (e.type) {
-        case EntityType.handle:
-          return bsky.Facet(
-            index: bsky.ByteSlice(
-              byteStart: e.indices.start,
-              byteEnd: e.indices.end,
-            ),
-            features: [
-              bsky.FacetFeature.mention(
-                data: bsky.FacetMention(did: dids[e.value]!),
-              ),
-            ],
-          );
-        case EntityType.link:
-          return bsky.Facet(
-            index: bsky.ByteSlice(
-              byteStart: e.indices.start,
-              byteEnd: e.indices.end,
-            ),
-            features: [
-              bsky.FacetFeature.link(
-                data: bsky.FacetLink(uri: e.value),
-              ),
-            ],
-          );
-      }
-    }).toList(),
+    facets: facets.map(bsky.Facet.fromJson).toList(),
   );
 
   // Get our newly created post.
