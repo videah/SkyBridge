@@ -54,9 +54,8 @@ class UserRecord {
 
     if (exists != null) {
       // Entry with this ID already exists, bailing out.
-      throw Exception(
-        'UserRecord with ID $id already exists! SHA256 collision?\n  $did : ${exists.did}',
-      );
+      print('UserRecord with ID $id already exists! SHA256 collision? Race condition??\n  $did : ${exists.did}');
+      return exists;
     }
     await db.userRecords.put(this);
     return this;
