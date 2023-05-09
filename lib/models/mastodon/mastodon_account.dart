@@ -60,11 +60,11 @@ class MastodonAccount {
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
-      header: profile.banner ?? bannerFallback,
-      headerStatic: profile.banner ?? bannerFallback,
-      followersCount: profile.followersCount,
-      followingCount: profile.followsCount,
-      statusesCount: profile.postsCount,
+      header: user.profileInfo.banner ?? bannerFallback,
+      headerStatic: user.profileInfo.banner ?? bannerFallback,
+      followersCount: user.profileInfo.followersCount,
+      followingCount: user.profileInfo.followsCount,
+      statusesCount: user.profileInfo.postsCount,
       lastStatusAt: DateTime.now(),
       emojis: [],
       fields: [],
@@ -72,10 +72,7 @@ class MastodonAccount {
   }
 
   /// Creates a [MastodonAccount] from an [Actor].
-  static Future<MastodonAccount> fromActor(
-    Actor profile, {
-    ProfileInfo? profileInfo,
-  }) async {
+  static Future<MastodonAccount> fromActor(Actor profile) async {
     // Assign/get a user ID from the database.
     final user = await actorToDatabase(profile);
 
@@ -96,15 +93,15 @@ class MastodonAccount {
       locked: false,
       bot: false,
       createdAt: DateTime.now(),
-      note: profileInfo?.description ?? '',
+      note: user.profileInfo.description ?? '',
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
-      header: profileInfo?.banner ?? bannerFallback,
-      headerStatic: profileInfo?.banner ?? bannerFallback,
-      followersCount: profileInfo?.followersCount,
-      followingCount: profileInfo?.followsCount,
-      statusesCount: profileInfo?.postsCount,
+      header: user.profileInfo.banner ?? bannerFallback,
+      headerStatic: user.profileInfo.banner ?? bannerFallback,
+      followersCount: user.profileInfo.followersCount,
+      followingCount: user.profileInfo.followsCount,
+      statusesCount: user.profileInfo.postsCount,
       lastStatusAt: DateTime.now(),
       emojis: [],
       fields: [],

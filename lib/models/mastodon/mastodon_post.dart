@@ -55,10 +55,7 @@ class MastodonPost {
   Map<String, dynamic> toJson() => _$MastodonPostToJson(this);
 
   /// Converts a [bsky.FeedView] to a [MastodonPost].
-  static Future<MastodonPost> fromFeedView(
-    bsky.FeedView view, {
-    ProfileInfo? profile,
-  }) async {
+  static Future<MastodonPost> fromFeedView(bsky.FeedView view) async {
     final post = view.post;
     final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
 
@@ -93,10 +90,7 @@ class MastodonPost {
       id = (await repostToDatabase(view)).id;
       account = await MastodonAccount.fromActor(view.reason!.by);
     } else {
-      account = await MastodonAccount.fromActor(
-        post.author,
-        profileInfo: profile,
-      );
+      account = await MastodonAccount.fromActor(post.author);
     }
 
     // Handle embedded content.

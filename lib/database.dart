@@ -93,10 +93,18 @@ Future<UserRecord> actorProfileToDatabase(bsky.ActorProfile actor) async {
   final existing =
       await db.userRecords.filter().didEqualTo(actor.did).findFirst();
   if (existing == null) {
-    final record = UserRecord(did: actor.did, profileInfo: ProfileInfo());
+    final record = UserRecord(
+      did: actor.did,
+      profileInfo: ProfileInfo.fromActorProfile(actor),
+    );
     final saved = await record.insert();
     return saved;
   } else {
+    final record = UserRecord(
+      did: actor.did,
+      profileInfo: ProfileInfo.fromActorProfile(actor),
+    )..id = existing.id;
+    await db.userRecords.put(record);
     return existing;
   }
 }
