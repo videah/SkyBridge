@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
-  bluesky: ^0.4.2
+  bluesky: ^0.4.5
   bluesky_text: ^0.1.0
   collection: ^1.17.1
   crypto: ^3.0.2
