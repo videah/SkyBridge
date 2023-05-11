@@ -41,8 +41,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
     () => MastodonPost.fromBlueSkyPost(post),
   );
 
+  final processedPost = await processParentPosts(bluesky, [mastodonPost]);
+
   // Return the post that we just liked.
   return Response.json(
-    body: mastodonPost,
+    body: processedPost,
   );
 }

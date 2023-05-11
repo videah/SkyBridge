@@ -31,7 +31,7 @@ Future<Response> onRequest(RequestContext context) async {
       profile = (await bluesky.actors.findProfile(actor: handle)).data;
     } catch (e) {
       // We just assume no account exists for now.
-      print("Could not find profile with handle: ${encodedParams.query}");
+      print('Could not find profile with handle: ${encodedParams.query}');
       return Response.json(body: [], statusCode: HttpStatus.notFound);
     }
 
@@ -52,24 +52,13 @@ Future<Response> onRequest(RequestContext context) async {
     // Get all the handles from the results and grab the full profile info.
     final handles = results.data.actors.map((actor) => actor.handle).toList();
 
-    // Split handles into chunks of 25.
-    // This is the max number of handles we can query at once.
-    const chunkSize = 25;
-    final profiles = <bsky.ActorProfile>[];
-    for (var i = 0; i < handles.length; i += chunkSize) {
-      // Process the current chunk of 25 handles which is currently the max
-      // that bluesky allows you to query at once.
-      final chunk = handles.sublist(
-        i,
-        i + chunkSize.clamp(0, handles.length - i),
-      );
-
-      // Get the profiles for the current chunk.
-      final results = await bluesky.actors.findProfiles(
-        actors: chunk,
-      );
-      profiles.addAll(results.data.profiles);
-    }
+    final profiles = await chunkResults<bsky.ActorProfile, String>(
+      items: handles,
+      callback: (chunk) async {
+        final response = await bluesky.actors.findProfiles(actors: chunk);
+        return response.data.profiles;
+      },
+    );
 
     // Convert all the profiles to MastodonAccounts.
     final accounts = await db.writeTxn(() {

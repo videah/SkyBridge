@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
-import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_notification.dart';
 import 'package:sky_bridge/util.dart';
 
@@ -22,24 +20,10 @@ Future<Response> onRequest<T>(RequestContext context) async {
 
   final response = await bluesky.notifications.findNotifications();
 
-  final notifs = <MastodonNotification>[];
-  final accounts = <bsky.Actor>[];
-
-  for (final notification in response.data.notifications) {
-    if (notification.reason.name == 'follow') {
-      accounts.add(notification.author);
-    }
-  }
-
-  await db.writeTxn(() async {
-    for (final notification in response.data.notifications) {
-      if (notification.reason.name == 'follow') {
-        notifs.add(await MastodonNotification.fromNotification(notification));
-      }
-    }
-  });
-
-  print(jsonEncode(notifs));
+  final notifs = await MastodonNotification.fromNotificationList(
+    response.data.notifications,
+    bluesky,
+  );
 
   return Response.json(
     body: notifs,

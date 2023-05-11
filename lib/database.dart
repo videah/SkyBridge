@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:crypto/crypto.dart';
 import 'package:isar/isar.dart';
+import 'package:sky_bridge/models/database/notification_record.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/database/repost_record.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
@@ -116,6 +117,29 @@ Future<UserRecord> didToDatabase(String did) async {
   if (existing == null) {
     final record = UserRecord(did: did, profileInfo: ProfileInfo());
     final saved = await record.insert();
+    return saved;
+  } else {
+    return existing;
+  }
+}
+
+/// Checks if a notification has been assigned a [NotificationRecord],
+/// and if not, gives it one. Either the existing or the newly
+/// created [NotificationRecord] is returned.
+Future<NotificationRecord> notificationToDatabase(
+  bsky.Notification notification,
+) async {
+  final existing = await db.notificationRecords
+      .filter()
+      .cidEqualTo(notification.cid)
+      .findFirst();
+
+  if (existing == null) {
+    final record = NotificationRecord(
+      cid: notification.cid,
+      uri: notification.uri.toString(),
+    );
+    final saved = await record.insert(notification.indexedAt);
     return saved;
   } else {
     return existing;

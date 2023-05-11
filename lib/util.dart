@@ -1,5 +1,6 @@
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dotenv/dotenv.dart';
+import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:template_expressions/template_expressions.dart';
 
 /// Environment variables loaded from a .env file.
@@ -68,9 +69,77 @@ Future<bsky.Session> get session async {
   return session.data;
 }
 
+/// Takes a list of items and a function that processes the items in chunks,
+/// returning a list of results for each chunk. returns a Future that resolves
+/// to a list of all results combined.
+///
+/// This is useful for getting around Bluesky API limits, where a lot of
+/// endpoints will restrict the number of items you can query at once to 25.
+Future<List<T>> chunkResults<T, K>({
+  required List<K> items,
+  required Future<List<T>> Function(List<K> results) callback,
+  int limit = 25,
+}) async {
+  final results = <T>[];
+  for (var i = 0; i < items.length; i += limit) {
+    // Process the current chunk of items.
+    final chunk = items.sublist(i, i + limit.clamp(0, items.length - i));
+    results.addAll(await callback(chunk));
+  }
+
+  return results;
+}
+
+/// Traverse the replies of a [bsky.PostThreadView] and return a list of
+/// [MastodonPost]s with the correct reply IDs set, down to a certain [depth].
+///
+/// Creates a list of replies compatible with the Mastodon API
+/// status context endpoint.
+Future<List<MastodonPost>> traverseReplies(
+    bsky.PostThreadView view,
+    int depth,
+    ) async {
+  final result = <MastodonPost>[];
+  await view.map(
+    record: (record) async {
+      // Get the current depth post and add it to the list.
+      final currentPost = await MastodonPost.fromBlueSkyPost(record.data.post);
+      result.add(currentPost);
+
+      // We don't want to traverse too deep, 6 is just a number I pulled out
+      // of thin air. Need to look into how deep Bluesky goes.
+      if (depth < 6) {
+        if (record.data.replies != null) {
+          for (final view in record.data.replies!) {
+            // Step down and recursively traverse the replies.
+            // TODO(videah): Handle this better asynchronously.
+            final list = await traverseReplies(view, depth + 1);
+            for (final childPost in list) {
+              if (childPost.inReplyToId == null) {
+                // We have a dangling reply which means they are replying to
+                // this current post. Set the IDs accordingly.
+                childPost
+                  ..inReplyToAccountId = currentPost.account.id
+                  ..inReplyToId = currentPost.id;
+              }
+              result.add(childPost);
+            }
+          }
+        }
+      }
+    },
+    notFound: (_) {},
+    blocked: (_) {},
+    unknown: (_) {},
+  );
+
+  return result;
+}
+
 /// Parameter conversion functions.
 
 /// Convert a bool to an int. Used for converting parameter values.
+// ignore: avoid_positional_boolean_parameters
 String boolToInt(bool? value) => value ?? true ? '1' : '0';
 
 /// Convert an int to a bool. Used for converting parameter values.

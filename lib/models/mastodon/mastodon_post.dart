@@ -1,4 +1,5 @@
 import 'package:bluesky/bluesky.dart' as bsky;
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/facets.dart';
@@ -46,6 +47,7 @@ class MastodonPost {
     this.text,
     this.editedAt,
     this.pinned,
+    this.replyPostUri,
   });
 
   /// Converts JSON into a [MastodonPost] instance.
@@ -145,6 +147,7 @@ class MastodonPost {
       pinned: false,
       filtered: [],
       card: card,
+      replyPostUri: view.post.record.reply?.parent.uri,
     );
   }
 
@@ -208,6 +211,7 @@ class MastodonPost {
       pinned: false,
       filtered: [],
       card: card,
+      replyPostUri: post.record.reply?.parent.uri,
     );
   }
 
@@ -276,11 +280,11 @@ class MastodonPost {
 
   /// The ID of the post this post is a reply to.
   @JsonKey(name: 'in_reply_to_id')
-  final String? inReplyToId;
+  String? inReplyToId;
 
   /// The 64-bit ID of the account this post is a reply to.
   @JsonKey(name: 'in_reply_to_account_id')
-  final String? inReplyToAccountId;
+  String? inReplyToAccountId;
 
   /// The post being reblogged.
   final MastodonPost? reblog;
@@ -324,6 +328,12 @@ class MastodonPost {
 
   /// The filter and keywords used to match this post by the current user.
   final List<String> filtered;
+
+  /// The URI of the post this post is a reply to.
+  /// Is not included in the JSON representation of a post, only used
+  /// internally for [processParentPosts].
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final bsky.AtUri? replyPostUri;
 }
 
 /// The visibility of a post.
@@ -345,4 +355,52 @@ enum PostVisibility {
   /// Visible only to mentioned users.
   @JsonValue('direct')
   direct,
+}
+
+/// Processes the parent posts of the given posts.
+/// This is used to fetch the parent posts of a list of posts by their URIs.
+Future<List<MastodonPost>> processParentPosts(
+  bsky.Bluesky bluesky,
+  List<MastodonPost> posts,
+) async {
+  // Collect all the CIDs of the posts we need to fetch.
+  final uris = <bsky.AtUri>[];
+  for (final post in posts) {
+    final uri = post.replyPostUri;
+    if (uri != null) {
+      if (!uris.contains(uri)) uris.add(uri);
+    }
+  }
+
+  // Pull the posts from the server in chunks to avoid hitting the
+  // maximum post limit.
+  final results = await chunkResults<bsky.Post, bsky.AtUri>(
+    items: uris,
+    callback: (chunk) async {
+      final response = await bluesky.feeds.findPosts(uris: chunk);
+      return response.data.posts;
+    },
+  );
+
+  // Map the results back to the original posts.
+  final modifiedPosts = <MastodonPost>[];
+  await db.writeTxn(() async {
+    for (final post in posts) {
+      final uri = post.replyPostUri;
+      if (uri != null) {
+        final replyPost = results.firstWhereOrNull((post) {
+          return post.uri.toString() == uri.toString();
+        });
+        if (replyPost != null) {
+          final reply = await MastodonPost.fromBlueSkyPost(replyPost);
+          post
+            ..inReplyToId = reply.id
+            ..inReplyToAccountId = reply.account.id;
+        }
+      }
+      modifiedPosts.add(post);
+    }
+  });
+
+  return modifiedPosts;
 }

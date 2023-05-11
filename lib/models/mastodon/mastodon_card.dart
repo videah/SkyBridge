@@ -56,6 +56,7 @@ class MastodonCard {
       },
       images: (_) => null,
       recordWithMedia: (_) => null,
+      unknown: (_) => null,
     );
   }
 

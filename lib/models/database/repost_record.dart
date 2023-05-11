@@ -35,7 +35,7 @@ class RepostRecord {
   Future<RepostRecord> insert(DateTime createdAt) async {
     var sequence = 0;
     while (true) {
-      // Generate a new Snowflake ID. We don't care about workerId right now.
+      // Generate a new Snowflake ID. Worker ID 1 is reserved for reposts.
       id = generateSnowflake(date: createdAt, workerId: 1, sequence: sequence);
 
       // Check if the ID already exists. Unlikely, but possible.

@@ -19,7 +19,10 @@ Future<Response> onRequest(RequestContext context) async {
     return Future.wait(futures);
   });
 
+  // Get the parent posts for each post.
+  final processedPosts = await processParentPosts(bluesky, posts);
+
   return Response.json(
-    body: posts,
+    body: processedPosts,
   );
 }
