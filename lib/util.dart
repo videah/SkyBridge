@@ -4,7 +4,7 @@ import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:template_expressions/template_expressions.dart';
 
 /// Environment variables loaded from a .env file.
-late DotEnv env;
+DotEnv env = DotEnv(includePlatformEnvironment: true);
 
 /// Returns a [DateTime] from a Unix epoch in seconds.
 DateTime dateTimeFromEpoch(int epoch) {

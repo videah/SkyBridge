@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:dart_frog/dart_frog.dart';
-import 'package:dotenv/dotenv.dart';
 import 'package:isar/isar.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
@@ -13,13 +13,25 @@ import 'package:sky_bridge/models/database/repost_record.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/util.dart';
 
-import '.dart_frog/server.dart';
 import 'routes/_middleware.dart';
+import 'server/server.dart';
 
 Future<void> init(InternetAddress ip, int port) async {
+  // If we are in Docker land then we already have the Isar core library
+  // so we'll check for that and skip the download.
+  final libx86 = File.fromUri(Uri.file('/app/bin/libisar_linux_x64.so'));
+  final libArm = File.fromUri(Uri.file('/app/bin/libisar_linux_arm64.so'));
+  final dockerExists = libx86.existsSync() || libArm.existsSync();
+
+  final libraries = <Abi, String>{};
+  if (dockerExists) {
+    libraries[Abi.linuxX64] = libx86.path;
+    libraries[Abi.linuxArm64] = libArm.path;
+  }
+
   // Downloads the Isar core library at runtime.
   // Not a big fan of this, there has to be a better way of doing this
-  await Isar.initializeIsarCore(download: true);
+  await Isar.initializeIsarCore(download: !dockerExists, libraries: libraries);
 
   // Open the ID database, we just use /tmp/ for now which puts non-unix
   // systems out of the picture. This will be fixed in the future.
@@ -38,7 +50,7 @@ Future<void> init(InternetAddress ip, int port) async {
   // an exception for some reason so we manually check if the file exists.
   final f = File.fromUri(Uri.file('.env'));
   if (f.existsSync()) {
-    env = DotEnv(includePlatformEnvironment: true)..load();
+    env.load();
   } else {
     print('No .env file found, continuing without one.');
   }
