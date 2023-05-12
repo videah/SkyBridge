@@ -9,7 +9,9 @@ class SignInForm {
   /// Creates an instance of [SignInForm].
   SignInForm({
     required this.stuff,
-    required this.password,
+    required this.bridgePassword,
+    required this.identifier,
+    required this.appPassword,
   });
 
   /// Converts JSON into an [SignInForm] instance.
@@ -24,5 +26,13 @@ class SignInForm {
 
   /// The password entered by the user.
   /// Must match SKYBRIDGE_AUTH_PASSWORD to be valid.
-  final String password;
+  @JsonKey(name: 'bridge_password')
+  final String bridgePassword;
+
+  /// The identifier entered by the user, either an email or handle.
+  final String identifier;
+
+  /// The app password entered by the user, used to authenticate with Bluesky.
+  @JsonKey(name: 'app_password')
+  final String appPassword;
 }

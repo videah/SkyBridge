@@ -53,21 +53,21 @@ void isValidAppPassword(String password) {
   }
 }
 
-/// Returns a [bsky.Session] from the provided credentials.
-Future<bsky.Session> get session async {
-  final session = await bsky.createSession(
-    identifier: env.getOrElse(
-      'SKYBRIDGE_IDENTIFIER',
-      () => throw Exception('SKYBRIDGE_IDENTIFIER not set!'),
-    ),
-    password: env.getOrElse(
-      'SKYBRIDGE_APP_PASSWORD',
-      () => throw Exception('SKYBRIDGE_APP_PASSWORD not set!'),
-    ),
-  );
-
-  return session.data;
-}
+// /// Returns a [bsky.Session] from the provided credentials.
+// Future<bsky.Session> get session async {
+//   final session = await bsky.createSession(
+//     identifier: env.getOrElse(
+//       'SKYBRIDGE_IDENTIFIER',
+//       () => throw Exception('SKYBRIDGE_IDENTIFIER not set!'),
+//     ),
+//     password: env.getOrElse(
+//       'SKYBRIDGE_APP_PASSWORD',
+//       () => throw Exception('SKYBRIDGE_APP_PASSWORD not set!'),
+//     ),
+//   );
+//
+//   return session.data;
+// }
 
 /// Takes a list of items and a function that processes the items in chunks,
 /// returning a list of results for each chunk. returns a Future that resolves

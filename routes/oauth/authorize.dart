@@ -24,6 +24,13 @@ Future<Response> onRequest(RequestContext context) async {
   }
 }
 
+/// Displays an authorization form to the user. If approved, it will create and
+/// return an authorization code, then redirect to the desired redirect_uri, or
+/// show the authorization code if urn:ietf:wg:oauth:2.0:oob was requested.
+/// The authorization code can be used while requesting a token to
+/// obtain access to user-level methods.
+/// GET /oauth/authorize HTTP/1.1
+/// See: https://docs.joinmastodon.org/methods/oauth/#authorize
 Future<Response> _get(RequestContext context) async {
   final params = context.request.uri.queryParameters;
   final encodedParams = OAuthAuthorizeParams.fromJson(params);
@@ -43,6 +50,10 @@ Future<Response> _get(RequestContext context) async {
   );
 }
 
+
+/// Get sign-in information entered into the form by the user and process
+/// it to redirect with an auth token code.
+/// POST /oauth/authorize HTTP/1.1
 Future<Response> _post(RequestContext context) async {
   final request = context.request;
   final data = await request.formData();
@@ -60,13 +71,13 @@ Future<Response> _post(RequestContext context) async {
 
   final auth = OAuthAuthorizeParams.fromJson(stuff);
 
-  final authPassword = env.getOrElse(
+  final bridgePassword = env.getOrElse(
     'SKYBRIDGE_AUTH_PASSWORD',
     () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
   );
 
   // Check if what the user entered matches the password we have on file.
-  if (form.password != authPassword) {
+  if (form.bridgePassword != bridgePassword) {
     return Response.json(
       statusCode: HttpStatus.unauthorized,
       body: {
@@ -80,6 +91,8 @@ Future<Response> _post(RequestContext context) async {
     tokenSecret: base64.encode(randomBytes(48)),
     clientId: auth.clientId,
     scope: auth.scope,
+    identifier: form.identifier,
+    appPassword: form.appPassword,
   );
 
   final signedCode = packObject(code.toJson());

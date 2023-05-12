@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bluesky/bluesky.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:dotenv/dotenv.dart';
@@ -56,18 +55,6 @@ Future<void> init(InternetAddress ip, int port) async {
     () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
   );
 
-  // Make sure we have an app password set.
-  final appPassword = env.getOrElse(
-    'SKYBRIDGE_APP_PASSWORD',
-    () => throw Exception('SKYBRIDGE_APP_PASSWORD not set!'),
-  );
-
-  // Check the provided password is an actual app password.
-  // This is just a bonus check to make sure the user isn't using their
-  // main account password. This only holds if the users password doesn't
-  // follow the same format but it's better than nothing.
-  isValidAppPassword(appPassword);
-
   // Make sure we have a secret key set.
   final secret = env.getOrElse(
     'SKYBRIDGE_SECRET',
@@ -79,17 +66,6 @@ Future<void> init(InternetAddress ip, int port) async {
 
   // Ok, we're good, load the key.
   bridgeKey = Hmac(sha1, utf8.encode(secret));
-
-  // Try to establish a session with Bluesky.
-  // We want to catch issues such as incorrect identifier/passwords early.
-  try {
-    final connection = await session;
-    print('Successfully established a session with Bluesky!');
-    print('Logged in as @${connection.handle}');
-  } on XRPCException catch (e) {
-    final message = e.response.data.message;
-    throw Exception('Failed to establish a session with Bluesky: $message');
-  }
 
   // Check if we should wipe the database on startup.
   final shouldWipeDB = env.getOrElse(

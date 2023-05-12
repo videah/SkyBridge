@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
+import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/forms/new_post_form.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
-import 'package:sky_bridge/util.dart';
 
 /// Publish a new post with the given parameters.
 /// POST /api/v1/statuses HTTP/1.1
@@ -16,9 +16,10 @@ Future<Response> onRequest<T>(RequestContext context) async {
     return Response(statusCode: HttpStatus.methodNotAllowed);
   }
 
-  // Construct bluesky connection.
-  final connection = await session;
-  final bluesky = bsky.Bluesky.fromSession(connection);
+  // Get a bluesky connection/session from the a provided bearer token.
+  // If the token is invalid, bail out and return an error.
+  final bluesky = await blueskyFromContext(context);
+  if (bluesky == null) return authError();
 
   // Determine if the request is a JSON request or a form request.
   final request = context.request;

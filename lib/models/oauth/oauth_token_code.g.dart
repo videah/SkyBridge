@@ -12,6 +12,8 @@ OAuthTokenCode _$OAuthTokenCodeFromJson(Map<String, dynamic> json) =>
       tokenSecret: json['token_secret'] as String,
       clientId: json['client_id'] as String,
       scope: json['scope'] as String,
+      identifier: json['identifier'] as String,
+      appPassword: json['app_password'] as String,
       purpose: json['purpose'] as String? ?? 'token',
     );
 
@@ -22,4 +24,6 @@ Map<String, dynamic> _$OAuthTokenCodeToJson(OAuthTokenCode instance) =>
       'token_secret': instance.tokenSecret,
       'client_id': instance.clientId,
       'scope': instance.scope,
+      'identifier': instance.identifier,
+      'app_password': instance.appPassword,
     };

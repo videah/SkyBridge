@@ -23,7 +23,7 @@ class OAuthTokenRequest {
   /// Converts the [OAuthTokenRequest to JSON.
   Map<String, dynamic> toJson() => _$OAuthTokenRequestToJson(this);
 
-  /// TThe type of grant being requested.
+  /// The type of grant being requested.
   /// Set equal to [GrantType.authorizationCode] if [code] is provided in order
   /// to gain user-level access.
   @JsonKey(name: 'grant_type')

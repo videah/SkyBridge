@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
+import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
-import 'package:sky_bridge/util.dart';
 
 Future<Response> onRequest<T>(RequestContext context, String id) async {
   // If the id is not a number we return 404
@@ -13,8 +12,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
     return Response(statusCode: HttpStatus.notFound);
   }
 
-  final connection = await session;
-  final bluesky = bsky.Bluesky.fromSession(connection);
+  // Get a bluesky connection/session from the a provided bearer token.
+  // If the token is invalid, bail out and return an error.
+  final bluesky = await blueskyFromContext(context);
+  if (bluesky == null) return authError();
 
   final idNumber = int.parse(id);
   final user = await db.userRecords.get(idNumber);

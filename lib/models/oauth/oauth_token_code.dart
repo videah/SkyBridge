@@ -14,6 +14,8 @@ class OAuthTokenCode {
     required this.tokenSecret,
     required this.clientId,
     required this.scope,
+    required this.identifier,
+    required this.appPassword,
     this.purpose = 'token',
   });
 
@@ -46,4 +48,11 @@ class OAuthTokenCode {
 
   /// List of requested OAuth scopes, separated by spaces.
   final String scope;
+
+  /// The identifier entered by the user, either an email or handle.
+  final String identifier;
+
+  /// The app password entered by the user, used to authenticate with Bluesky.
+  @JsonKey(name: 'app_password')
+  final String appPassword;
 }

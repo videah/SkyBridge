@@ -30,15 +30,26 @@
     <div class="h-[200px] fade flex items-center justify-center">
         <h1 class="text-white text-5xl font-bold -mt-1 -ml-1 [text-shadow:_2px_2px_0_rgb(0_0_0_/_60%)]">Sky Bridge</h1>
     </div>
-    <main>
-        <form class="p-4" action="/oauth/authorize" method="POST">
+    <main class="flex flex-row justify-center">
+        <form class="max-w-2xl p-4" action="/oauth/authorize" method="POST">
             <h2 class="text-2xl font-bold mb-4">Sign In</h2>
             <input type="hidden" name="stuff" value="##form_data##">
             <div class="mb-6">
-                <label class="block text-gray-700 font-bold mb-2" for="password">
+                <label class="block text-gray-700 font-bold mb-2" for="identifier">
+                    Email/Handle
+                </label>
+                <input id="identifier" name="identifier" class="appearance-none border-2 border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="john.bsky.social">
+
+                <label class="block text-gray-700 font-bold my-2" for="app_password">
+                    App Password
+                </label>
+                <input id="app_password" type="password" name="app_password" class="appearance-none border-2 border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Password">
+                <p class="mt-2">For increased security please create an app password on Bluesky instead of using your main password.</p>
+                <hr class="my-4">
+                <label class="block text-gray-700 font-bold mb-2" for="bridge_password">
                     Bridge Password
                 </label>
-                <input id="password" type="password" name="password" class="appearance-none border-2 border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Password">
+                <input id="bridge_password" type="password" name="bridge_password" class="appearance-none border-2 border-blue-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Password">
             </div>
             <div class="flex items-center justify-between">
                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">

@@ -1,10 +1,16 @@
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
+import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/crypto.dart';
+import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
 import 'package:sky_bridge/models/oauth/oauth_token.dart';
 import 'package:sky_bridge/models/oauth/oauth_token_request.dart';
 
+
+/// Obtain an access token, to be used during API calls that are not public.
+/// POST /oauth/token HTTP/1.1
+/// See: https://docs.joinmastodon.org/methods/oauth/#token
 Future<Response> onRequest(RequestContext context) async {
   if (context.request.method == HttpMethod.post) {
     final request = context.request;
@@ -20,6 +26,8 @@ Future<Response> onRequest(RequestContext context) async {
     final oauth = OAuthTokenRequest.fromJson(body);
 
     if (oauth.grantType == GrantType.clientCredentials) {
+      // Ivory expects a client credential token but we don't really care
+      // about that right now so we just return a dummy token.
       final token = OAuthToken(
         accessToken: 'ZA-Yj3aBD8U8Cm7lKUp-lm9O9BmDgdhHzDeqsY8tlL0',
         tokenType: 'Bearer',
@@ -37,23 +45,36 @@ Future<Response> onRequest(RequestContext context) async {
         return Response(statusCode: HttpStatus.badRequest);
       }
 
-
       if (code.purpose == 'token') {
         final clientSecret = makeClientSecret(code.clientId);
-
-        print(oauth.clientSecret);
-        print(clientSecret);
 
         if (oauth.clientId == code.clientId &&
             oauth.clientSecret == clientSecret) {
 
-          final accessToken = packObject({
-            'a': code.token,
-            's': code.tokenSecret,
-          });
+          // Attempt to sign in with the provided credentials.
+          // If successful a session is stored globally in [sessions].
+          final session = await createBlueskySession(
+            identifier: code.identifier,
+            appPassword: code.appPassword,
+          );
+
+          // Credentials don't match a bluesky account, time to bail.
+          if (session == null) {
+            return Response(statusCode: HttpStatus.unauthorized);
+          }
+
+          final accessToken = OAuthAccessToken(
+            identifier: code.identifier,
+            did: session.did,
+            appPassword: code.appPassword,
+          );
+
+          // Sign the access token with the bridge key and pack it into a
+          // string.
+          final signedAccessToken = packObject(accessToken.toJson());
 
           final token = OAuthToken(
-            accessToken: accessToken,
+            accessToken: signedAccessToken,
             tokenType: 'Bearer',
             scope: code.scope,
             createdAt: DateTime.now(),

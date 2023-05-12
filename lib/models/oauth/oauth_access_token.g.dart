@@ -1,22 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sign_in_form.dart';
+part of 'oauth_access_token.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-SignInForm _$SignInFormFromJson(Map<String, dynamic> json) => SignInForm(
-      stuff: json['stuff'] as String,
-      bridgePassword: json['bridge_password'] as String,
+OAuthAccessToken _$OAuthAccessTokenFromJson(Map<String, dynamic> json) =>
+    OAuthAccessToken(
       identifier: json['identifier'] as String,
+      did: json['did'] as String,
       appPassword: json['app_password'] as String,
     );
 
-Map<String, dynamic> _$SignInFormToJson(SignInForm instance) =>
+Map<String, dynamic> _$OAuthAccessTokenToJson(OAuthAccessToken instance) =>
     <String, dynamic>{
-      'stuff': instance.stuff,
-      'bridge_password': instance.bridgePassword,
       'identifier': instance.identifier,
+      'did': instance.did,
       'app_password': instance.appPassword,
     };
