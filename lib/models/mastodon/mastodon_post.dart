@@ -54,7 +54,7 @@ class MastodonPost {
   factory MastodonPost.fromJson(Map<String, dynamic> json) =>
       _$MastodonPostFromJson(json);
 
-  /// Converts the Mastodon Post to JSON.
+  /// Converts the [MastodonPost] to JSON.
   Map<String, dynamic> toJson() => _$MastodonPostToJson(this);
 
   /// Converts a [bsky.FeedView] to a [MastodonPost].
