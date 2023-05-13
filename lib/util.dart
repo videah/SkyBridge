@@ -80,9 +80,9 @@ Future<List<T>> chunkResults<T, K>({
 /// Creates a list of replies compatible with the Mastodon API
 /// status context endpoint.
 Future<List<MastodonPost>> traverseReplies(
-    bsky.PostThreadView view,
-    int depth,
-    ) async {
+  bsky.PostThreadView view,
+  int depth,
+) async {
   final result = <MastodonPost>[];
   await view.map(
     record: (record) async {
