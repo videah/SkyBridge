@@ -227,7 +227,7 @@ class MastodonPost {
     final intId = int.parse(id);
     final postRecord = await db.postRecords.get(intId);
     if (postRecord != null) {
-      late RepostRecord repost;
+      late RepostRecord repostRecord;
       final createdAt = DateTime.now().toUtc();
 
       // Create the appropriate bluesky record.
@@ -244,11 +244,11 @@ class MastodonPost {
 
       // Write the repost to the database.
       await db.writeTxn(() async {
-        repost = await postRecord.repost(createdAt, postRecord.author);
+        repostRecord = await postRecord.repost(createdAt, postRecord.author);
       });
 
-      return copyWith(
-        id: repost.id.toString(),
+      final repost = copyWith(
+        id: repostRecord.id.toString(),
         content: '',
         text: '',
         favouritesCount: 0,
@@ -256,9 +256,13 @@ class MastodonPost {
         repliesCount: 0,
         language: null,
         reblog: this,
+        reblogged: true,
         createdAt: createdAt,
-      );
+      )..reblogsCount += 1;
+
+      return repost;
     }
+    return null;
   }
 
   /// The ID of the post. Is a 64-bit integer cast to a string.
@@ -311,7 +315,7 @@ class MastodonPost {
 
   /// How many reposts this post has received.
   @JsonKey(name: 'reblogs_count')
-  final int reblogsCount;
+  int reblogsCount;
 
   /// How many likes this post has received.
   @JsonKey(name: 'favourites_count')
@@ -361,9 +365,9 @@ class MastodonPost {
   bool? favourited;
 
   /// Whether the current user has reblogged this post.
-  final bool? reblogged;
+  bool? reblogged;
 
-  /// Whether the current user has muted notifications for this post.
+  /// Whether the current user h§as muted notifications for this post.
   final bool? muted;
 
   /// Whether the current user has bookmarked this post.
