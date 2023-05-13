@@ -58,7 +58,7 @@ packages:
     source: hosted
     version: "0.0.3"
   atproto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: atproto
       sha256: "57eef8eba3c62b6c22cdbec1a3769185836170f90867eb304efa01f1120dd828"
@@ -209,6 +209,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  copy_with_extension:
+    dependency: "direct main"
+    description:
+      name: copy_with_extension
+      sha256: "13d2e7e1c4d420424db9137a5f595a9c624461e6abc5f71bd65d81e131fa6226"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
+  copy_with_extension_gen:
+    dependency: "direct dev"
+    description:
+      name: copy_with_extension_gen
+      sha256: "2a22b974bdbd0b34ab5af230451799500e2c1c8e1759a117801f652b6c2a6c3b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
   coverage:
     dependency: transitive
     description:

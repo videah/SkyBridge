@@ -1,8 +1,13 @@
+import 'package:atproto/atproto.dart' as at;
+import 'package:atproto/atproto.dart';
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:collection/collection.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/facets.dart';
+import 'package:sky_bridge/models/database/post_record.dart';
+import 'package:sky_bridge/models/database/repost_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_card.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
@@ -13,6 +18,7 @@ part 'mastodon_post.g.dart';
 
 /// Representation for a Mastodon status.
 @JsonSerializable()
+@CopyWith()
 class MastodonPost {
   /// Constructs an instance of [MastodonPost].
   MastodonPost({
@@ -213,6 +219,46 @@ class MastodonPost {
       card: card,
       replyPostUri: post.record.reply?.parent.uri,
     );
+  }
+
+  /// Uses the current user session to repost this [MastodonPost].
+  Future<MastodonPost?> repost(bsky.Bluesky bluesky) async {
+    // Convert the string ID to an int and get the record for the post.
+    final intId = int.parse(id);
+    final postRecord = await db.postRecords.get(intId);
+    if (postRecord != null) {
+      late RepostRecord repost;
+      final createdAt = DateTime.now().toUtc();
+
+      // Create the appropriate bluesky record.
+      await bluesky.repositories.createRecord(
+        collection: at.NSID.create('feed.bsky.app', 'repost'),
+        record: {
+          'subject': {
+            'cid': postRecord.cid,
+            'uri': postRecord.uri,
+          },
+          'createdAt': createdAt.toIso8601String(),
+        },
+      );
+
+      // Write the repost to the database.
+      await db.writeTxn(() async {
+        repost = await postRecord.repost(createdAt, postRecord.author);
+      });
+
+      return copyWith(
+        id: repost.id.toString(),
+        content: '',
+        text: '',
+        favouritesCount: 0,
+        reblogsCount: 0,
+        repliesCount: 0,
+        language: null,
+        reblog: this,
+        createdAt: createdAt,
+      );
+    }
   }
 
   /// The ID of the post. Is a 64-bit integer cast to a string.

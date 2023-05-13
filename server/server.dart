@@ -16,6 +16,7 @@ import '../routes/api/v1/trends/statuses.dart' as api_v1_trends_statuses;
 import '../routes/api/v1/timelines/home.dart' as api_v1_timelines_home;
 import '../routes/api/v1/statuses/index.dart' as api_v1_statuses_index;
 import '../routes/api/v1/statuses/[id]/unfavourite.dart' as api_v1_statuses_$id_unfavourite;
+import '../routes/api/v1/statuses/[id]/reblog.dart' as api_v1_statuses_$id_reblog;
 import '../routes/api/v1/statuses/[id]/index.dart' as api_v1_statuses_$id_index;
 import '../routes/api/v1/statuses/[id]/favourite.dart' as api_v1_statuses_$id_favourite;
 import '../routes/api/v1/statuses/[id]/context.dart' as api_v1_statuses_$id_context;
@@ -85,7 +86,7 @@ Handler buildApiV1NotificationsHandler() {
 Handler buildApiV1Statuses$idHandler(String id,) {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/unfavourite', (context) => api_v1_statuses_$id_unfavourite.onRequest(context,id,))..all('/', (context) => api_v1_statuses_$id_index.onRequest(context,id,))..all('/favourite', (context) => api_v1_statuses_$id_favourite.onRequest(context,id,))..all('/context', (context) => api_v1_statuses_$id_context.onRequest(context,id,));
+    ..all('/unfavourite', (context) => api_v1_statuses_$id_unfavourite.onRequest(context,id,))..all('/reblog', (context) => api_v1_statuses_$id_reblog.onRequest(context,id,))..all('/', (context) => api_v1_statuses_$id_index.onRequest(context,id,))..all('/favourite', (context) => api_v1_statuses_$id_favourite.onRequest(context,id,))..all('/context', (context) => api_v1_statuses_$id_context.onRequest(context,id,));
   return pipeline.addHandler(router);
 }
 

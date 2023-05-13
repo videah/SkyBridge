@@ -7,9 +7,11 @@ environment:
   sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
+  atproto: ^0.2.12
   bluesky: ^0.4.5
   bluesky_text: ^0.1.0
   collection: ^1.17.1
+  copy_with_extension: ^5.0.2
   crypto: ^3.0.2
   dart_frog: ^0.3.0
   dotenv: ^4.1.0
@@ -19,6 +21,7 @@ dependencies:
   template_expressions: ^3.0.0+5
 
 dev_dependencies:
+  copy_with_extension_gen: ^5.0.2
   build_runner: ^2.3.3
   fixnum: ^1.1.0
   isar_generator: ^3.1.0+1
