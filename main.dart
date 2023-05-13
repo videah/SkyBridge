@@ -33,6 +33,12 @@ Future<void> init(InternetAddress ip, int port) async {
   // Not a big fan of this, there has to be a better way of doing this
   await Isar.initializeIsarCore(download: !dockerExists, libraries: libraries);
 
+  // Make directory for the database if it doesn't exist.
+  final dir = Directory.fromUri(Uri.directory('database'));
+  if (!dir.existsSync()) {
+    dir.createSync();
+  }
+
   // Open the ID database, we just use /tmp/ for now which puts non-unix
   // systems out of the picture. This will be fixed in the future.
   db = await Isar.open(
@@ -42,7 +48,7 @@ Future<void> init(InternetAddress ip, int port) async {
       RepostRecordSchema,
       NotificationRecordSchema,
     ],
-    directory: '/tmp',
+    directory: 'database',
   );
 
   // Load the .env file if it exists.

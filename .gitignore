@@ -22,3 +22,6 @@ coverage/
 
 # Mac
 .DS_Store
+
+# Database
+database/
