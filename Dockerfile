@@ -1,6 +1,6 @@
 # Isar does not provided prebuilt linux/arm64 binaries so we need to build it
 # ourselves. This only happens on linux/arm64.
-FROM --platform=linux/arm64 rust:slim-bullseye AS isar
+FROM --platform=linux/arm64 rust:slim-bullseye AS isar-arm64
 
 # Install libclang, needed for libmdbx-rs
 RUN set -eux; \
@@ -24,7 +24,7 @@ RUN tool/build_linux.sh
 # an issue with a dependency that prevents it from compiling on x86 in a docker container.
 # The joys of computers. Here is a relevant github issue on the dependency repo:
 # https://github.com/vorot93/libmdbx-rs/issues/13
-FROM --platform=linux/amd64 bitnami/minideb:bullseye AS isar
+FROM --platform=linux/amd64 bitnami/minideb:bullseye AS isar-amd64
 WORKDIR /app/isar-3.1.0-1
 RUN install_packages wget ca-certificates
 RUN wget https://github.com/isar/isar/releases/download/3.1.0%2B1/libisar_linux_x64.so
@@ -50,6 +50,11 @@ RUN dart pub global run dart_frog_cli:dart_frog build
 RUN dart pub get --offline
 RUN dart compile exe build/server/server.dart -o build/bin/server
 
+
+ARG TARGETARCH
+# Final stage that lets us get the files from whichever previous stage ran.
+FROM isar-${TARGETARCH} as isar-final
+
 # Build minimal serving image from AOT-compiled `/server` and required system
 # libraries and configuration files stored in `/runtime/` from the build stage.
 FROM bitnami/minideb:bullseye
@@ -62,7 +67,7 @@ COPY --from=build /app/build/bin/server /app/bin/
 COPY --from=build /app/build/public /public/
 
 # Get our Isar library from the previous stage.
-COPY --from=isar /app/isar-3.1.0-1/*.so /app/bin/
+COPY --from=isar-final /app/isar-3.1.0-1/*.so /app/bin/
 
 # Start the server.
 CMD ["/app/bin/server"]
