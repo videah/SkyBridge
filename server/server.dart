@@ -25,6 +25,7 @@ import '../routes/api/v1/notifications/index.dart' as api_v1_notifications_index
 import '../routes/api/v1/accounts/verify_credentials.dart' as api_v1_accounts_verify_credentials;
 import '../routes/api/v1/accounts/search.dart' as api_v1_accounts_search;
 import '../routes/api/v1/accounts/relationships.dart' as api_v1_accounts_relationships;
+import '../routes/api/v1/accounts/lookup.dart' as api_v1_accounts_lookup;
 import '../routes/api/v1/accounts/familiar_followers.dart' as api_v1_accounts_familiar_followers;
 import '../routes/api/v1/accounts/[id]/statuses.dart' as api_v1_accounts_$id_statuses;
 import '../routes/api/v1/accounts/[id]/index.dart' as api_v1_accounts_$id_index;
@@ -73,7 +74,7 @@ Handler buildApiV1Accounts$idHandler(String id,) {
 Handler buildApiV1AccountsHandler() {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/verify_credentials', (context) => api_v1_accounts_verify_credentials.onRequest(context,))..all('/search', (context) => api_v1_accounts_search.onRequest(context,))..all('/relationships', (context) => api_v1_accounts_relationships.onRequest(context,))..all('/familiar_followers', (context) => api_v1_accounts_familiar_followers.onRequest(context,));
+    ..all('/verify_credentials', (context) => api_v1_accounts_verify_credentials.onRequest(context,))..all('/search', (context) => api_v1_accounts_search.onRequest(context,))..all('/relationships', (context) => api_v1_accounts_relationships.onRequest(context,))..all('/lookup', (context) => api_v1_accounts_lookup.onRequest(context,))..all('/familiar_followers', (context) => api_v1_accounts_familiar_followers.onRequest(context,));
   return pipeline.addHandler(router);
 }
 
