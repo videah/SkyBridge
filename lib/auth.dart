@@ -28,8 +28,8 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
     if (newSession == null) return null;
 
     // We have a valid session, store it globally for later.
-    sessions[token.identifier] = newSession;
-    return sessions[token.identifier];
+    sessions[token.did] = newSession;
+    return sessions[token.did];
   }
 }
 
