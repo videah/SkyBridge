@@ -120,6 +120,50 @@ Future<List<MastodonPost>> traverseReplies(
   return result;
 }
 
+/// Traverse the parents of a [bsky.PostThreadView] and return a list of
+/// [MastodonPost]s with the correct reply IDs set, up to a certain [depth].
+///
+/// Creates a list of parents compatible with the Mastodon API
+/// status context endpoint.
+Future<List<MastodonPost>> traverseParents(
+  bsky.PostThreadView view,
+  int depth,
+) async {
+  final result = <MastodonPost>[];
+  await view.map(
+    record: (record) async {
+      // Get the current depth post and add it to the list.
+      final currentPost = await MastodonPost.fromBlueSkyPost(record.data.post);
+
+      // We don't want to traverse too deep, 6 is just a number I pulled out
+      // of thin air. Need to look into how deep Bluesky goes.
+      if (depth < 6) {
+        final view = record.data.parent;
+        if (view != null) {
+          final list = await traverseParents(view, depth + 1);
+          for (final childPost in list) {
+            if (childPost.inReplyToId == null) {
+              // We have a dangling reply which means they are replying to
+              // this current post. Set the IDs accordingly.
+              currentPost
+                ..inReplyToAccountId = childPost.account.id
+                ..inReplyToId = childPost.id;
+            }
+            result.add(childPost);
+          }
+        }
+      }
+      // Skip the first post.
+      if (depth > 0) result.add(currentPost);
+    },
+    notFound: (_) {},
+    blocked: (_) {},
+    unknown: (_) {},
+  );
+
+  return result;
+}
+
 /// Parameter conversion functions.
 
 /// Convert a bool to an int. Used for converting parameter values.

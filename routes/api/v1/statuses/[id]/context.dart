@@ -39,9 +39,19 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   final parents = <MastodonPost>[];
   final replies = <MastodonPost>[];
-  await db.writeTxn(
+
+  // Get all the post replies.
+  final replyFuture = db.writeTxn(
     () async => replies.addAll(await traverseReplies(posts.data.thread, 0)),
   );
+
+  // Get all the post parents.
+  final parentFuture = db.writeTxn(
+    () async => parents.addAll(await traverseParents(posts.data.thread, 0)),
+  );
+
+  // Process both asynchronously.
+  await Future.wait([replyFuture, parentFuture]);
 
   return Response.json(
     body: {
