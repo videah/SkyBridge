@@ -4,6 +4,7 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/forms/new_post_form.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 
@@ -34,6 +35,31 @@ Future<Response> onRequest<T>(RequestContext context) async {
   final form = NewPostForm.fromJson(body);
   var facets = <Map<String, dynamic>>[];
 
+  bsky.ReplyRef? postReplyRef;
+  final replyId = form.inReplyToId;
+  if (replyId != null) {
+    final record = await db.postRecords.get(replyId);
+
+    // The post we're trying to reply to doesn't exist in the database.
+    if (record == null) return Response(statusCode: HttpStatus.notFound);
+
+    final uri = bsky.AtUri.parse(record.uri);
+    final post = (await bluesky.feeds.findPosts(uris: [uri])).data.posts.first;
+
+    final parentRef = bsky.StrongRef(
+      cid: post.cid,
+      uri: post.uri,
+    );
+
+    // If the post we're replying to is itself a reply we need to grab the root
+    // from it. Otherwise the root is the post we're replying to.
+    final reply = post.record.reply;
+    postReplyRef = bsky.ReplyRef(
+      root: reply != null ? reply.root : parentRef,
+      parent: parentRef,
+    );
+  }
+
   // Find any linked entities like mentions or links.
   final status = form.status;
   if (status != null) {
@@ -45,6 +71,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
   final newPost = await bluesky.feeds.createPost(
     text: form.status?.value ?? '',
     facets: facets.map(bsky.Facet.fromJson).toList(),
+    reply: postReplyRef,
   );
 
   // Get our newly created post.

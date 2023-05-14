@@ -10,6 +10,7 @@ class NewPostForm {
   NewPostForm({
     required this.status,
     required this.mediaIds,
+    required this.inReplyToId,
   });
 
   /// Converts JSON into a [NewPostForm] instance.
@@ -28,6 +29,10 @@ class NewPostForm {
   /// If provided, [status] becomes optional.
   @JsonKey(name: 'media_ids')
   final List<String>? mediaIds;
+
+  /// The ID of the post being replied to.
+  @JsonKey(name: 'in_reply_to_id')
+  final int? inReplyToId;
 }
 
 BlueskyText stringToBluesky(String? value) => BlueskyText(value ?? '');
