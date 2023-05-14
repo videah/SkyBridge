@@ -13,7 +13,7 @@ OAuthAuthorizeParams _$OAuthAuthorizeParamsFromJson(
       clientId: json['client_id'] as String,
       redirectUri: json['redirect_uri'] as String,
       scope: json['scope'] as String? ?? 'read',
-      forceLogin: json['force_login'] as bool?,
+      forceLogin: stringToBool(json['force_login'] as String?),
       lang: json['lang'] as String?,
     );
 
@@ -24,6 +24,6 @@ Map<String, dynamic> _$OAuthAuthorizeParamsToJson(
       'client_id': instance.clientId,
       'redirect_uri': instance.redirectUri,
       'scope': instance.scope,
-      'force_login': instance.forceLogin,
+      'force_login': boolToString(instance.forceLogin),
       'lang': instance.lang,
     };

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sky_bridge/util.dart';
 
 part 'oauth_authorize_params.g.dart';
 
@@ -45,10 +46,11 @@ class OAuthAuthorizeParams {
 
   /// Forces the user to re-login, which is necessary for authorizing with
   /// multiple accounts from the same instance.
-  @JsonKey(name: 'force_login')
+  @JsonKey(name: 'force_login', toJson: boolToString, fromJson: stringToBool)
   final bool? forceLogin;
 
   /// The ISO 639-1 two-letter language code to use while rendering the
   /// authorization form.
   final String? lang;
 }
+

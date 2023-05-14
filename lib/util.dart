@@ -134,3 +134,9 @@ int stringToInt(String? value) => int.parse(value ?? '0');
 
 /// Convert an int to a string. Used for converting parameter values.
 String intToString(int? value) => value?.toString() ?? '0';
+
+/// Convert a string to a bool Used for converting parameter values.
+bool stringToBool(String? value) => value == 'true';
+
+/// Convert a bool to a string. Used for converting parameter values.
+String boolToString(bool? value) => value?.toString() ?? 'false';
