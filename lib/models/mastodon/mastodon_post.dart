@@ -85,23 +85,6 @@ class MastodonPost {
     final mediaAttachments = <MastodonMediaAttachment>[];
     String? language = 'en';
 
-    if (isRepost) {
-      // Clear out the content, since this is a repost.
-      content = '';
-      text = '';
-      likeCount = 0;
-      repostCount = 0;
-      replyCount = 0;
-      language = null;
-
-      // Since this is a repost, we need to assign a unique ID and get
-      // the account that reposted it.
-      id = (await repostToDatabase(view)).id;
-      account = await MastodonAccount.fromActor(view.reason!.by);
-    } else {
-      account = await MastodonAccount.fromActor(post.author);
-    }
-
     // Handle embedded content.
     if (post.embed != null) {
       if (post.embed!.data is bsky.EmbedViewImages) {
@@ -112,6 +95,24 @@ class MastodonPost {
           mediaAttachments.add(attachment);
         }
       }
+    }
+
+    if (isRepost) {
+      // Clear out the content, since this is a repost.
+      content = '';
+      text = '';
+      likeCount = 0;
+      repostCount = 0;
+      replyCount = 0;
+      language = null;
+      mediaAttachments.clear();
+
+      // Since this is a repost, we need to assign a unique ID and get
+      // the account that reposted it.
+      id = (await repostToDatabase(view)).id;
+      account = await MastodonAccount.fromActor(view.reason!.by);
+    } else {
+      account = await MastodonAccount.fromActor(post.author);
     }
 
     // Construct URL/URI
