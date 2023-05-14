@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
+import 'package:sky_bridge/util.dart';
 
 /// Returns accounts which follow the given account.
 /// GET /api/v1/accounts/:id/followers HTTP/1.1
@@ -22,9 +24,24 @@ Future<Response> onRequest(RequestContext context, String id) async {
   if (userRecord == null) return Response(statusCode: HttpStatus.notFound);
 
   final response = await bluesky.graphs.findFollowers(actor: userRecord.did);
+
+  // Get all the handles from the results and grab the full profile info.
+  final handles = response.data.followers.map((actor) => actor.handle).toList();
+
+  // We need to chunk the results because the Bluesky server has a limit on the
+  // number of actors you can query at once.
+  final profiles = await chunkResults<bsky.ActorProfile, String>(
+    items: handles,
+    callback: (chunk) async {
+      final response = await bluesky.actors.findProfiles(actors: chunk);
+      return response.data.profiles;
+    },
+  );
+
+  // Convert the profiles to MastodonAccount objects.
   final followers = await db.writeTxn(() {
     return Future.wait(
-      response.data.followers.map(MastodonAccount.fromActor),
+      profiles.map(MastodonAccount.fromActorProfile),
     );
   });
 
