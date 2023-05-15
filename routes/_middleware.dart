@@ -6,8 +6,17 @@ import 'package:sky_bridge/auth.dart';
 Handler middleware(Handler handler) {
   return (RequestContext context) async {
     try {
-      final handlerResponse = await handler(context);
-      return handlerResponse;
+      final response = await handler(context);
+
+      // Reset Cache-Control so that we don't cache responses.
+      return response.copyWith(
+        headers: Map.of(response.headers)
+          ..addAll(
+            {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+            },
+          ),
+      );
     } on bsky.InvalidRequestException catch (e) {
       final error = e.response.data.error;
 
@@ -40,7 +49,17 @@ Handler middleware(Handler handler) {
       }
 
       // Try again now that we have a new session.
-      return handler(context);
+      final response = await handler(context);
+
+      // Reset Cache-Control so that we don't cache responses.
+      return response.copyWith(
+        headers: Map.of(response.headers)
+          ..addAll(
+            {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+            },
+          ),
+      );
     }
   }.use(requestLogger()).use(
         // Temporary middleware that print requests.

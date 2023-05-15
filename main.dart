@@ -104,7 +104,7 @@ Future<void> init(InternetAddress ip, int port) async {
   }
 }
 
-Future<HttpServer> run(Handler handler, InternetAddress ip, int port) {
+Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
   // This is a super temporary fix for dart_frog generating routes in the
   // wrong order, preventing non-dynamic routes from being matched if in
   // the same directory as a dynamic directory route.
@@ -169,5 +169,14 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) {
   final handler =
       Cascade().add(createStaticFileHandler()).add(buildRootHandler()).handler;
 
-  return serve(handler, ip, port);
+  final server = await serve(handler, ip, port);
+
+  // Attach Cache-Control header to all responses so we cache static files.
+  // We remove this in the middleware for API requests.
+  server.defaultResponseHeaders.add(
+    'Cache-Control',
+    'public, max-age=15552000',
+  );
+
+  return server;
 }
