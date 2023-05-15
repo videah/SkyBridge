@@ -149,6 +149,10 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) {
         (RequestContext context) => buildApiV1Handler()(context),
       )
       ..mount(
+        '/api/v2',
+        (RequestContext context) => buildApiV2Handler()(context),
+      )
+      ..mount(
         '/oauth',
         (RequestContext context) => buildOauthHandler()(context),
       )

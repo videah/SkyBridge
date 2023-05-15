@@ -10,6 +10,7 @@ import '../routes/index.dart' as index;
 import '../routes/oauth/token.dart' as oauth_token;
 import '../routes/oauth/revoke.dart' as oauth_revoke;
 import '../routes/oauth/authorize.dart' as oauth_authorize;
+import '../routes/api/v2/instance.dart' as api_v2_instance;
 import '../routes/api/v1/instance.dart' as api_v1_instance;
 import '../routes/api/v1/apps.dart' as api_v1_apps;
 import '../routes/api/v1/trends/statuses.dart' as api_v1_trends_statuses;
@@ -59,6 +60,7 @@ Handler buildRootHandler() {
     ..mount('/api/v1/timelines', (context) => buildApiV1TimelinesHandler()(context))
     ..mount('/api/v1/trends', (context) => buildApiV1TrendsHandler()(context))
     ..mount('/api/v1', (context) => buildApiV1Handler()(context))
+    ..mount('/api/v2', (context) => buildApiV2Handler()(context))
     ..mount('/oauth', (context) => buildOauthHandler()(context))
     ..mount('/', (context) => buildHandler()(context));
   return pipeline.addHandler(router);
@@ -117,6 +119,13 @@ Handler buildApiV1Handler() {
   final pipeline = const Pipeline();
   final router = Router()
     ..all('/instance', (context) => api_v1_instance.onRequest(context,))..all('/apps', (context) => api_v1_apps.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiV2Handler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/instance', (context) => api_v2_instance.onRequest(context,));
   return pipeline.addHandler(router);
 }
 

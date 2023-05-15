@@ -1,36 +1,31 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_instance.dart';
-import 'package:sky_bridge/models/mastodon/mastodon_instance_v1.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Obtain general information about the server.
-/// GET /api/v1/instance HTTP/1.1
-/// See: https://docs.joinmastodon.org/methods/instance/#v1
-Response onRequest(RequestContext context) {
+/// GET /api/v2/instance HTTP/1.1
+/// See: https://docs.joinmastodon.org/methods/instance/#v2
+Future<Response> onRequest(RequestContext context) async {
   final url = env.getOrElse(
     'SKYBRIDGE_BASEURL',
     () => throw Exception('SKYBRIDGE_BASEURL not set!'),
   );
 
   return Response.json(
-    body: MastodonInstanceV1(
-      uri: url,
+    body: MastodonInstance(
+      domain: url,
       title: 'SkyBridge',
-      shortDescription: 'A Mastodon bridge for Bluesky.',
-      description: 'A Mastodon bridge for Bluesky.',
-      email: 'videah@selfish.systems',
       version: '4.1.2',
-      urls: {},
-      stats: StatInfo(
-        userCount: sessions.length,
-        statusCount: 99999,
-        domainCount: 1,
+      sourceUrl: 'https://github.com/videah/SkyBridge',
+      description: 'A Mastodon bridge for Bluesky.',
+      usage: UsageInfo(
+        users: UsersUsageInfo(
+          activeMonth: sessions.length,
+        ),
       ),
+      thumbnail: {},
       languages: ['en'],
-      registrations: false,
-      approvalRequired: true,
-      invitesEnabled: false,
       configuration: InstanceConfiguration(
         urls: {},
         accounts: AccountConfiguration(
@@ -61,6 +56,14 @@ Response onRequest(RequestContext context) {
         translation: TranslationConfiguration(
           enabled: false,
         ),
+      ),
+      registrations: RegistrationConfiguration(
+        enabled: false,
+        approvalRequired: true,
+        message: 'Register on the main Bluesky website.',
+      ),
+      contact: ContactInfo(
+        email: 'videah@selfish.systems',
       ),
       rules: [
         Rule(id: '1', text: 'Be nice.'),
