@@ -30,10 +30,12 @@ import '../routes/api/v1/accounts/search.dart' as api_v1_accounts_search;
 import '../routes/api/v1/accounts/relationships.dart' as api_v1_accounts_relationships;
 import '../routes/api/v1/accounts/lookup.dart' as api_v1_accounts_lookup;
 import '../routes/api/v1/accounts/familiar_followers.dart' as api_v1_accounts_familiar_followers;
+import '../routes/api/v1/accounts/[id]/unfollow.dart' as api_v1_accounts_$id_unfollow;
 import '../routes/api/v1/accounts/[id]/statuses.dart' as api_v1_accounts_$id_statuses;
 import '../routes/api/v1/accounts/[id]/index.dart' as api_v1_accounts_$id_index;
 import '../routes/api/v1/accounts/[id]/following.dart' as api_v1_accounts_$id_following;
 import '../routes/api/v1/accounts/[id]/followers.dart' as api_v1_accounts_$id_followers;
+import '../routes/api/v1/accounts/[id]/follow.dart' as api_v1_accounts_$id_follow;
 
 import '../routes/_middleware.dart' as middleware;
 
@@ -72,7 +74,7 @@ Handler buildRootHandler() {
 Handler buildApiV1Accounts$idHandler(String id,) {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/statuses', (context) => api_v1_accounts_$id_statuses.onRequest(context,id,))..all('/', (context) => api_v1_accounts_$id_index.onRequest(context,id,))..all('/following', (context) => api_v1_accounts_$id_following.onRequest(context,id,))..all('/followers', (context) => api_v1_accounts_$id_followers.onRequest(context,id,));
+    ..all('/unfollow', (context) => api_v1_accounts_$id_unfollow.onRequest(context,id,))..all('/statuses', (context) => api_v1_accounts_$id_statuses.onRequest(context,id,))..all('/', (context) => api_v1_accounts_$id_index.onRequest(context,id,))..all('/following', (context) => api_v1_accounts_$id_following.onRequest(context,id,))..all('/followers', (context) => api_v1_accounts_$id_followers.onRequest(context,id,))..all('/follow', (context) => api_v1_accounts_$id_follow.onRequest(context,id,));
   return pipeline.addHandler(router);
 }
 
