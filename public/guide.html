@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Sky Bridge</title>
+  <meta charset="utf-8" name="viewport" content= "width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade {
+      position: relative;
+      z-index: 0;
+    }
+
+    .fade:before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1.0) 0%, transparent 100%);
+      background-image: url("/banner.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body>
+<div class="h-[200px] fade flex items-center justify-center">
+  <h1 class="text-white text-5xl font-bold -mt-1 -ml-1 [text-shadow:_2px_2px_0_rgb(0_0_0_/_60%)]">Sky Bridge</h1>
+</div>
+<main class="flex flex-row justify-center">
+  <ol class="max-w-2xl list-none list-inside px-4 py-2">
+    <li class="mb-4 flex items-center">
+      <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg mr-4">1</div>
+      <div class="flex-1">
+        <span class="font-bold text-lg block mb-1">Add Account</span>
+        <p class="text-gray-700 text-lg">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </div>
+    </li>
+    <li class="mb-4 flex items-center">
+      <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg mr-4">2</div>
+      <div class="flex-1">
+        <span class="font-bold text-lg block mb-1">Sign In</span>
+        <p class="text-gray-700 text-lg">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      </div>
+    </li>
+    <li class="mb-4 flex items-center">
+      <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg mr-4">3</div>
+      <div class="flex-1">
+        <span class="font-bold text-lg block mb-1">Have fun!</span>
+        <p class="text-gray-700 text-lg">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </div>
+    </li>
+  </ol>
+</main>
+</body>
+</html>

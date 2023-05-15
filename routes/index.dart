@@ -1,13 +1,29 @@
+import 'dart:io';
+
 import 'package:dart_frog/dart_frog.dart';
-import 'package:sky_bridge/auth.dart';
+import 'package:path/path.dart' as path;
+import 'package:sky_bridge/util.dart';
 
-Future<Response> onRequest(RequestContext context) async{
-  // Get a bluesky connection/session from the a provided bearer token.
-  // If the token is invalid, bail out and return an error.
-  final bluesky = await blueskyFromContext(context);
-  if (bluesky == null) return authError();
+Future<Response> onRequest(RequestContext context) async {
+  final shouldShowIndex = env.getOrElse(
+    'SKYBRIDGE_SHOW_INDEX',
+    () => 'false',
+  );
 
-  return Response.json(
-    body: {},
+  if (shouldShowIndex.toLowerCase() == 'false') {
+    return Response.json(
+      statusCode: HttpStatus.notFound,
+      body: {},
+    );
+  }
+
+  final file = File(path.join(Directory.current.path, 'public', 'guide.html'));
+  final indexHtml = await file.readAsString();
+
+  return Response(
+    body: indexHtml,
+    headers: {
+      HttpHeaders.contentTypeHeader: ContentType.html.value,
+    },
   );
 }
