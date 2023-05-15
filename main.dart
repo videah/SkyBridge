@@ -7,6 +7,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:isar/isar.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/models/database/media_record.dart';
 import 'package:sky_bridge/models/database/notification_record.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/database/repost_record.dart';
@@ -47,6 +48,7 @@ Future<void> init(InternetAddress ip, int port) async {
       UserRecordSchema,
       RepostRecordSchema,
       NotificationRecordSchema,
+      MediaRecordSchema,
     ],
     directory: 'database',
   );
@@ -122,6 +124,10 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) {
         '/api/v1/accounts/<id>',
         (RequestContext context, String id) =>
             buildApiV1Accounts$idHandler(id)(context),
+      )
+      ..mount(
+        '/api/v1/media',
+        (RequestContext context) => buildApiV1MediaHandler()(context),
       )
       ..mount(
         '/api/v1/notifications',

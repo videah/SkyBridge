@@ -11,10 +11,10 @@ MastodonMediaAttachment _$MastodonMediaAttachmentFromJson(
     MastodonMediaAttachment(
       id: json['id'] as String,
       type: $enumDecode(_$MediaTypeEnumMap, json['type']),
-      url: json['url'] as String,
       previewUrl: json['preview_url'] as String,
       description: json['description'] as String,
       blurhash: json['blurhash'] as String,
+      url: json['url'] as String?,
       remoteUrl: json['remote_url'] as String?,
     );
 

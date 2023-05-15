@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dotenv/dotenv.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
@@ -184,3 +186,18 @@ bool stringToBool(String? value) => value == 'true';
 
 /// Convert a bool to a string. Used for converting parameter values.
 String boolToString(bool? value) => value?.toString() ?? 'false';
+
+/// Get the file extension of an image from its bytes.
+String? imageBytesToExtension(List<int> bytes) {
+  final buffer = bytes is! Uint8List ? Uint8List.fromList(bytes) : bytes;
+  final magic = buffer.length >= 2 ? ((buffer[0] << 8) | buffer[1]) : null;
+
+  switch (magic) {
+    case 0xFFD8:
+      return 'jpeg';
+    case 0x8950:
+      return 'png';
+    default:
+      return null;
+  }
+}

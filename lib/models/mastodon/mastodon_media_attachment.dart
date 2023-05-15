@@ -10,10 +10,10 @@ class MastodonMediaAttachment {
   MastodonMediaAttachment({
     required this.id,
     required this.type,
-    required this.url,
     required this.previewUrl,
     required this.description,
     required this.blurhash,
+    this.url,
     this.remoteUrl,
   });
 
@@ -45,7 +45,7 @@ class MastodonMediaAttachment {
   final MediaType type;
 
   /// The location of the original full-size attachment.
-  final String url;
+  final String? url;
 
   /// The location of a scaled-down preview of the attachment.
   @JsonKey(name: 'preview_url')

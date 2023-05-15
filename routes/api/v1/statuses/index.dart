@@ -4,6 +4,7 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/models/database/media_record.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/forms/new_post_form.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
@@ -35,6 +36,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
   final form = NewPostForm.fromJson(body);
   var facets = <Map<String, dynamic>>[];
 
+  // If the post is a reply, we need to get the parent post and root post.
   bsky.ReplyRef? postReplyRef;
   final replyId = form.inReplyToId;
   if (replyId != null) {
@@ -66,12 +68,40 @@ Future<Response> onRequest<T>(RequestContext context) async {
     facets = await status.entities.toFacets();
   }
 
+  // Get any images we need to attach if necessary.
+  final mediaIds = form.mediaIds;
+  final images = <bsky.Image>[];
+  if (mediaIds != null) {
+    for (final idString in mediaIds) {
+      // Get the media record from the database.
+      final id = int.parse(idString);
+      final record = await db.mediaRecords.get(id);
+      if (record == null) continue;
+
+      // Construct an embed attachment and add it to the list of images.
+      final blob = record.toBlob();
+      final image = bsky.Image(
+        alt: record.description,
+        image: bsky.BlobContext.blob(data: blob),
+      );
+
+      images.add(image);
+    }
+  }
+
+  // Construct an embed if we have any images to attach.
+  final embed = images.isEmpty ? null : bsky.Embed.images(
+    data: bsky.EmbedImages(
+      images: images,
+    ),
+  );
+
   // Create a new post with attached entities.
-  // TODO(videah): Add media support.
   final newPost = await bluesky.feeds.createPost(
     text: form.status?.value ?? '',
     facets: facets.map(bsky.Facet.fromJson).toList(),
     reply: postReplyRef,
+    embed: embed,
   );
 
   // Get our newly created post.

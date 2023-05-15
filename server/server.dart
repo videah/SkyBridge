@@ -10,6 +10,7 @@ import '../routes/index.dart' as index;
 import '../routes/oauth/token.dart' as oauth_token;
 import '../routes/oauth/revoke.dart' as oauth_revoke;
 import '../routes/oauth/authorize.dart' as oauth_authorize;
+import '../routes/api/v2/media.dart' as api_v2_media;
 import '../routes/api/v2/instance.dart' as api_v2_instance;
 import '../routes/api/v1/instance.dart' as api_v1_instance;
 import '../routes/api/v1/apps.dart' as api_v1_apps;
@@ -23,6 +24,7 @@ import '../routes/api/v1/statuses/[id]/index.dart' as api_v1_statuses_$id_index;
 import '../routes/api/v1/statuses/[id]/favourite.dart' as api_v1_statuses_$id_favourite;
 import '../routes/api/v1/statuses/[id]/context.dart' as api_v1_statuses_$id_context;
 import '../routes/api/v1/notifications/index.dart' as api_v1_notifications_index;
+import '../routes/api/v1/media/[id].dart' as api_v1_media_$id;
 import '../routes/api/v1/accounts/verify_credentials.dart' as api_v1_accounts_verify_credentials;
 import '../routes/api/v1/accounts/search.dart' as api_v1_accounts_search;
 import '../routes/api/v1/accounts/relationships.dart' as api_v1_accounts_relationships;
@@ -54,6 +56,7 @@ Handler buildRootHandler() {
   final router = Router()
     ..mount('/api/v1/accounts/<id>', (context,id,) => buildApiV1Accounts$idHandler(id,)(context))
     ..mount('/api/v1/accounts', (context) => buildApiV1AccountsHandler()(context))
+    ..mount('/api/v1/media', (context) => buildApiV1MediaHandler()(context))
     ..mount('/api/v1/notifications', (context) => buildApiV1NotificationsHandler()(context))
     ..mount('/api/v1/statuses/<id>', (context,id,) => buildApiV1Statuses$idHandler(id,)(context))
     ..mount('/api/v1/statuses', (context) => buildApiV1StatusesHandler()(context))
@@ -77,6 +80,13 @@ Handler buildApiV1AccountsHandler() {
   final pipeline = const Pipeline();
   final router = Router()
     ..all('/verify_credentials', (context) => api_v1_accounts_verify_credentials.onRequest(context,))..all('/search', (context) => api_v1_accounts_search.onRequest(context,))..all('/relationships', (context) => api_v1_accounts_relationships.onRequest(context,))..all('/lookup', (context) => api_v1_accounts_lookup.onRequest(context,))..all('/familiar_followers', (context) => api_v1_accounts_familiar_followers.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiV1MediaHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/<id>', (context,id,) => api_v1_media_$id.onRequest(context,id,));
   return pipeline.addHandler(router);
 }
 
@@ -125,7 +135,7 @@ Handler buildApiV1Handler() {
 Handler buildApiV2Handler() {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/instance', (context) => api_v2_instance.onRequest(context,));
+    ..all('/media', (context) => api_v2_media.onRequest(context,))..all('/instance', (context) => api_v2_instance.onRequest(context,));
   return pipeline.addHandler(router);
 }
 
