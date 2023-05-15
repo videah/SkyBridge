@@ -78,6 +78,7 @@ Future<Response> _post(RequestContext context) async {
 
   // Check if what the user entered matches the password we have on file.
   if (form.bridgePassword != bridgePassword) {
+    print('User entered an invalid bridge password.');
     return Response.json(
       statusCode: HttpStatus.unauthorized,
       body: {

@@ -60,6 +60,7 @@ Future<Response> onRequest(RequestContext context) async {
 
           // Credentials don't match a bluesky account, time to bail.
           if (session == null) {
+            print('Invalid bluesky credentials, no session could be created.');
             return Response(statusCode: HttpStatus.unauthorized);
           }
 
@@ -87,6 +88,7 @@ Future<Response> onRequest(RequestContext context) async {
       }
     }
 
+    print('Unknown token type requested.');
     return Response(statusCode: HttpStatus.unauthorized);
   } else {
     return Response(statusCode: HttpStatus.methodNotAllowed);
