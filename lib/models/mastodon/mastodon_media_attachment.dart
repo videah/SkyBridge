@@ -19,13 +19,15 @@ class MastodonMediaAttachment {
 
   /// Converts a [bsky.EmbedViewImagesView] to a [MastodonMediaAttachment].
   factory MastodonMediaAttachment.fromEmbed(bsky.EmbedViewImagesView embed) {
+    // If embed.alt is empty, we return null instead.
+    final description = embed.alt.isEmpty ? null : embed.alt;
     return MastodonMediaAttachment(
       id: '0',
       type: MediaType.image,
       url: embed.fullsize,
       previewUrl: embed.thumbnail,
       remoteUrl: embed.fullsize,
-      description: embed.alt,
+      description: description,
       blurhash: '0',
     );
   }
@@ -57,7 +59,7 @@ class MastodonMediaAttachment {
 
   /// Alternate text that describes what is in the media attachment, to
   /// be used for the visually impaired or when media attachments do not load.
-  final String description;
+  final String? description;
 
   /// A hash computed by the BlurHash algorithm, for generating colorful
   /// preview thumbnails when media has not been downloaded yet.
