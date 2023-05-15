@@ -20,8 +20,15 @@ Future<Response> onRequest(RequestContext context) async {
   final file = File(path.join(Directory.current.path, 'public', 'guide.html'));
   final indexHtml = await file.readAsString();
 
+  final baseUrl = env.getOrElse(
+    'SKYBRIDGE_BASEURL',
+    () => throw Exception('SKYBRIDGE_BASEURL not set!'),
+  );
+
   return Response(
-    body: indexHtml,
+    body: indexHtml.format({
+      'baseurl': baseUrl,
+    }),
     headers: {
       HttpHeaders.contentTypeHeader: ContentType.html.value,
     },
