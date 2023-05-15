@@ -20,6 +20,10 @@ other apps at the moment. PRs and issues are welcome, we want to support as many
 
 **Please don't host this on the open internet yet, it's not ready!**
 
+If you find this project useful please consider donating, it really helps a lot!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/videah)
+
 ## Getting Started
 In order to run SkyBridge you will need the [Dart SDK](https://dart.dev/get-dart) installed on your system.
 
