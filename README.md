@@ -18,8 +18,6 @@ this to be your daily driver just yet!
 Currently only being tested with [Ivory](https://tapbots.com/ivory) on iOS and macOS, your mileage may vary with
 other apps at the moment. PRs and issues are welcome, we want to support as many apps as possible.
 
-**Please don't host this on the open internet yet, it's not ready!**
-
 If you find this project useful please consider donating, it really helps a lot!
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/videah)
