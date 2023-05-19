@@ -43,6 +43,7 @@ class MastodonNotification {
       final unknownRecord = notification.record ?? {};
       // What type of notification is this?
       switch (notification.reason.name) {
+        case 'repost':
         case 'like':
           final subject = unknownRecord['subject'] as Map<String, dynamic>;
           final uriString = subject['uri'] as String;
