@@ -118,7 +118,7 @@ class MastodonPost {
     // Construct URL/URI
     // will need to change this when federation is a thing probably?
     final postId = post.uri.toString().split('/').last;
-    const base = 'https://staging.bsky.app';
+    const base = 'https://bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
     final card = MastodonCard.fromEmbed(post.embed);
@@ -183,7 +183,7 @@ class MastodonPost {
     // Construct URL/URI
     // will need to change this when federation is a thing probably?
     final postId = post.uri.toString().split('/').last;
-    const base = 'https://staging.bsky.app';
+    const base = 'https://bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
     final card = MastodonCard.fromEmbed(post.embed);
