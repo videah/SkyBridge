@@ -22,9 +22,10 @@ Future<Response> onRequest<T>(RequestContext context) async {
   final bluesky = await blueskyFromContext(context);
   if (bluesky == null) return authError();
 
+  final limit = encodedParams.limit <= 100 ? encodedParams.limit : 100;
   // Fetch the notifications with the given parameters.
   final response = await bluesky.notifications.findNotifications(
-    limit: encodedParams.limit,
+    limit: limit,
   );
 
   // Convert the response into a list of MastodonNotification objects with
