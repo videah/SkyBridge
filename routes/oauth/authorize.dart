@@ -40,16 +40,24 @@ Future<Response> _get(RequestContext context) async {
   final file = File(path.join(Directory.current.path, 'public', 'auth.html'));
   final authHtml = await file.readAsString();
 
+  final needBridgePass = env.getOrElse(
+    'SKYBRIDGE_REQUIRE_AUTH_PASSWORD',
+    () => 'true',
+  );
+
+  final requireBridgePassword = !(needBridgePass.toLowerCase() == 'false');
+  final bridgeClass = requireBridgePassword ? '' : 'hidden';
+
   return Response(
     body: authHtml.format({
       'form_data': signedData,
+      'bridge_password_class': bridgeClass,
     }),
     headers: {
       HttpHeaders.contentTypeHeader: ContentType.html.value,
     },
   );
 }
-
 
 /// Get sign-in information entered into the form by the user and process
 /// it to redirect with an auth token code.
@@ -71,20 +79,30 @@ Future<Response> _post(RequestContext context) async {
 
   final auth = OAuthAuthorizeParams.fromJson(stuff);
 
-  final bridgePassword = env.getOrElse(
-    'SKYBRIDGE_AUTH_PASSWORD',
-    () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
+  final needBridgePass = env.getOrElse(
+    'SKYBRIDGE_REQUIRE_AUTH_PASSWORD',
+    () => 'true',
   );
 
-  // Check if what the user entered matches the password we have on file.
-  if (form.bridgePassword != bridgePassword) {
-    print('User entered an invalid bridge password.');
-    return Response.json(
-      statusCode: HttpStatus.unauthorized,
-      body: {
-        'error': 'Password does not match.',
-      },
+  // Check if we need a bridge password, and if so check the user entered
+  // the correct one.
+  final requireBridgePassword = !(needBridgePass.toLowerCase() == 'false');
+  if (requireBridgePassword) {
+    final bridgePassword = env.getOrElse(
+      'SKYBRIDGE_AUTH_PASSWORD',
+      () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
     );
+
+    // Check if what the user entered matches the password we have on file.
+    if (form.bridgePassword != bridgePassword) {
+      print('User entered an invalid bridge password.');
+      return Response.json(
+        statusCode: HttpStatus.unauthorized,
+        body: {
+          'error': 'Bridge password does not match.',
+        },
+      );
+    }
   }
 
   final code = OAuthTokenCode(

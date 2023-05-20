@@ -69,11 +69,21 @@ Future<void> init(InternetAddress ip, int port) async {
     () => throw Exception('SKYBRIDGE_BASEURL not set!'),
   );
 
-  // Make sure we have an auth password set, used on the login page.
-  env.getOrElse(
-    'SKYBRIDGE_AUTH_PASSWORD',
-    () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
+  // Check if we are enforcing a bridge password.
+  final needBridgePass = env.getOrElse(
+    'SKYBRIDGE_REQUIRE_AUTH_PASSWORD',
+    () => 'true',
   );
+
+  final requireBridgePassword = !(needBridgePass.toLowerCase() == 'false');
+  if (requireBridgePassword) {
+    // Make sure we have an auth password set, used on the login page.
+    print('Enforcing bridge password.');
+    env.getOrElse(
+      'SKYBRIDGE_AUTH_PASSWORD',
+      () => throw Exception('SKYBRIDGE_AUTH_PASSWORD not set!'),
+    );
+  }
 
   // Make sure we have a secret key set.
   final secret = env.getOrElse(
