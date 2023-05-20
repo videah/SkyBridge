@@ -32,7 +32,7 @@ Future<Response> onRequest(RequestContext context) async {
         accessToken: 'ZA-Yj3aBD8U8Cm7lKUp-lm9O9BmDgdhHzDeqsY8tlL0',
         tokenType: 'Bearer',
         scope: 'read write follow push',
-        createdAt: DateTime.now(),
+        createdAt: DateTime.now().toUtc(),
       );
 
       return Response.json(
@@ -78,7 +78,7 @@ Future<Response> onRequest(RequestContext context) async {
             accessToken: signedAccessToken,
             tokenType: 'Bearer',
             scope: code.scope,
-            createdAt: DateTime.now(),
+            createdAt: DateTime.now().toUtc(),
           );
 
           return Response.json(

@@ -104,7 +104,7 @@ class MastodonNotification {
       final mastodonNotification = MastodonNotification(
         id: record.id.toString(),
         type: type,
-        createdAt: notification.indexedAt,
+        createdAt: notification.indexedAt.toUtc(),
         account: await MastodonAccount.fromActor(notification.author),
         status: post != null ? await MastodonPost.fromBlueSkyPost(post) : null,
       );

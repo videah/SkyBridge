@@ -10,7 +10,7 @@ DotEnv env = DotEnv(includePlatformEnvironment: true);
 
 /// Returns a [DateTime] from a Unix epoch in seconds.
 DateTime dateTimeFromEpoch(int epoch) {
-  return DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+  return DateTime.fromMillisecondsSinceEpoch(epoch * 1000).toUtc();
 }
 
 /// Returns a Unix epoch in seconds from a [DateTime].
@@ -20,12 +20,12 @@ int dateTimeToEpoch(DateTime date) {
 
 /// Returns a [DateTime] from an ISO 8601 string.
 DateTime dateTimeFromISO8601(String date) {
-  return DateTime.parse(date);
+  return DateTime.parse(date).toUtc();
 }
 
 /// Returns an ISO 8601 string from a [DateTime].
 String? dateTimeToISO8601(DateTime? date) {
-  return date?.toIso8601String();
+  return date?.toUtc().toIso8601String();
 }
 
 /// Extends [String] to allow for rudimentary string formatting/templating.

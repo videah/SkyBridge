@@ -125,7 +125,7 @@ class MastodonPost {
 
     return MastodonPost(
       id: id.toString(),
-      createdAt: post.indexedAt,
+      createdAt: post.indexedAt.toUtc(),
       sensitive: false,
       spoilerText: '',
       visibility: PostVisibility.public,
@@ -190,7 +190,7 @@ class MastodonPost {
 
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),
-      createdAt: post.indexedAt,
+      createdAt: post.indexedAt.toUtc(),
       sensitive: false,
       spoilerText: '',
       visibility: PostVisibility.public,

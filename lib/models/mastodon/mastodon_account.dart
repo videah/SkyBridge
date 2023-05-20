@@ -55,7 +55,7 @@ class MastodonAccount {
       displayName: profile.displayName ?? profile.handle,
       locked: false,
       bot: false,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
       note: profile.description ?? '',
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
@@ -65,7 +65,7 @@ class MastodonAccount {
       followersCount: user.profileInfo.followersCount,
       followingCount: user.profileInfo.followsCount,
       statusesCount: user.profileInfo.postsCount,
-      lastStatusAt: DateTime.now(),
+      lastStatusAt: DateTime.now().toUtc(),
       emojis: [],
       fields: [],
     );
