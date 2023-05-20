@@ -11,9 +11,15 @@ Future<Response> onRequest(RequestContext context) async {
 
     // Determine if the request is a JSON request or a form request.
     final type = context.request.headers[HttpHeaders.contentTypeHeader] ?? '';
+    final params = context.request.uri.queryParameters;
+
     Map<String, dynamic> body;
     if (type.contains('application/json')) {
       body = await request.json() as Map<String, dynamic>;
+    } else if (params['client_name'] != null) {
+      // Some clients like Ice Cubes give the data as query parameters.
+      // This isn't mentioned in the Mastodon docs but we handle it here.
+      body = params;
     } else {
       body = await request.formData();
     }
