@@ -40,8 +40,7 @@ Future<void> init(InternetAddress ip, int port) async {
     dir.createSync();
   }
 
-  // Open the ID database, we just use /tmp/ for now which puts non-unix
-  // systems out of the picture. This will be fixed in the future.
+  // Open the Isar database with the schemas we need.
   db = await Isar.open(
     [
       PostRecordSchema,
