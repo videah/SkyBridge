@@ -16,9 +16,9 @@ RUN unzip 3.1.0+1.zip
 
 # Extract and build Isar.
 WORKDIR /app/isar-3.1.0-1
-RUN rustup target add aarch64-unknown-linux-gnu &&\
-    cargo build --target aarch64-unknown-linux-gnu --release &&\
-    mv "target/aarch64-unknown-linux-gnu/release/libisar.so" "libisar_linux_arm64.so"
+RUN rustup target add aarch64-unknown-linux-gnu
+RUN cargo build --target aarch64-unknown-linux-gnu --release
+RUN mv "target/aarch64-unknown-linux-gnu/release/libisar.so" "libisar_linux_arm64.so"
 
 # On linux/amd64 we can use the official binaries.
 # I did try to have it build on both platforms for completeness but there is actually
