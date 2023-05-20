@@ -43,10 +43,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
     () => MastodonPost.fromBlueSkyPost(post),
   );
 
+  // Process replies.
   final processedPost = await processParentPosts(bluesky, [mastodonPost]);
 
-  // Return the post that we just liked.
   return Response.json(
-    body: processedPost,
+    body: processedPost.first,
   );
 }
