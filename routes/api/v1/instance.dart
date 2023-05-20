@@ -63,7 +63,7 @@ Response onRequest(RequestContext context) {
         ),
       ),
       rules: [
-        Rule(id: '1', text: 'Be nice.'),
+        Rule(id: '1', text: 'Report all issues to the SkyBridge repo!'),
       ],
     ),
   );
