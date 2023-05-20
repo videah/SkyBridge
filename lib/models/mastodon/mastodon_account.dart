@@ -27,9 +27,9 @@ class MastodonAccount {
     required this.fields,
     this.header,
     this.headerStatic,
-    this.followersCount,
-    this.followingCount,
-    this.statusesCount,
+    this.followersCount = 0,
+    this.followingCount = 0,
+    this.statusesCount = 0,
   });
 
   /// Creates a [MastodonAccount] from an [ActorProfile].

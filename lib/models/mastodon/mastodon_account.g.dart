@@ -676,9 +676,9 @@ MastodonAccount _$MastodonAccountFromJson(Map<String, dynamic> json) =>
           .toList(),
       header: json['header'] as String?,
       headerStatic: json['header_static'] as String?,
-      followersCount: json['followers_count'] as int?,
-      followingCount: json['following_count'] as int?,
-      statusesCount: json['statuses_count'] as int?,
+      followersCount: json['followers_count'] as int? ?? 0,
+      followingCount: json['following_count'] as int? ?? 0,
+      statusesCount: json['statuses_count'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$MastodonAccountToJson(MastodonAccount instance) =>
