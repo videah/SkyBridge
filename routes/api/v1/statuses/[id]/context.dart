@@ -53,7 +53,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   // Process both asynchronously.
   await Future.wait([replyFuture, parentFuture]);
 
-  return Response.json(
+  return threadedJsonResponse(
     body: {
       'descendants': replies,
       'ancestors': parents,

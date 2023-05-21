@@ -4,6 +4,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_notification.dart';
 import 'package:sky_bridge/models/params/notification_params.dart';
+import 'package:sky_bridge/util.dart';
 
 /// Receive notifications for activity on your account or posts.
 /// GET /api/v1/notifications HTTP/1.1
@@ -35,7 +36,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
     bluesky,
   );
 
-  return Response.json(
+  return threadedJsonResponse(
     body: notifs,
   );
 }

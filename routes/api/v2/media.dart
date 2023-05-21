@@ -70,7 +70,7 @@ Future<Response> onRequest(RequestContext context) async {
     // The API is meant to return a URL at this point but we can't actually
     // get one until a blob is attached to a post. So we return nothing.
     // This might cause issues in the future but should be fine for now.
-    return Response.json(
+    return threadedJsonResponse(
       body: MastodonMediaAttachment(
         id: record.id.toString(),
         type: MediaType.image,

@@ -12,7 +12,7 @@ Future<Response> onRequest(RequestContext context) async {
     () => throw Exception('SKYBRIDGE_BASEURL not set!'),
   );
 
-  return Response.json(
+  return threadedJsonResponse(
     body: MastodonInstance(
       domain: url,
       title: 'SkyBridge',

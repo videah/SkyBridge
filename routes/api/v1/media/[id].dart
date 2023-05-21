@@ -5,6 +5,7 @@ import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/media_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
+import 'package:sky_bridge/util.dart';
 
 /// Get a media attachment, before it is attached to a post and posted, but
 /// after it is accepted for processing. Use this method to check that the
@@ -43,7 +44,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   );
 
   // Return the post that we just liked.
-  return Response.json(
+  return threadedJsonResponse(
     body: attachment,
   );
 }

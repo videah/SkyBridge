@@ -1,12 +1,37 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bluesky/bluesky.dart' as bsky;
+import 'package:dart_frog/dart_frog.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:template_expressions/template_expressions.dart';
+import 'package:yet_another_json_isolate/yet_another_json_isolate.dart';
 
 /// Environment variables loaded from a .env file.
 DotEnv env = DotEnv(includePlatformEnvironment: true);
+
+/// Isolate used for JSON encoding/decoding.
+YAJsonIsolate jsonIsolate = YAJsonIsolate()..initialize();
+
+/// Encode a JSON [Response] in a separate isolate to avoid blocking the main
+/// isolate.
+Future<Response> threadedJsonResponse({
+  int statusCode = 200,
+  Object? body = const <String, dynamic>{},
+  Map<String, Object> headers = const <String, Object>{},
+}) async {
+  final json = body != null ? await jsonIsolate.encode(body) : null;
+  return Response(
+    statusCode: statusCode,
+    body: json,
+    headers: {
+      ...headers,
+      if (!headers.containsKey(HttpHeaders.contentTypeHeader))
+        HttpHeaders.contentTypeHeader: ContentType.json.value,
+    },
+  );
+}
 
 /// Returns a [DateTime] from a Unix epoch in seconds.
 DateTime dateTimeFromEpoch(int epoch) {

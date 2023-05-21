@@ -3,6 +3,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
+import 'package:sky_bridge/util.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   // Get a bluesky connection/session from the a provided bearer token.
@@ -17,7 +18,7 @@ Future<Response> onRequest(RequestContext context) async {
     () => MastodonAccount.fromActorProfile(profile.data),
   );
 
-  return Response.json(
+  return threadedJsonResponse(
     body: account,
   );
 }

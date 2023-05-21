@@ -8,6 +8,7 @@ import 'package:sky_bridge/models/database/media_record.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/forms/new_post_form.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/util.dart';
 
 /// Publish a new post with the given parameters.
 /// POST /api/v1/statuses HTTP/1.1
@@ -113,7 +114,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
     () => MastodonPost.fromBlueSkyPost(postData),
   );
 
-  return Response.json(
+  return threadedJsonResponse(
     body: mastodonPost,
   );
 }

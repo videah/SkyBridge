@@ -7,13 +7,13 @@ import 'package:sky_bridge/util.dart';
 /// Obtain general information about the server.
 /// GET /api/v1/instance HTTP/1.1
 /// See: https://docs.joinmastodon.org/methods/instance/#v1
-Response onRequest(RequestContext context) {
+Future<Response> onRequest(RequestContext context) {
   final url = env.getOrElse(
     'SKYBRIDGE_BASEURL',
     () => throw Exception('SKYBRIDGE_BASEURL not set!'),
   );
 
-  return Response.json(
+  return threadedJsonResponse(
     body: MastodonInstanceV1(
       uri: url,
       title: 'SkyBridge',

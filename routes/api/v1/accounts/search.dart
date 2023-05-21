@@ -70,7 +70,7 @@ Future<Response> onRequest(RequestContext context) async {
       );
     });
 
-    return Response.json(
+    return threadedJsonResponse(
       body: accounts,
     );
   }

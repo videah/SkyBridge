@@ -3,6 +3,7 @@ import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/models/params/lookup_account_params.dart';
+import 'package:sky_bridge/util.dart';
 
 /// Quickly lookup a username to see if it is available.
 /// GET /api/v1/accounts/lookup HTTP/1.1
@@ -22,7 +23,7 @@ Future<Response> onRequest(RequestContext context) async {
     () => MastodonAccount.fromActorProfile(profile.data),
   );
 
-  return Response.json(
+  return threadedJsonResponse(
     body: account,
   );
 }

@@ -2,6 +2,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/util.dart';
 
 /// Posts that have been interacted with more than others.
 /// GET /api/v1/trends/statuses HTTP/1.1
@@ -24,7 +25,7 @@ Future<Response> onRequest(RequestContext context) async {
     return Future.wait(futures);
   });
 
-  return Response.json(
+  return threadedJsonResponse(
     body: posts,
   );
 }

@@ -8,6 +8,7 @@ import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:sky_bridge/models/params/statuses_params.dart';
+import 'package:sky_bridge/util.dart';
 
 Future<Response> onRequest(RequestContext context, String id) async {
   final params = context.request.uri.queryParameters;
@@ -48,7 +49,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
     posts.removeWhere((post) => post.account.username != session.handle);
   }
 
-  return Response.json(
+  return threadedJsonResponse(
     body: posts,
   );
 }

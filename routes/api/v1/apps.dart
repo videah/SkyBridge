@@ -4,6 +4,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_application.dart';
 import 'package:sky_bridge/models/mastodon/registered_mastodon_application.dart';
+import 'package:sky_bridge/util.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   if (context.request.method == HttpMethod.post) {
@@ -43,8 +44,8 @@ Future<Response> onRequest(RequestContext context) async {
       vapidKey: '', // Some clients want this field to exist
     );
 
-    return Response.json(
-      body: registered.toJson(),
+    return threadedJsonResponse(
+      body: registered,
     );
   } else if (context.request.method == HttpMethod.options) {
     return Response(

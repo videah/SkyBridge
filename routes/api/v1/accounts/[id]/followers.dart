@@ -45,7 +45,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
     );
   });
 
-  return Response.json(
+  return threadedJsonResponse(
     body: followers,
   );
 }

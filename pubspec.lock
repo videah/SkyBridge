@@ -897,5 +897,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0+3"
+  yet_another_json_isolate:
+    dependency: "direct main"
+    description:
+      name: yet_another_json_isolate
+      sha256: "94ba4947ac1ce44bd6a1634d9df712e07b9b5025ba12abd6750be77ba5c08f18"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
 sdks:
   dart: ">=2.19.6 <3.0.0"

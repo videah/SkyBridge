@@ -21,6 +21,7 @@ dependencies:
   path: ^1.8.3
   shelf_cors_headers: ^0.1.5
   template_expressions: ^3.0.0+5
+  yet_another_json_isolate: ^1.0.4
 
 dev_dependencies:
   build_runner: ^2.3.3

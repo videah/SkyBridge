@@ -7,6 +7,7 @@ import 'package:sky_bridge/database.dart';
 
 import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_relationship.dart';
+import 'package:sky_bridge/util.dart';
 
 /// Unfollow the given account.
 /// POST /api/v1/accounts/:id/unfollow HTTP/1.1
@@ -48,7 +49,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final rel = await MastodonRelationship.getActorRelationship(bluesky, record!);
 
   // Return the post that we just liked.
-  return Response.json(
+  return threadedJsonResponse(
     body: rel,
   );
 }

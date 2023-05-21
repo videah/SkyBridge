@@ -5,6 +5,7 @@ import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
+import 'package:sky_bridge/util.dart';
 
 Future<Response> onRequest<T>(RequestContext context, String id) async {
   // If the id is not a number we return 404
@@ -29,7 +30,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
     () => MastodonAccount.fromActorProfile(profile.data),
   );
 
-  return Response.json(
+  return threadedJsonResponse(
     body: account,
   );
 }

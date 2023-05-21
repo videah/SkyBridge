@@ -2,6 +2,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/util.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   // Get a bluesky connection/session from the a provided bearer token.
@@ -21,7 +22,7 @@ Future<Response> onRequest(RequestContext context) async {
   // Get the parent posts for each post.
   final processedPosts = await processParentPosts(bluesky, posts);
 
-  return Response.json(
+  return threadedJsonResponse(
     body: processedPosts,
   );
 }
