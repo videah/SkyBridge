@@ -71,9 +71,10 @@ RUN install_packages libgcc-s1
 COPY --from=build /runtime/ /
 COPY --from=build /app/build/bin/server /app/bin/
 COPY --from=build /app/build/public /public/
+COPY --from=build /app/entrypoint.sh /app/
 
 # Get our Isar library from the previous stage.
 COPY --from=isar-final /app/isar-3.1.0-1/*.so /app/bin/
 
 # Start the server.
-CMD ["/app/bin/server"]
+CMD ["/app/entrypoint.sh"]

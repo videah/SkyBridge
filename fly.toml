@@ -16,6 +16,7 @@ primary_region = "lhr"
 [env]
   SKYBRIDGE_BASEURL = "skybridge.fly.dev"
   SKYBRIDGE_SHOW_INDEX = true
+  FLY_SWAP = true
 
 [mounts]
   source="skybridge_data"
