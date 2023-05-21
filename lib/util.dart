@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:dotenv/dotenv.dart';
+import 'package:html/parser.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:template_expressions/template_expressions.dart';
 import 'package:yet_another_json_isolate/yet_another_json_isolate.dart';
@@ -234,4 +235,26 @@ String? imageBytesToExtension(List<int> bytes) {
     default:
       return null;
   }
+}
+
+/// Returns a string with all HTML tags removed.
+String sanitizeText(String text) {
+  final document = parseFragment(text);
+  final sanitizedText = document.text;
+  return sanitizedText ?? '';
+}
+
+/// Converts all links in a string to HTML links.
+String convertTextToLinks(String? text) {
+  if (text == null) return '';
+  // TODO(videah): This regex is not perfect, would like to cover more cases.
+  final linkRegex = RegExp(r'(?<!@)\b(https?://(?:\S+?\.)?\S+\.\S+)\b');
+
+  // Remove all HTML tags inserted by the user.
+  final sanitizedText = sanitizeText(text);
+
+  return sanitizedText.replaceAllMapped(linkRegex, (match) {
+    final url = match.group(0);
+    return '<a href="$url">$url</a>';
+  });
 }

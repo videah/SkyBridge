@@ -35,6 +35,13 @@ class MastodonAccount {
     this.role,
   });
 
+  /// Converts JSON into a [MastodonAccount] instance.
+  factory MastodonAccount.fromJson(Map<String, dynamic> json) =>
+      _$MastodonAccountFromJson(json);
+
+  /// Converts the [MastodonAccount] to JSON.
+  Map<String, dynamic> toJson() => _$MastodonAccountToJson(this);
+
   /// Creates a [MastodonAccount] from an [ActorProfile].
   static Future<MastodonAccount> fromActorProfile(
     ActorProfile profile,
@@ -59,7 +66,7 @@ class MastodonAccount {
       locked: false,
       bot: false,
       createdAt: DateTime.now().toUtc(),
-      note: profile.description ?? '',
+      note: convertTextToLinks(profile.description),
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
@@ -96,7 +103,7 @@ class MastodonAccount {
       locked: false,
       bot: false,
       createdAt: DateTime.now(),
-      note: user.profileInfo.description ?? '',
+      note: convertTextToLinks(user.profileInfo.description),
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
@@ -110,13 +117,6 @@ class MastodonAccount {
       fields: [],
     );
   }
-
-  /// Converts JSON into a [MastodonAccount] instance.
-  factory MastodonAccount.fromJson(Map<String, dynamic> json) =>
-      _$MastodonAccountFromJson(json);
-
-  /// Converts the [MastodonAccount] to JSON.
-  Map<String, dynamic> toJson() => _$MastodonAccountToJson(this);
 
   /// The 64-bit account id of the user.
   final String id;
@@ -221,7 +221,7 @@ class ProfileInfo {
       followersCount: profile.followersCount,
       followsCount: profile.followsCount,
       postsCount: profile.postsCount,
-      description: profile.description,
+      description: convertTextToLinks(profile.description ?? ''),
     );
   }
 
