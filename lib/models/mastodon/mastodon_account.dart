@@ -2,6 +2,7 @@ import 'package:bluesky/bluesky.dart';
 import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:sky_bridge/util.dart';
 
 part 'mastodon_account.g.dart';
@@ -30,6 +31,8 @@ class MastodonAccount {
     this.followersCount = 0,
     this.followingCount = 0,
     this.statusesCount = 0,
+    this.source,
+    this.role,
   });
 
   /// Creates a [MastodonAccount] from an [ActorProfile].
@@ -187,6 +190,13 @@ class MastodonAccount {
 
   /// Additional metadata attached to a profile as name-value pairs.
   final List<Map<String, dynamic>> fields;
+
+  /// An extra attribute that contains source values to be used with API
+  /// methods that verify credentials and update credentials.
+  AccountSource? source;
+
+  /// The role assigned to the currently authorized user.
+  AccountRole? role;
 }
 
 /// A utility class for passing around profile information.
@@ -229,4 +239,113 @@ class ProfileInfo {
 
   /// The user's profile description.
   final String? description;
+}
+
+/// Extra attributes that contains source values to be used with API methods
+/// that verify credentials and update credentials.
+@JsonSerializable()
+class AccountSource {
+  /// Creates a new [AccountSource] instance.
+  AccountSource({
+    required this.note,
+    required this.fields,
+    required this.privacy,
+    required this.sensitive,
+    required this.language,
+    required this.followRequestsCount,
+  });
+
+  /// Converts JSON into a [AccountSource] instance.
+  factory AccountSource.fromJson(Map<String, dynamic> json) =>
+      _$AccountSourceFromJson(json);
+
+  /// Converts the [AccountSource] to JSON.
+  Map<String, dynamic> toJson() => _$AccountSourceToJson(this);
+
+  /// Profile bio, in plain-text instead of HTML.
+  final String note;
+
+  /// Metadata attached to a profile as name-value pairs.
+  final List<AccountField> fields;
+
+  /// The default post visibility for new posts.
+  final PostVisibility privacy;
+
+  /// Whether or not new posts should be marked as sensitive by default.
+  final bool sensitive;
+
+  /// The default language for new posts.
+  final String language;
+
+  /// The number of pending follow requests.
+  @JsonKey(name: 'follow_requests_count')
+  final int followRequestsCount;
+}
+
+/// A name-value pair attached to a profile.
+@JsonSerializable()
+class AccountField {
+  /// Creates a new [AccountField] instance.
+  AccountField({
+    required this.name,
+    required this.value,
+    this.verifiedAt,
+  });
+
+  /// Converts JSON into a [AccountField] instance.
+  factory AccountField.fromJson(Map<String, dynamic> json) =>
+      _$AccountFieldFromJson(json);
+
+  /// Converts the [AccountField] to JSON.
+  Map<String, dynamic> toJson() => _$AccountFieldToJson(this);
+
+  /// The key of a given field’s key-value pair.
+  final String name;
+
+  /// The value of a given field’s key-value pair.
+  final String value;
+
+  /// Timestamp of when the server verified a URL value for a rel=“me” link.
+  @JsonKey(
+    name: 'verified_at',
+    fromJson: dateTimeFromISO8601,
+    toJson: dateTimeToISO8601,
+  )
+  final DateTime? verifiedAt;
+}
+
+/// Represents a custom user role that grants permissions.
+@JsonSerializable()
+class AccountRole {
+  /// Creates a new [AccountRole] instance.
+  AccountRole({
+    required this.id,
+    required this.name,
+    required this.permissions,
+    required this.highlighted,
+    this.color = '',
+  });
+
+  /// Converts JSON into a [AccountRole] instance.
+  factory AccountRole.fromJson(Map<String, dynamic> json) =>
+      _$AccountRoleFromJson(json);
+
+  /// Converts the [AccountRole] to JSON.
+  Map<String, dynamic> toJson() => _$AccountRoleToJson(this);
+
+  /// The ID of the role.
+  final int id;
+
+  /// The name of the role.
+  final String name;
+
+  /// The hex code assigned to this role. If no hex code is assigned,
+  /// the string will be empty.
+  final String color;
+
+  /// A bitmask that represents the sum of all permissions granted to the role.
+  final int permissions;
+
+  /// Whether the role is publicly visible as a badge on user profiles.
+  final bool highlighted;
 }
