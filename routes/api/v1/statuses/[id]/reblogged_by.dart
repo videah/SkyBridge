@@ -5,12 +5,12 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
-import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/util.dart';
 
-/// View posts above and below this post in the thread.
-/// GET /api/v1/statuses/:id/context HTTP/1.1
-/// See: https://docs.joinmastodon.org/methods/statuses/#context
+/// View who reblogged a given post.
+/// GET /api/v1/statuses/:id/reblogged_by HTTP/1.1
+/// See: https://docs.joinmastodon.org/methods/statuses/#reblogged_by
 Future<Response> onRequest<T>(RequestContext context, String id) async {
   // Only allow GET requests.
   if (context.request.method != HttpMethod.get) {
@@ -33,30 +33,31 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final postRecord = await db.postRecords.get(idNumber);
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
-  final posts = await bluesky.feeds.findPostThread(
+  final response = await bluesky.feeds.findRepostedBy(
     uri: bsky.AtUri.parse(postRecord!.uri),
   );
 
-  final parents = <MastodonPost>[];
-  final replies = <MastodonPost>[];
+  // Construct a list of handles from the response.
+  final handles = response.data.repostedBy.map((act) => act.handle).toList();
 
-  // Get all the post replies.
-  final replyFuture = db.writeTxn(
-    () async => replies.addAll(await traverseReplies(posts.data.thread, 0)),
+  // We need to chunk the results because the Bluesky server has a limit on the
+  // number of actors you can query at once.
+  final profiles = await chunkResults<bsky.ActorProfile, String>(
+    items: handles,
+    callback: (chunk) async {
+      final response = await bluesky.actors.findProfiles(actors: chunk);
+      return response.data.profiles;
+    },
   );
 
-  // Get all the post parents.
-  final parentFuture = db.writeTxn(
-    () async => parents.addAll(await traverseParents(posts.data.thread, 0)),
-  );
-
-  // Process both asynchronously.
-  await Future.wait([replyFuture, parentFuture]);
+  // Convert the profiles to MastodonAccount objects.
+  final rebloggers = await db.writeTxn(() {
+    return Future.wait(
+      profiles.map(MastodonAccount.fromActorProfile),
+    );
+  });
 
   return threadedJsonResponse(
-    body: {
-      'descendants': replies,
-      'ancestors': parents,
-    },
+    body: rebloggers,
   );
 }
