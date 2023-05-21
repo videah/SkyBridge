@@ -67,10 +67,19 @@ Future<List<T>> chunkResults<T, K>({
   int limit = 25,
 }) async {
   final results = <T>[];
+  final tasks = <Future<List<T>>>[];
+
   for (var i = 0; i < items.length; i += limit) {
     // Process the current chunk of items.
     final chunk = items.sublist(i, i + limit.clamp(0, items.length - i));
-    results.addAll(await callback(chunk));
+    final task = callback(chunk);
+    tasks.add(task);
+  }
+
+  // Perform all the tasks asynchronously.
+  final chunkResults = await Future.wait(tasks);
+  for (final chunkResult in chunkResults) {
+    results.addAll(chunkResult);
   }
 
   return results;
