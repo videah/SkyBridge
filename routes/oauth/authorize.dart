@@ -137,7 +137,7 @@ Future<Response> _post(RequestContext context) async {
     statusCode: HttpStatus.found,
     headers: {
       HttpHeaders.locationHeader:
-          stringifyModifiedURI(redirectUriWithCode, auth.redirectUri),
+          stringifyModifiedUri(redirectUriWithCode, auth.redirectUri),
     },
   );
 }
