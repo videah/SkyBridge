@@ -42,7 +42,7 @@ const PostRecordSchema = CollectionSchema(
     r'cid': IndexSchema(
       id: 2203098626925536187,
       name: r'cid',
-      unique: true,
+      unique: false,
       replace: false,
       properties: [
         IndexPropertySchema(
@@ -127,60 +127,6 @@ List<IsarLinkBase<dynamic>> _postRecordGetLinks(PostRecord object) {
 
 void _postRecordAttach(IsarCollection<dynamic> col, Id id, PostRecord object) {
   object.id = id;
-}
-
-extension PostRecordByIndex on IsarCollection<PostRecord> {
-  Future<PostRecord?> getByCid(String cid) {
-    return getByIndex(r'cid', [cid]);
-  }
-
-  PostRecord? getByCidSync(String cid) {
-    return getByIndexSync(r'cid', [cid]);
-  }
-
-  Future<bool> deleteByCid(String cid) {
-    return deleteByIndex(r'cid', [cid]);
-  }
-
-  bool deleteByCidSync(String cid) {
-    return deleteByIndexSync(r'cid', [cid]);
-  }
-
-  Future<List<PostRecord?>> getAllByCid(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return getAllByIndex(r'cid', values);
-  }
-
-  List<PostRecord?> getAllByCidSync(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'cid', values);
-  }
-
-  Future<int> deleteAllByCid(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'cid', values);
-  }
-
-  int deleteAllByCidSync(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'cid', values);
-  }
-
-  Future<Id> putByCid(PostRecord object) {
-    return putByIndex(r'cid', object);
-  }
-
-  Id putByCidSync(PostRecord object, {bool saveLinks = true}) {
-    return putByIndexSync(r'cid', object, saveLinks: saveLinks);
-  }
-
-  Future<List<Id>> putAllByCid(List<PostRecord> objects) {
-    return putAllByIndex(r'cid', objects);
-  }
-
-  List<Id> putAllByCidSync(List<PostRecord> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'cid', objects, saveLinks: saveLinks);
-  }
 }
 
 extension PostRecordQueryWhereSort

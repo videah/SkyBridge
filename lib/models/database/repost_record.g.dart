@@ -32,7 +32,7 @@ const RepostRecordSchema = CollectionSchema(
     r'hashId': IndexSchema(
       id: -7070364231115312276,
       name: r'hashId',
-      unique: true,
+      unique: false,
       replace: false,
       properties: [
         IndexPropertySchema(
@@ -117,61 +117,6 @@ void _repostRecordAttach(
   object.id = id;
   object.originalPost
       .attach(col, col.isar.collection<PostRecord>(), r'originalPost', id);
-}
-
-extension RepostRecordByIndex on IsarCollection<RepostRecord> {
-  Future<RepostRecord?> getByHashId(String hashId) {
-    return getByIndex(r'hashId', [hashId]);
-  }
-
-  RepostRecord? getByHashIdSync(String hashId) {
-    return getByIndexSync(r'hashId', [hashId]);
-  }
-
-  Future<bool> deleteByHashId(String hashId) {
-    return deleteByIndex(r'hashId', [hashId]);
-  }
-
-  bool deleteByHashIdSync(String hashId) {
-    return deleteByIndexSync(r'hashId', [hashId]);
-  }
-
-  Future<List<RepostRecord?>> getAllByHashId(List<String> hashIdValues) {
-    final values = hashIdValues.map((e) => [e]).toList();
-    return getAllByIndex(r'hashId', values);
-  }
-
-  List<RepostRecord?> getAllByHashIdSync(List<String> hashIdValues) {
-    final values = hashIdValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'hashId', values);
-  }
-
-  Future<int> deleteAllByHashId(List<String> hashIdValues) {
-    final values = hashIdValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'hashId', values);
-  }
-
-  int deleteAllByHashIdSync(List<String> hashIdValues) {
-    final values = hashIdValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'hashId', values);
-  }
-
-  Future<Id> putByHashId(RepostRecord object) {
-    return putByIndex(r'hashId', object);
-  }
-
-  Id putByHashIdSync(RepostRecord object, {bool saveLinks = true}) {
-    return putByIndexSync(r'hashId', object, saveLinks: saveLinks);
-  }
-
-  Future<List<Id>> putAllByHashId(List<RepostRecord> objects) {
-    return putAllByIndex(r'hashId', objects);
-  }
-
-  List<Id> putAllByHashIdSync(List<RepostRecord> objects,
-      {bool saveLinks = true}) {
-    return putAllByIndexSync(r'hashId', objects, saveLinks: saveLinks);
-  }
 }
 
 extension RepostRecordQueryWhereSort

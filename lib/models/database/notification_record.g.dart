@@ -38,7 +38,7 @@ const NotificationRecordSchema = CollectionSchema(
     r'cid': IndexSchema(
       id: 2203098626925536187,
       name: r'cid',
-      unique: true,
+      unique: false,
       replace: false,
       properties: [
         IndexPropertySchema(
@@ -120,61 +120,6 @@ List<IsarLinkBase<dynamic>> _notificationRecordGetLinks(
 void _notificationRecordAttach(
     IsarCollection<dynamic> col, Id id, NotificationRecord object) {
   object.id = id;
-}
-
-extension NotificationRecordByIndex on IsarCollection<NotificationRecord> {
-  Future<NotificationRecord?> getByCid(String cid) {
-    return getByIndex(r'cid', [cid]);
-  }
-
-  NotificationRecord? getByCidSync(String cid) {
-    return getByIndexSync(r'cid', [cid]);
-  }
-
-  Future<bool> deleteByCid(String cid) {
-    return deleteByIndex(r'cid', [cid]);
-  }
-
-  bool deleteByCidSync(String cid) {
-    return deleteByIndexSync(r'cid', [cid]);
-  }
-
-  Future<List<NotificationRecord?>> getAllByCid(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return getAllByIndex(r'cid', values);
-  }
-
-  List<NotificationRecord?> getAllByCidSync(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'cid', values);
-  }
-
-  Future<int> deleteAllByCid(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'cid', values);
-  }
-
-  int deleteAllByCidSync(List<String> cidValues) {
-    final values = cidValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'cid', values);
-  }
-
-  Future<Id> putByCid(NotificationRecord object) {
-    return putByIndex(r'cid', object);
-  }
-
-  Id putByCidSync(NotificationRecord object, {bool saveLinks = true}) {
-    return putByIndexSync(r'cid', object, saveLinks: saveLinks);
-  }
-
-  Future<List<Id>> putAllByCid(List<NotificationRecord> objects) {
-    return putAllByIndex(r'cid', objects);
-  }
-
-  List<Id> putAllByCidSync(List<NotificationRecord> objects,
-      {bool saveLinks = true}) {
-    return putAllByIndexSync(r'cid', objects, saveLinks: saveLinks);
-  }
 }
 
 extension NotificationRecordQueryWhereSort

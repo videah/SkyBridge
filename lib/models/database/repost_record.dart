@@ -21,7 +21,7 @@ class RepostRecord {
 
   /// SHA256 hash of the original post's CID and the reposter's DID.
   /// This is used to identify reposts at a later time.
-  @Index(unique: true)
+  @Index()
   final String hashId;
 
   /// The original post being reposted in the form of a [PostRecord].

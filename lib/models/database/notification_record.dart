@@ -17,7 +17,7 @@ class NotificationRecord {
   late Id id;
 
   /// The fingerprint hash content ID used to identify Bluesky objects.
-  @Index(unique: true)
+  @Index()
   final String cid;
 
   /// ATP URI pointing to the post.
