@@ -139,6 +139,15 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
         (RequestContext context) => buildApiV1MediaHandler()(context),
       )
       ..mount(
+        '/api/v1/lists',
+        (RequestContext context) => buildApiV1ListsHandler()(context),
+      )
+      ..mount(
+        '/api/v1/lists/<id>',
+        (RequestContext context, String id) =>
+            buildApiV1Lists$idHandler(id)(context),
+      )
+      ..mount(
         '/api/v1/notifications',
         (RequestContext context) => buildApiV1NotificationsHandler()(context),
       )
@@ -154,6 +163,10 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
       ..mount(
         '/api/v1/timelines',
         (RequestContext context) => buildApiV1TimelinesHandler()(context),
+      )
+      ..mount(
+        '/api/v1/timelines/list',
+        (RequestContext context) => buildApiV1TimelinesListHandler()(context),
       )
       ..mount(
         '/api/v1/trends',

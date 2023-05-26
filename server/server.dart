@@ -16,6 +16,7 @@ import '../routes/api/v1/instance.dart' as api_v1_instance;
 import '../routes/api/v1/apps.dart' as api_v1_apps;
 import '../routes/api/v1/trends/statuses.dart' as api_v1_trends_statuses;
 import '../routes/api/v1/timelines/home.dart' as api_v1_timelines_home;
+import '../routes/api/v1/timelines/list/[id].dart' as api_v1_timelines_list_$id;
 import '../routes/api/v1/statuses/index.dart' as api_v1_statuses_index;
 import '../routes/api/v1/statuses/[id]/unreblog.dart' as api_v1_statuses_$id_unreblog;
 import '../routes/api/v1/statuses/[id]/unfavourite.dart' as api_v1_statuses_$id_unfavourite;
@@ -27,6 +28,8 @@ import '../routes/api/v1/statuses/[id]/favourite.dart' as api_v1_statuses_$id_fa
 import '../routes/api/v1/statuses/[id]/context.dart' as api_v1_statuses_$id_context;
 import '../routes/api/v1/notifications/index.dart' as api_v1_notifications_index;
 import '../routes/api/v1/media/[id].dart' as api_v1_media_$id;
+import '../routes/api/v1/lists/index.dart' as api_v1_lists_index;
+import '../routes/api/v1/lists/[id]/accounts.dart' as api_v1_lists_$id_accounts;
 import '../routes/api/v1/accounts/verify_credentials.dart' as api_v1_accounts_verify_credentials;
 import '../routes/api/v1/accounts/search.dart' as api_v1_accounts_search;
 import '../routes/api/v1/accounts/relationships.dart' as api_v1_accounts_relationships;
@@ -60,10 +63,13 @@ Handler buildRootHandler() {
   final router = Router()
     ..mount('/api/v1/accounts/<id>', (context,id,) => buildApiV1Accounts$idHandler(id,)(context))
     ..mount('/api/v1/accounts', (context) => buildApiV1AccountsHandler()(context))
+    ..mount('/api/v1/lists/<id>', (context,id,) => buildApiV1Lists$idHandler(id,)(context))
+    ..mount('/api/v1/lists', (context) => buildApiV1ListsHandler()(context))
     ..mount('/api/v1/media', (context) => buildApiV1MediaHandler()(context))
     ..mount('/api/v1/notifications', (context) => buildApiV1NotificationsHandler()(context))
     ..mount('/api/v1/statuses/<id>', (context,id,) => buildApiV1Statuses$idHandler(id,)(context))
     ..mount('/api/v1/statuses', (context) => buildApiV1StatusesHandler()(context))
+    ..mount('/api/v1/timelines/list', (context) => buildApiV1TimelinesListHandler()(context))
     ..mount('/api/v1/timelines', (context) => buildApiV1TimelinesHandler()(context))
     ..mount('/api/v1/trends', (context) => buildApiV1TrendsHandler()(context))
     ..mount('/api/v1', (context) => buildApiV1Handler()(context))
@@ -84,6 +90,20 @@ Handler buildApiV1AccountsHandler() {
   final pipeline = const Pipeline();
   final router = Router()
     ..all('/verify_credentials', (context) => api_v1_accounts_verify_credentials.onRequest(context,))..all('/search', (context) => api_v1_accounts_search.onRequest(context,))..all('/relationships', (context) => api_v1_accounts_relationships.onRequest(context,))..all('/lookup', (context) => api_v1_accounts_lookup.onRequest(context,))..all('/familiar_followers', (context) => api_v1_accounts_familiar_followers.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiV1Lists$idHandler(String id,) {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/accounts', (context) => api_v1_lists_$id_accounts.onRequest(context,id,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiV1ListsHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/', (context) => api_v1_lists_index.onRequest(context,));
   return pipeline.addHandler(router);
 }
 
@@ -112,6 +132,13 @@ Handler buildApiV1StatusesHandler() {
   final pipeline = const Pipeline();
   final router = Router()
     ..all('/', (context) => api_v1_statuses_index.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiV1TimelinesListHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/<id>', (context,id,) => api_v1_timelines_list_$id.onRequest(context,id,));
   return pipeline.addHandler(router);
 }
 
