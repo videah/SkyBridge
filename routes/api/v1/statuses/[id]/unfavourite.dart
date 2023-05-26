@@ -55,8 +55,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   if (post.viewer.like != null) {
     // Unlike the post now that we have everything in order.
-    final uri = bsky.AtUri.parse(post.viewer.like!);
-    await bluesky.repositories.deleteRecord(uri: uri);
+    await bluesky.repositories.deleteRecord(uri: post.viewer.like!);
     mastodonPost
       ..favourited = false
       ..favouritesCount -= 1;

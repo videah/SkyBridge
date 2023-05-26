@@ -66,7 +66,13 @@ class MastodonPost {
   /// Converts a [bsky.FeedView] to a [MastodonPost].
   static Future<MastodonPost> fromFeedView(bsky.FeedView view) async {
     final post = view.post;
-    final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
+
+    // Determine if this is a repost.
+    final repost = view.reason?.map(
+      repost: (repost) => repost,
+      unknown: (_) => null,
+    );
+    final isRepost = repost != null;
 
     // Process facets such as mentions and links.
     final processed = await processFacets(
@@ -110,7 +116,8 @@ class MastodonPost {
       // Since this is a repost, we need to assign a unique ID and get
       // the account that reposted it.
       id = (await repostToDatabase(view)).id;
-      account = await MastodonAccount.fromActor(view.reason!.by);
+
+      account = await MastodonAccount.fromActor(repost.data.by);
     } else {
       account = await MastodonAccount.fromActor(post.author);
     }

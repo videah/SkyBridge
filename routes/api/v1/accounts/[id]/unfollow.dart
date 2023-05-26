@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
@@ -40,9 +39,8 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   // Check if we are actually following the account and get the follow uri
   // so we can delete it. Otherwise we just skip this step and return
   // the relationship.
-  final followUriString = profile.data.viewer.following;
-  if (followUriString != null) {
-    final followUri = bsky.AtUri.parse(followUriString);
+  final followUri = profile.data.viewer.following;
+  if (followUri != null) {
     await bluesky.repositories.deleteRecord(uri: followUri);
   }
 

@@ -57,7 +57,11 @@ Future<PostRecord> postToDatabase(bsky.Post post) async {
 /// it one. Either the existing or the newly created [RepostRecord] is returned.
 Future<RepostRecord> repostToDatabase(bsky.FeedView view) async {
   // Double check that this is a repost, bail if not.
-  final isRepost = view.reason?.type.endsWith('reasonRepost') ?? false;
+  final repost = view.reason?.map(
+    repost: (repost) => repost,
+    unknown: (_) => null,
+  );
+  final isRepost = repost != null;
   if (!isRepost) {
     throw ArgumentError('FeedView is not a repost');
   }
@@ -69,8 +73,8 @@ Future<RepostRecord> repostToDatabase(bsky.FeedView view) async {
     throw ArgumentError('Original post not found in database!');
   }
 
-  final reposterDid = view.reason!.by.did;
-  final createdAt = view.reason!.indexedAt;
+  final reposterDid = repost.data.by.did;
+  final createdAt = repost.data.indexedAt;
   return original.repost(createdAt, reposterDid);
 }
 

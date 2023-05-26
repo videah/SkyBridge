@@ -7,9 +7,9 @@ environment:
   sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
-  atproto: ^0.2.12
-  bluesky: ^0.4.6
-  bluesky_text: ^0.1.0
+  atproto: ^0.3.0
+  bluesky: ^0.5.2
+  bluesky_text: ^0.2.1
   collection: ^1.17.1
   copy_with_extension: ^5.0.2
   crypto: ^3.0.2
