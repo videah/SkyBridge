@@ -72,12 +72,6 @@ Future<Response> onRequest(RequestContext context) async {
       uri: feeds.first.uri,
     );
 
-    // If the feed is not online, bail out.
-    if (!generator.data.isOnline) {
-      print('Feed generator is not online for actor: ${profile.handle}');
-      return Response(statusCode: HttpStatus.notFound);
-    }
-
     return threadedJsonResponse(
       body: MastodonList(
         id: userRecord.id.toString(),
