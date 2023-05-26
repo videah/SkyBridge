@@ -258,3 +258,11 @@ String convertTextToLinks(String? text) {
     return '<a href="$url">$url</a>';
   });
 }
+
+
+/// [Uri.toString] lowercases the host, which breaks the URI
+/// for some clients. This is just a simple function that preserves the casing.
+String stringifyModifiedUri(Uri uri, String originalUri) {
+  final host = originalUri.substring(0, uri.scheme.length + uri.host.length + 3);
+  return host + uri.toString().substring(host.length);
+}

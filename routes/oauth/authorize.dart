@@ -59,13 +59,6 @@ Future<Response> _get(RequestContext context) async {
   );
 }
 
-// Uri.toString() lowercases the host, which breaks the URI
-// This is just a simple function that preserves the casing
-String stringifyModifiedUri(Uri uri, String originalUri) {
-  final host = originalUri.substring(0, uri.scheme.length + uri.host.length + 3);
-  return host + uri.toString().substring(host.length);
-}
-
 /// Get sign-in information entered into the form by the user and process
 /// it to redirect with an auth token code.
 /// POST /oauth/authorize HTTP/1.1
@@ -133,8 +126,10 @@ Future<Response> _post(RequestContext context) async {
   return Response(
     statusCode: HttpStatus.found,
     headers: {
-      HttpHeaders.locationHeader:
-          stringifyModifiedUri(redirectUriWithCode, auth.redirectUri),
+      HttpHeaders.locationHeader: stringifyModifiedUri(
+        redirectUriWithCode,
+        auth.redirectUri,
+      ),
     },
   );
 }
