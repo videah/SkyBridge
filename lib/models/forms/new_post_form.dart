@@ -31,9 +31,18 @@ class NewPostForm {
   final List<String>? mediaIds;
 
   /// The ID of the post being replied to.
-  @JsonKey(name: 'in_reply_to_id')
+  @JsonKey(name: 'in_reply_to_id', fromJson: handleReplyId)
   final int? inReplyToId;
 }
 
 BlueskyText stringToBluesky(String? value) => BlueskyText(value ?? '');
 String blueskyToString(BlueskyText? text) => text?.value ?? '';
+
+/// Ivory still has code lingering from Tweetbot that handles post IDs as [int]
+/// when they really should be [String]. This function is used to guarantee
+/// an int result for the [NewPostForm.inReplyToId] field.
+int? handleReplyId(dynamic value) {
+  if (value is int) return value;
+  if (value is String) return int.tryParse(value);
+  return null;
+}

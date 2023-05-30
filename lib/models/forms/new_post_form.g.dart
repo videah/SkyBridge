@@ -11,7 +11,7 @@ NewPostForm _$NewPostFormFromJson(Map<String, dynamic> json) => NewPostForm(
       mediaIds: (json['media_ids'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      inReplyToId: json['in_reply_to_id'] as int?,
+      inReplyToId: handleReplyId(json['in_reply_to_id']),
     );
 
 Map<String, dynamic> _$NewPostFormToJson(NewPostForm instance) =>
