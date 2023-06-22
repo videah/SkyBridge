@@ -24,4 +24,4 @@ coverage/
 .DS_Store
 
 # Database
-database/
+/database/
