@@ -7,6 +7,7 @@ part 'timeline_params.g.dart';
 class TimelineParams {
   /// Constructs an instance of [TimelineParams].
   TimelineParams({
+    this.cursor,
     this.maxId,
     this.sinceId,
     this.minId,
@@ -35,4 +36,12 @@ class TimelineParams {
   /// The maximum number of results to return.
   @JsonKey(fromJson: int.parse)
   final int limit;
+
+  /// Arbitrary cursor string. This is not present in the Mastodon API, and
+  /// is only used by SkyBridge to make pagination easier.
+  final String? cursor;
+
+  /// Whether or not this request contains *only* a [minId], signifying that
+  /// it's a request to fetch new posts after a certain point.
+  bool get isNewPostsRequest => minId != null && maxId == null && sinceId == null && cursor == null;
 }

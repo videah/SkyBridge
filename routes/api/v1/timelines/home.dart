@@ -15,9 +15,9 @@ Future<Response> onRequest(RequestContext context) async {
   if (bluesky == null) return authError();
 
   final List<MastodonPost> allPosts;
-  var nextCursor;
+  String? nextCursor;
 
-  if (encodedParams.minId != null && encodedParams.maxId == null && encodedParams.sinceId == null) {
+  if (encodedParams.isNewPostsRequest) {
     // Get all the posts following minId so that Ivory can backfill its timeline
     allPosts = [];
 
@@ -61,7 +61,10 @@ Future<Response> onRequest(RequestContext context) async {
     nextCursor = prevCursor;
   } else {
     // Make a single, standard request
-    final feed = await bluesky.feeds.findTimeline(limit: encodedParams.limit);
+    final feed = await bluesky.feeds.findTimeline(
+      limit: encodedParams.limit,
+      cursor: encodedParams.cursor
+    );
     allPosts = await db.writeTxn(() async {
       final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
       return Future.wait(futures);
@@ -89,7 +92,7 @@ Future<Response> onRequest(RequestContext context) async {
     }
 
     final prevParams = {'min_id': highestID.toString()};
-    final nextParams = {'max_id': (lowestID - BigInt.one).toString()};
+    final nextParams = {'cursor': nextCursor};
     final prevURI = uri.replace(queryParameters: prevParams);
     final nextURI = uri.replace(queryParameters: nextParams);
     headers['Link'] = '<$prevURI>; rel="prev", <$nextURI>; rel="next"';
