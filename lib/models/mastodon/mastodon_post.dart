@@ -128,7 +128,14 @@ class MastodonPost {
     const base = 'https://bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
-    final card = MastodonCard.fromEmbed(post.embed);
+    final card = await MastodonCard.fromEmbed(post.embed);
+
+    // If there is a card but no link to it in the content, add it.
+    if (card != null) {
+      if (!text.contains(card.url)) {
+        content += ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
+      }
+    }
 
     return MastodonPost(
       id: id.toString(),
@@ -193,7 +200,17 @@ class MastodonPost {
     const base = 'https://bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
-    final card = MastodonCard.fromEmbed(post.embed);
+    var content = processed.htmlText;
+    final text = post.record.text;
+
+    final card = await MastodonCard.fromEmbed(post.embed);
+
+    // If there is a card but no link to it in the content, add it.
+    if (card != null) {
+      if (!text.contains(card.url)) {
+        content += ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
+      }
+    }
 
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),
@@ -211,11 +228,11 @@ class MastodonPost {
       reblogged: post.viewer.repost != null,
       muted: false,
       bookmarked: false,
-      content: '<p>${processed.htmlText}</p>',
-      text: post.record.text,
+      content: '<p>$content</p>',
+      text: text,
       application: {
-        'name': 'BlueSky',
-        'website': '',
+        'name': 'Bluesky',
+        'website': 'https://bsky.app',
       },
       account: account,
       mediaAttachments: mediaAttachments,

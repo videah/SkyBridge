@@ -10,6 +10,7 @@ import '../routes/index.dart' as index;
 import '../routes/oauth/token.dart' as oauth_token;
 import '../routes/oauth/revoke.dart' as oauth_revoke;
 import '../routes/oauth/authorize.dart' as oauth_authorize;
+import '../routes/api/v2/search.dart' as api_v2_search;
 import '../routes/api/v2/media.dart' as api_v2_media;
 import '../routes/api/v2/instance.dart' as api_v2_instance;
 import '../routes/api/v1/instance.dart' as api_v1_instance;
@@ -166,7 +167,7 @@ Handler buildApiV1Handler() {
 Handler buildApiV2Handler() {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/media', (context) => api_v2_media.onRequest(context,))..all('/instance', (context) => api_v2_instance.onRequest(context,));
+    ..all('/search', (context) => api_v2_search.onRequest(context,))..all('/media', (context) => api_v2_media.onRequest(context,))..all('/instance', (context) => api_v2_instance.onRequest(context,));
   return pipeline.addHandler(router);
 }
 

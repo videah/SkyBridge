@@ -1,5 +1,7 @@
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/util.dart';
 
 part 'mastodon_card.g.dart';
 
@@ -33,9 +35,9 @@ class MastodonCard {
   Map<String, dynamic> toJson() => _$MastodonCardToJson(this);
 
   /// Constructs a potential [MastodonCard] from a [bsky.EmbedView].
-  static MastodonCard? fromEmbed(bsky.EmbedView? embed) {
+  static Future<MastodonCard?> fromEmbed(bsky.EmbedView? embed) async {
     return embed?.map(
-      record: (_) => null,
+      record: (record) => embedViewRecordToCard(record.data),
       external: (embed) {
         final external = embed.data.external;
         return MastodonCard(
@@ -55,8 +57,60 @@ class MastodonCard {
         );
       },
       images: (_) => null,
-      recordWithMedia: (_) => null,
+      recordWithMedia: (record) => embedViewRecordToCard(record.data.record),
       unknown: (_) => null,
+    );
+  }
+
+  /// Constructs a potential [MastodonCard] from a [bsky.EmbedViewRecord].
+  /// This is used to construct 'fake' quote posts by abusing embed cards.
+  static Future<MastodonCard?> embedViewRecordToCard(
+    bsky.EmbedViewRecord record,
+  ) async {
+    // Get the fallback URL for the avatar.
+    final base = env.getOrElse(
+      'SKYBRIDGE_BASEURL',
+      () => throw Exception('SKYBRIDGE_BASEURL not set!'),
+    );
+
+    // Get the database record for the post.
+    final dbRecord = await embedPostToDatabase(record.record);
+    if (dbRecord == null) return null;
+
+    var title = 'Quote Post';
+    var handle = '@unknown.bsky.social';
+    var clickableUrl = base;
+
+    // Get any data we need from the post's record.
+    record.record.map(
+      record: (post) {
+        handle = post.data.author.handle;
+        title = 'Quote Post - (@$handle) \n ${post.data.value.text}';
+        clickableUrl = 'https://$base/@$handle/${dbRecord.id}';
+      },
+      notFound: (_) {},
+      blocked: (_) {},
+      generatorView: (_) {},
+      unknown: (_) {},
+    );
+
+    // Ivory expects an image to render a card so we pass a 1x1 transparent
+    // image to make it happy.
+    final quoteImage = 'https://$base/1px.png';
+    return MastodonCard(
+      url: clickableUrl,
+      title: title,
+      description: '',
+      type: CardType.link,
+      authorName: '',
+      authorUrl: '',
+      providerName: '',
+      providerUrl: '',
+      html: '',
+      width: 1000,
+      height: 1,
+      embedUrl: quoteImage,
+      image: quoteImage,
     );
   }
 
@@ -100,7 +154,7 @@ class MastodonCard {
   /// The preview thumbnail for the resource.
   final String? image;
 
-  /// Used for photo embes, instead of custom [html].
+  /// Used for photo embeds, instead of custom [html].
   @JsonKey(name: 'embed_url')
   final String embedUrl;
 

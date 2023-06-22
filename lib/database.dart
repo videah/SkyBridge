@@ -55,6 +55,32 @@ Future<PostRecord> postToDatabase(bsky.Post post) async {
   }
 }
 
+/// Checks if a embed post has been assigned a [PostRecord], and if not, gives
+/// it one. Either the existing or the newly created [PostRecord] is returned.
+Future<PostRecord?> embedPostToDatabase(bsky.EmbedViewRecordView view) async {
+  return await view.map(
+    record: (record) async {
+      final post = record.data;
+      final existing =
+          await db.postRecords.filter().cidEqualTo(post.cid).findFirst();
+      if (existing == null) {
+        final record = PostRecord(
+          cid: post.cid,
+          uri: post.uri.toString(),
+          author: post.author.did,
+        );
+        final saved = await record.insert(post.indexedAt);
+        return saved;
+      } else {
+        return existing;
+      }
+    },
+    notFound: (_) => null,
+    blocked: (_) => null,
+    generatorView: (_) => null,
+    unknown: (_) => null,
+  );
+}
 
 /// Checks if a repost has been assigned a [RepostRecord], and if not, gives
 /// it one. Either the existing or the newly created [RepostRecord] is returned.
@@ -157,7 +183,7 @@ Future<NotificationRecord> notificationToDatabase(
 /// it one. Either the existing or the newly created [FeedRecord] is returned.
 Future<FeedRecord> feedToDatabase(bsky.FeedGeneratorView feed) async {
   final existing =
-  await db.feedRecords.filter().cidEqualTo(feed.cid).findFirst();
+      await db.feedRecords.filter().cidEqualTo(feed.cid).findFirst();
   if (existing == null) {
     final record = FeedRecord(
       cid: feed.cid,
