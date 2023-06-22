@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/user_record.dart';
+import 'package:sky_bridge/models/database/feed_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:sky_bridge/util.dart';
 
@@ -29,14 +30,11 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   // Get the media attachment from the database.
   final idNumber = int.parse(id);
-  final record = await db.userRecords.get(idNumber);
-  if (record == null) Response(statusCode: HttpStatus.notFound);
-
-  final response = await bluesky.feeds.findActorFeeds(actor: record!.did);
-  final feedInfo = response.data.feeds.first;
+  final record = await db.feedRecords.get(idNumber);
+  if (record == null) return Response(statusCode: HttpStatus.notFound);
 
   final feed = await bluesky.feeds.findCustomFeed(
-    generatorUri: feedInfo.uri,
+    generatorUri: bsky.AtUri.parse(record.uri),
   );
 
   // Take all the posts and convert them to Mastodon ones

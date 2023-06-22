@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:crypto/crypto.dart';
 import 'package:isar/isar.dart';
+import 'package:sky_bridge/models/database/feed_record.dart';
 import 'package:sky_bridge/models/database/notification_record.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/database/repost_record.dart';
@@ -35,7 +37,7 @@ int generateSnowflake({
   return id;
 }
 
-/// Checks if a repost has been a [PostRecord], and if not, gives
+/// Checks if a post has been assigned a [PostRecord], and if not, gives
 /// it one. Either the existing or the newly created [PostRecord] is returned.
 Future<PostRecord> postToDatabase(bsky.Post post) async {
   final existing =
@@ -53,7 +55,8 @@ Future<PostRecord> postToDatabase(bsky.Post post) async {
   }
 }
 
-/// Checks if a repost has been a [RepostRecord], and if not, gives
+
+/// Checks if a repost has been assigned a [RepostRecord], and if not, gives
 /// it one. Either the existing or the newly created [RepostRecord] is returned.
 Future<RepostRecord> repostToDatabase(bsky.FeedView view) async {
   // Double check that this is a repost, bail if not.
@@ -150,8 +153,41 @@ Future<NotificationRecord> notificationToDatabase(
   }
 }
 
+/// Checks if a feed has been assigned a [FeedRecord], and if not, gives
+/// it one. Either the existing or the newly created [FeedRecord] is returned.
+Future<FeedRecord> feedToDatabase(bsky.FeedGeneratorView feed) async {
+  final existing =
+  await db.feedRecords.filter().cidEqualTo(feed.cid).findFirst();
+  if (existing == null) {
+    final record = FeedRecord(
+      cid: feed.cid,
+      uri: feed.uri.toString(),
+      author: feed.did,
+    );
+    final saved = await record.insert(feed.indexedAt);
+    return saved;
+  } else {
+    return existing;
+  }
+}
+
 /// Constructs a SHA256 hash of the reposter's DID and the original post's CID
 /// to create a reproducible ID used to query for a [RepostRecord].
 String constructRepostHash(String reposterDid, String cid) {
   return sha256.convert(utf8.encode(reposterDid + cid)).toString();
+}
+
+/// Hash the DID and use the first 64 bits as the ID.
+///
+/// I *think* this is ok to do, we don't have a way of knowing when
+/// an account was created so we can't use the creation date to construct
+/// a snowflake. We might have to change this in the future.
+///
+/// The chances of collision are unbelievably low, but it's still
+/// technically possible. Might want to add a check for this in the future.
+int hashBlueskyToId(String bskyId) {
+  final hashBytes = sha256.convert(utf8.encode(bskyId)).bytes;
+  final hashUint8List = Uint8List.fromList(hashBytes);
+  final hashData = ByteData.view(hashUint8List.buffer);
+  return hashData.getUint64(0) & 0x7fffffffffffffff; // 63-bit positive mask
 }

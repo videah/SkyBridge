@@ -9,75 +9,51 @@ import 'package:sky_bridge/util.dart';
 
 /// Create a new list.
 /// This is used to create custom feed entries in Bluesky's case.
-/// POST /api/v1/lists HTTP/1.1
-/// See: https://docs.joinmastodon.org/methods/lists/#create
+/// GET /api/v1/lists HTTP/1.1
+/// See: https://docs.joinmastodon.org/methods/lists/#get
 Future<Response> onRequest(RequestContext context) async {
-  if (context.request.method == HttpMethod.post) {
-    // Determine if the request is a JSON request or a form request.
-    final request = context.request;
-    final type = context.request.headers[HttpHeaders.contentTypeHeader] ?? '';
-    Map<String, dynamic> body;
-    if (type.contains('application/json')) {
-      body = await request.json() as Map<String, dynamic>;
-    } else {
-      body = await request.formData();
-    }
-
+  if (context.request.method == HttpMethod.get) {
     // Get a bluesky connection/session from the a provided bearer token.
     // If the token is invalid, bail out and return an error.
     final bluesky = await blueskyFromContext(context);
     if (bluesky == null) return authError();
 
-    final newList = MastodonList.fromJson(body);
+    var lists = <MastodonList>[];
 
-    // Check if the title starts with an @ symbol.
-    if (!newList.title.startsWith('@')) {
-      // We're currently overloading Mastodon lists to support custom bluesky
-      // feeds, but if bluesky ends up supporting lists natively we'll need to
-      // account or both use cases.
-      //
-      // My plan for now is if the list name starts with an @ it's intended
-      // to be a feed, otherwise it's a regular list.
-      //
-      // Since regular lists don't exist yet, we just bail out for now.
-      return Response(statusCode: HttpStatus.badRequest);
+    // Get saved feeds from the user's preferences.
+    final response = await bluesky.actors.findPreferences();
+    for (final preference in response.data.preferences) {
+      await preference.map(
+        adultContent: (_) {},
+        contentLabel: (_) {},
+        savedFeeds: (feedUris) async {
+          // Get the feed generator views for each saved feed, giving us info
+          // like the name of the feed and the accompanying IDs.
+          final result = await chunkResults<bsky.FeedGeneratorView, bsky.AtUri>(
+            items: feedUris.data.savedUris,
+            callback: (chunk) async {
+              final response = await bluesky.feeds.findGenerators(
+                uris: feedUris.data.savedUris,
+              );
+              return response.data.feeds;
+            },
+          );
+
+          // Convert the feed generator views to [MastodonList]'s, storing
+          // any info in the database we might need to access later.
+          lists = await db.writeTxn(() async {
+            final listFutures = result.map(
+              MastodonList.fromFeedGenerator,
+            );
+            return Future.wait(listFutures);
+          });
+        },
+        unknown: (_) {},
+      );
     }
-
-    // Get the profile info for the handle.
-    final handle = newList.title.substring(1);
-    late bsky.ActorProfile profile;
-    try {
-      profile = (await bluesky.actors.findProfile(actor: handle)).data;
-    } catch (e) {
-      return Response(statusCode: HttpStatus.notFound);
-    }
-
-    // Convert the profile to a user record.
-    final userRecord = await db.writeTxn(
-      () async => actorProfileToDatabase(profile),
-    );
-
-    // Check if that actor has any feed generators.
-    final response = await bluesky.feeds.findActorFeeds(actor: userRecord.did);
-    final feeds = response.data.feeds;
-
-    // If there are no feeds, bail out.
-    if (feeds.isEmpty) {
-      print('No feeds found for actor: ${profile.handle}');
-      return Response(statusCode: HttpStatus.notFound);
-    }
-
-    // Get information on the feeds like display name and if it's online.
-    final generator = await bluesky.feeds.findGenerator(
-      uri: feeds.first.uri,
-    );
 
     return threadedJsonResponse(
-      body: MastodonList(
-        id: userRecord.id.toString(),
-        title: generator.data.view.displayName,
-        repliesPolicy: RepliesPolicy.list,
-      ),
+      body: lists,
     );
   } else {
     return Response(statusCode: HttpStatus.methodNotAllowed);

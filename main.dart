@@ -7,6 +7,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:isar/isar.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/models/database/feed_record.dart';
 import 'package:sky_bridge/models/database/media_record.dart';
 import 'package:sky_bridge/models/database/notification_record.dart';
 import 'package:sky_bridge/models/database/post_record.dart';
@@ -48,6 +49,7 @@ Future<void> init(InternetAddress ip, int port) async {
       RepostRecordSchema,
       NotificationRecordSchema,
       MediaRecordSchema,
+      FeedRecordSchema,
     ],
     directory: 'database',
   );

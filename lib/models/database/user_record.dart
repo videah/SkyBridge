@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:crypto/crypto.dart';
 import 'package:isar/isar.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
@@ -43,10 +39,7 @@ class UserRecord {
     //
     // The chances of collision are unbelievably low, but it's still
     // technically possible. Might want to add a check for this in the future.
-    final hashBytes = sha256.convert(utf8.encode(did)).bytes;
-    final hashUint8List = Uint8List.fromList(hashBytes);
-    final hashData = ByteData.view(hashUint8List.buffer);
-    id = hashData.getUint64(0) & 0x7fffffffffffffff; // 63-bit positive mask
+    id = hashBlueskyToId(did);
     print('Successfully inserted UserRecord with ID $id');
 
     // Check if the ID already exists. Very unlikely, but possible.

@@ -1,4 +1,6 @@
+import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sky_bridge/database.dart';
 
 part 'mastodon_list.g.dart';
 
@@ -18,6 +20,17 @@ class MastodonList {
 
   /// Converts a [MastodonList] instance into JSON.
   Map<String, dynamic> toJson() => _$MastodonListToJson(this);
+
+  /// Converts a [bsky.FeedGenerator] to a [MastodonList].
+  static Future<MastodonList> fromFeedGenerator(
+    bsky.FeedGeneratorView gen,
+  ) async {
+    return MastodonList(
+      id: (await feedToDatabase(gen)).id.toString(),
+      title: gen.displayName,
+      repliesPolicy: RepliesPolicy.list,
+    );
+  }
 
   /// The internal ID of the list in the database.
   final String? id;

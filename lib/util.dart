@@ -81,9 +81,10 @@ void isValidAppPassword(String password) {
   }
 }
 
-/// Takes a list of items and a function that processes the items in chunks,
-/// returning a list of results for each chunk. returns a Future that resolves
-/// to a list of all results combined.
+/// Takes a list of [K] and a function that processes the items in chunks,
+/// returning a list of [T] for each chunk.
+///
+/// Returns a Future that resolves to a list of all results combined.
 ///
 /// This is useful for getting around Bluesky API limits, where a lot of
 /// endpoints will restrict the number of items you can query at once to 25.
