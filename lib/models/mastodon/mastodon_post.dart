@@ -150,8 +150,8 @@ class MastodonPost {
       text: text,
       reblog: isRepost ? await MastodonPost.fromBlueSkyPost(view.post) : null,
       application: {
-        'name': 'BlueSky',
-        'website': '',
+        'name': 'Bluesky',
+        'website': 'https://bsky.app',
       },
       account: account,
       mediaAttachments: mediaAttachments,
