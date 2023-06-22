@@ -7,14 +7,14 @@ environment:
   sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
-  atproto: ^0.3.0
-  bluesky: ^0.5.3
+  atproto: ^0.4.0
+  bluesky: ^0.6.0
   bluesky_text: ^0.2.1
   collection: ^1.17.1
   copy_with_extension: ^5.0.2
   crypto: ^3.0.2
   dart_frog: ^0.3.0
-  dcli_core: ^2.2.0
+  dcli_core: ^3.0.3
   dotenv: ^4.1.0
   html: ^0.15.3
   isar: ^3.1.0+1
@@ -32,4 +32,4 @@ dev_dependencies:
   json_serializable: ^6.6.1
   mocktail: ^0.3.0
   test: ^1.19.2
-  very_good_analysis: ^4.0.0
+  very_good_analysis: ^5.0.0+1

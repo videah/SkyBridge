@@ -83,7 +83,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
       final blob = record.toBlob();
       final image = bsky.Image(
         alt: record.description,
-        image: bsky.BlobContext.blob(data: blob),
+        image: blob,
       );
 
       images.add(image);
