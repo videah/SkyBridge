@@ -50,11 +50,13 @@ Future<ProcessedFacets> processFacets(
   List<bsky.Facet> facets,
   String text,
 ) async {
+  const escape = HtmlEscape(HtmlEscapeMode.element);
+
   // If there are no facets, we can just return the text as-is.
   if (facets.isEmpty) {
     return ProcessedFacets(
       mentions: [],
-      htmlText: text,
+      htmlText: escape.convert(text),
     );
   }
 
@@ -85,10 +87,12 @@ Future<ProcessedFacets> processFacets(
       // Add the text before the facet.
       if (facet.index.byteStart > lastPos) {
         output.add(
-          utf8.decode(
-            facetBytes.sublist(
-              lastPos,
-              facet.index.byteStart,
+          escape.convert(
+            utf8.decode(
+              facetBytes.sublist(
+                lastPos,
+                facet.index.byteStart,
+              ),
             ),
           ),
         );
@@ -124,7 +128,7 @@ Future<ProcessedFacets> processFacets(
   }
 
   // Add the text after the last facet.
-  output.add(utf8.decode(facetBytes.sublist(lastPos)));
+  output.add(escape.convert(utf8.decode(facetBytes.sublist(lastPos))));
 
   // Map mention facets to MastodonMention objects.
   final mentionUsers = await Future.wait(

@@ -133,7 +133,8 @@ class MastodonPost {
     // If there is a card but no link to it in the content, add it.
     if (card != null) {
       if (!text.contains(card.url)) {
-        content += ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
+        content +=
+            ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
       }
     }
 
@@ -208,7 +209,8 @@ class MastodonPost {
     // If there is a card but no link to it in the content, add it.
     if (card != null) {
       if (!text.contains(card.url)) {
-        content += ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
+        content +=
+            ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
       }
     }
 
