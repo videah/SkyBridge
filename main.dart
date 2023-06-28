@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:isar/isar.dart';
+import 'package:shelf_rate_limiter/shelf_rate_limiter.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/feed_record.dart';
@@ -125,7 +126,17 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
   // It's likely you will get analysis errors at first if .dart_frog/server.dart
   // hasn't been generated yet.
   Handler buildRootHandler() {
-    final pipeline = const Pipeline().addMiddleware(middleware);
+    final memoryStorage = MemStorage();
+    final rateLimiter = ShelfRateLimiter(
+      storage: memoryStorage,
+      duration: const Duration(minutes: 5),
+      maxRequests: 1,
+    );
+
+    final pipeline = const Pipeline().addMiddleware(middleware).addMiddleware(
+          fromShelfMiddleware(rateLimiter.rateLimiter()),
+        );
+
     final router = Router()
       ..mount(
         '/api/v1/accounts',

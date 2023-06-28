@@ -737,6 +737,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  shelf_rate_limiter:
+    dependency: "direct main"
+    description:
+      name: shelf_rate_limiter
+      sha256: "8627f9a5c2b3c1c352d1e52dd4a61c2bbbb7db4b6fdad4540cdbc36a29f17e72"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   shelf_static:
     dependency: transitive
     description:
