@@ -130,7 +130,7 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
     final rateLimiter = ShelfRateLimiter(
       storage: memoryStorage,
       duration: const Duration(minutes: 5),
-      maxRequests: 1,
+      maxRequests: 300,
     );
 
     final pipeline = const Pipeline().addMiddleware(middleware).addMiddleware(
