@@ -2,6 +2,7 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
+import 'package:sky_bridge/models/preferences.dart';
 
 /// Check a request context for a valid bearer token to determine if the
 /// request is authenticated.
@@ -31,6 +32,14 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
     sessions[token.did] = newSession;
     return sessions[token.did];
   }
+}
+
+/// Helper function that takes a [RequestContext] and returns user preferences.
+SkybridgePreferences preferencesFromContext(RequestContext context) {
+  final header = context.request.headers['Authorization'];
+  final token = validateBearerToken(header);
+  if (token == null) return const SkybridgePreferences();
+  return token.preferences;
 }
 
 /// Helper function that takes a [RequestContext] and returns an API accessor.

@@ -12,6 +12,7 @@ class SignInForm {
     required this.bridgePassword,
     required this.identifier,
     required this.appPassword,
+    this.showRepliesInHome = false,
   });
 
   /// Converts JSON into an [SignInForm] instance.
@@ -35,4 +36,8 @@ class SignInForm {
   /// The app password entered by the user, used to authenticate with Bluesky.
   @JsonKey(name: 'app_password')
   final String appPassword;
+
+  /// Should the user's home timeline show replies?
+  @JsonKey(name: 'show_replies')
+  final bool showRepliesInHome;
 }

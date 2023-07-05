@@ -115,7 +115,6 @@ Future<Response> _post(RequestContext context) async {
   );
 
   final signedCode = packObject(code.toJson());
-
   final redirectUri = Uri.parse(auth.redirectUri);
   final redirectUriWithCode = redirectUri.replace(
     queryParameters: {

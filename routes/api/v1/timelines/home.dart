@@ -113,5 +113,11 @@ Future<Response> onRequest(RequestContext context) async {
     headers['Link'] = '<$prevURI>; rel="prev", <$nextURI>; rel="next"';
   }
 
+  // If the user prefers not to see replies, we need to filter them out.
+  final preferences = preferencesFromContext(context);
+  if (!preferences.showRepliesInHome) {
+    processedPosts.removeWhere((post) => post.inReplyToId != null);
+  }
+
   return threadedJsonResponse(body: processedPosts, headers: headers);
 }

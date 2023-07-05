@@ -17,6 +17,7 @@ class OAuthTokenCode {
     required this.identifier,
     required this.appPassword,
     this.purpose = 'token',
+    this.showRepliesInHome = false,
   });
 
   /// Converts JSON into an [OAuthTokenCode] instance.
@@ -55,4 +56,7 @@ class OAuthTokenCode {
   /// The app password entered by the user, used to authenticate with Bluesky.
   @JsonKey(name: 'app_password')
   final String appPassword;
+
+  @JsonKey(name: 'show_replies')
+  final bool showRepliesInHome;
 }

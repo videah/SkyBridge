@@ -6,6 +6,7 @@ import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
 import 'package:sky_bridge/models/oauth/oauth_token.dart';
 import 'package:sky_bridge/models/oauth/oauth_token_request.dart';
+import 'package:sky_bridge/models/preferences.dart';
 
 
 /// Obtain an access token, to be used during API calls that are not public.
@@ -68,6 +69,9 @@ Future<Response> onRequest(RequestContext context) async {
             identifier: code.identifier,
             did: session.did,
             appPassword: code.appPassword,
+            preferences: SkybridgePreferences(
+              showRepliesInHome: code.showRepliesInHome,
+            ),
           );
 
           // Sign the access token with the bridge key and pack it into a

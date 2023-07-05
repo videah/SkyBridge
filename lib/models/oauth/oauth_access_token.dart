@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sky_bridge/models/preferences.dart';
 
 part 'oauth_access_token.g.dart';
 
@@ -10,6 +11,7 @@ class OAuthAccessToken {
     required this.identifier,
     required this.did,
     required this.appPassword,
+    this.preferences = const SkybridgePreferences(),
   });
 
   /// Converts JSON into a [OAuthAccessToken] instance.
@@ -28,4 +30,7 @@ class OAuthAccessToken {
   /// The app password entered by the user, used to authenticate with Bluesky.
   @JsonKey(name: 'app_password')
   final String appPassword;
+
+  /// Per-user preferences set by the user when signing in.
+  final SkybridgePreferences preferences;
 }
