@@ -35,11 +35,11 @@ class SearchParams {
   final SearchType? type;
 
   /// Attempt WebFinger lookup on the query.
-  @JsonKey(toJson: boolToInt, fromJson: intToBool)
+  @JsonKey(fromJson: handleBoolParameter)
   final bool resolve;
 
   /// Whether to only include accounts that the user is following.
-  @JsonKey(toJson: boolToInt, fromJson: intToBool)
+  @JsonKey(fromJson: handleBoolParameter)
   final bool following;
 
   /// If provided, will only return posts by this account.
@@ -47,7 +47,7 @@ class SearchParams {
   final String? accountId;
 
   /// Whether to filter out unreviewed tags.
-  @JsonKey(name: 'exclude_unreviewed', toJson: boolToInt, fromJson: intToBool)
+  @JsonKey(name: 'exclude_unreviewed', fromJson: handleBoolParameter)
   final bool excludeUnreviewed;
 
   /// Return results older than this ID.

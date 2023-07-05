@@ -229,6 +229,11 @@ bool stringToBool(String? value) => value == 'true';
 /// Convert a bool to a string. Used for converting parameter values.
 String boolToString(bool? value) => value?.toString() ?? 'false';
 
+/// Convert a string to a bool. Used for converting parameter values.
+bool handleBoolParameter(String? value) {
+  return value == '1' || value == 'true';
+}
+
 /// Get the file extension of an image from its bytes.
 String? imageBytesToExtension(List<int> bytes) {
   final buffer = bytes is! Uint8List ? Uint8List.fromList(bytes) : bytes;
