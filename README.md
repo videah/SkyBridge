@@ -15,7 +15,7 @@ that apps will be happy connecting to it.
 Functionality is very basic at the moment, and there's bound to be a few bugs. Don't expect
 this to be your daily driver just yet!
 
-Currently only being tested with [Ivory](https://tapbots.com/ivory) on iOS and macOS, your mileage may vary with
+Currently only being tested with [Ivory](https://tapbots.com/ivory) and [Ice Cubes](https://github.com/dimillian/icecubesapp) on iOS and macOS, your mileage may vary with
 other apps at the moment. PRs and issues are welcome, we want to support as many apps as possible.
 
 If you find this project useful please consider donating, it really helps a lot!
