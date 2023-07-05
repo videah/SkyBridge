@@ -383,7 +383,7 @@ class MastodonPost {
   /// Timestamp of when the post was last edited.
   @JsonKey(
     name: 'edited_at',
-    fromJson: dateTimeFromISO8601,
+    fromJson: dateTimeFromNullableISO8601,
     toJson: dateTimeToISO8601,
   )
   final DateTime? editedAt;

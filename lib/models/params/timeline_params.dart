@@ -43,5 +43,6 @@ class TimelineParams {
 
   /// Whether or not this request contains *only* a [minId], signifying that
   /// it's a request to fetch new posts after a certain point.
-  bool get isNewPostsRequest => minId != null && maxId == null && sinceId == null && cursor == null;
+  bool get isNewPostsRequest =>
+      minId != null && maxId == null && sinceId == null && cursor == null;
 }

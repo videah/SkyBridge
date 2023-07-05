@@ -49,6 +49,12 @@ DateTime dateTimeFromISO8601(String date) {
   return DateTime.parse(date).toUtc();
 }
 
+/// Returns a [DateTime] from an ISO 8601 string if [date] is not null.
+DateTime? dateTimeFromNullableISO8601(String? date) {
+  if (date == null) return null;
+  return DateTime.parse(date).toUtc();
+}
+
 /// Returns an ISO 8601 string from a [DateTime].
 String? dateTimeToISO8601(DateTime? date) {
   return date?.toUtc().toIso8601String();

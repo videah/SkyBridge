@@ -465,7 +465,7 @@ MastodonPost _$MastodonPostFromJson(Map<String, dynamic> json) => MastodonPost(
           : MastodonCard.fromJson(json['card'] as Map<String, dynamic>),
       poll: json['poll'] as Map<String, dynamic>?,
       text: json['text'] as String?,
-      editedAt: dateTimeFromISO8601(json['edited_at'] as String),
+      editedAt: dateTimeFromNullableISO8601(json['edited_at'] as String?),
       pinned: json['pinned'] as bool?,
     );
 

@@ -17,7 +17,15 @@ Future<Response> onRequest(RequestContext context) async {
   final List<MastodonPost> allPosts;
   String? nextCursor;
 
-  if (encodedParams.isNewPostsRequest) {
+  // Check if we should allow posts to be backfilled.
+  final backfillAllowed = env
+      .getOrElse(
+        'SKYBRIDGE_ALLOW_BACKFILL',
+        () => 'false',
+      )
+      .toLowerCase();
+
+  if (encodedParams.isNewPostsRequest && backfillAllowed == 'true') {
     // Get all the posts following minId so that Ivory can backfill its timeline
     allPosts = [];
 
@@ -27,7 +35,11 @@ Future<Response> onRequest(RequestContext context) async {
     var done = false;
 
     while (!done) {
-      final feed = await bluesky.feeds.findTimeline(limit: 50, cursor: prevCursor);
+      final feed = await bluesky.feeds.findTimeline(
+        limit: 100,
+        cursor: prevCursor,
+      );
+
       final posts = await db.writeTxn(() async {
         final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
         return Future.wait(futures);
@@ -49,7 +61,9 @@ Future<Response> onRequest(RequestContext context) async {
         allPosts.add(post);
       }
 
-      print('Loaded ${posts.length} posts (total ${allPosts.length}, new maxID=$maxID)');
+      print(
+        'Loaded ${posts.length} posts (total ${allPosts.length}, new maxID=$maxID)',
+      );
       prevCursor = feed.data.cursor;
 
       if (posts.length < 25) {
@@ -63,8 +77,9 @@ Future<Response> onRequest(RequestContext context) async {
     // Make a single, standard request
     final feed = await bluesky.feeds.findTimeline(
       limit: encodedParams.limit,
-      cursor: encodedParams.cursor
+      cursor: encodedParams.cursor,
     );
+
     allPosts = await db.writeTxn(() async {
       final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
       return Future.wait(futures);
@@ -98,8 +113,5 @@ Future<Response> onRequest(RequestContext context) async {
     headers['Link'] = '<$prevURI>; rel="prev", <$nextURI>; rel="next"';
   }
 
-  return threadedJsonResponse(
-    body: processedPosts,
-    headers: headers
-  );
+  return threadedJsonResponse(body: processedPosts, headers: headers);
 }
