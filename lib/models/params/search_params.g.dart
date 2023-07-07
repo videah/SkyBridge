@@ -11,14 +11,14 @@ SearchParams _$SearchParamsFromJson(Map<String, dynamic> json) => SearchParams(
       type: $enumDecodeNullable(_$SearchTypeEnumMap, json['type']),
       resolve: json['resolve'] == null
           ? false
-          : intToBool(json['resolve'] as String?),
+          : handleBoolParameter(json['resolve'] as String?),
       following: json['following'] == null
           ? false
-          : intToBool(json['following'] as String?),
+          : handleBoolParameter(json['following'] as String?),
       accountId: json['account_id'] as String?,
       excludeUnreviewed: json['exclude_unreviewed'] == null
           ? false
-          : intToBool(json['exclude_unreviewed'] as String?),
+          : handleBoolParameter(json['exclude_unreviewed'] as String?),
       maxId: json['max_id'] as String?,
       minId: json['min_id'] as String?,
       limit: json['limit'] == null ? 20 : stringToInt(json['limit'] as String?),
@@ -29,10 +29,10 @@ Map<String, dynamic> _$SearchParamsToJson(SearchParams instance) =>
     <String, dynamic>{
       'q': instance.query,
       'type': _$SearchTypeEnumMap[instance.type],
-      'resolve': boolToInt(instance.resolve),
-      'following': boolToInt(instance.following),
+      'resolve': instance.resolve,
+      'following': instance.following,
       'account_id': instance.accountId,
-      'exclude_unreviewed': boolToInt(instance.excludeUnreviewed),
+      'exclude_unreviewed': instance.excludeUnreviewed,
       'max_id': instance.maxId,
       'min_id': instance.minId,
       'limit': instance.limit,

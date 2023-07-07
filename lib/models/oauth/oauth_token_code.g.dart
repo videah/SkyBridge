@@ -15,6 +15,7 @@ OAuthTokenCode _$OAuthTokenCodeFromJson(Map<String, dynamic> json) =>
       identifier: json['identifier'] as String,
       appPassword: json['app_password'] as String,
       purpose: json['purpose'] as String? ?? 'token',
+      showRepliesInHome: json['show_replies'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$OAuthTokenCodeToJson(OAuthTokenCode instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$OAuthTokenCodeToJson(OAuthTokenCode instance) =>
       'scope': instance.scope,
       'identifier': instance.identifier,
       'app_password': instance.appPassword,
+      'show_replies': instance.showRepliesInHome,
     };
