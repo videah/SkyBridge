@@ -91,7 +91,7 @@ Future<Response> onRequest(RequestContext context) async {
   final processedPosts = await processParentPosts(bluesky, allPosts);
 
   final headers = <String, Object>{};
-  if (processedPosts.isNotEmpty) {
+  if (processedPosts.isNotEmpty && backfillAllowed == 'true') {
     final uri = context.request.uri;
 
     var lowestID = BigInt.parse('99999999999999999999');
