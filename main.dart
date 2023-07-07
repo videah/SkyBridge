@@ -197,6 +197,12 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
         '/oauth',
         (RequestContext context) => buildOauthHandler()(context),
       )
+      ..mount(
+        '/<userId>',
+        (RequestContext context, String userId) => build$userIdHandler(userId)(
+          context,
+        ),
+      )
       ..mount('/', (RequestContext context) => buildHandler()(context));
     return pipeline.addHandler(router.call);
   }

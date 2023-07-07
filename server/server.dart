@@ -42,6 +42,7 @@ import '../routes/api/v1/accounts/[id]/index.dart' as api_v1_accounts_$id_index;
 import '../routes/api/v1/accounts/[id]/following.dart' as api_v1_accounts_$id_following;
 import '../routes/api/v1/accounts/[id]/followers.dart' as api_v1_accounts_$id_followers;
 import '../routes/api/v1/accounts/[id]/follow.dart' as api_v1_accounts_$id_follow;
+import '../routes/[userId]/[postId].dart' as $user_id_$post_id;
 
 import '../routes/_middleware.dart' as middleware;
 
@@ -77,6 +78,13 @@ Handler buildRootHandler() {
     ..mount('/api/v2', (context) => buildApiV2Handler()(context))
     ..mount('/oauth', (context) => buildOauthHandler()(context))
     ..mount('/', (context) => buildHandler()(context));
+  return pipeline.addHandler(router);
+}
+
+Handler build$userIdHandler(String userId,) {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/<postId>', (context,postId,) => $user_id_$post_id.onRequest(context,userId,postId,));
   return pipeline.addHandler(router);
 }
 
