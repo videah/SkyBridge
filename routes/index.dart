@@ -12,7 +12,6 @@ Future<Response> onRequest(RequestContext context) async {
 
   if (shouldShowIndex.toLowerCase() == 'false') {
     return Response.json(
-      statusCode: HttpStatus.notFound,
       body: {},
     );
   }
