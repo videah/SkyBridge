@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/models/oauth/oauth_authorize_params.dart';
+import 'package:sky_bridge/util.dart';
 
 part 'sign_in_form.g.dart';
 
@@ -38,6 +39,6 @@ class SignInForm {
   final String appPassword;
 
   /// Should the user's home timeline show replies?
-  @JsonKey(name: 'show_replies')
+  @JsonKey(name: 'show_replies', fromJson: handleBoolParameter)
   final bool showRepliesInHome;
 }

@@ -11,7 +11,9 @@ SignInForm _$SignInFormFromJson(Map<String, dynamic> json) => SignInForm(
       bridgePassword: json['bridge_password'] as String,
       identifier: json['identifier'] as String,
       appPassword: json['app_password'] as String,
-      showRepliesInHome: json['show_replies'] as bool? ?? false,
+      showRepliesInHome: json['show_replies'] == null
+          ? false
+          : handleBoolParameter(json['show_replies'] as String?),
     );
 
 Map<String, dynamic> _$SignInFormToJson(SignInForm instance) =>
