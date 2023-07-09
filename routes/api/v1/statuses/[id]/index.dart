@@ -12,11 +12,6 @@ import 'package:sky_bridge/util.dart';
 /// GET /api/v1/statuses/:id HTTP/1.1
 /// See: https://docs.joinmastodon.org/methods/statuses/#get
 Future<Response> onRequest<T>(RequestContext context, String id) async {
-  // Only allow GET requests.
-  if (context.request.method != HttpMethod.get) {
-    return Response(statusCode: HttpStatus.methodNotAllowed);
-  }
-
   // If the id is not a number we return 404 for now.
   if (int.tryParse(id) == null) {
     return Response(statusCode: HttpStatus.notFound);
@@ -34,20 +29,32 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final postRecord = await db.postRecords.get(idNumber);
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
-  // Get the post from bluesky, we assume we already know the post exists
-  // and don't bother adding to the database or anything.
-  final uri = bsky.AtUri.parse(postRecord!.uri);
-  final response = await bluesky.feeds.findPosts(uris: [uri]);
-  final post = response.data.posts.first;
 
-  final mastodonPost = await db.writeTxn(
-    () => MastodonPost.fromBlueSkyPost(post),
-  );
+    // Get the post from bluesky, we assume we already know the post exists
+    // and don't bother adding to the database or anything.
+    final uri = bsky.AtUri.parse(postRecord!.uri);
+    final response = await bluesky.feeds.findPosts(uris: [uri]);
+    final post = response.data.posts.first;
 
-  // Process replies.
-  final processedPost = await processParentPosts(bluesky, [mastodonPost]);
+    final mastodonPost = await db.writeTxn(
+      () => MastodonPost.fromBlueSkyPost(post),
+    );
 
-  return threadedJsonResponse(
-    body: processedPost.first,
-  );
+    // Process replies.
+    final processedPost = await processParentPosts(bluesky, [mastodonPost]);
+
+  if (context.request.method == HttpMethod.get) {
+    return threadedJsonResponse(
+      body: processedPost.first,
+    );
+  } else if (context.request.method == HttpMethod.delete) {
+    // Delete the post from bluesky.
+    await bluesky.repositories.deleteRecord(uri: uri);
+
+    return threadedJsonResponse(
+      body: processedPost.first,
+    );
+  } else {
+    return Response(statusCode: HttpStatus.methodNotAllowed);
+  }
 }
