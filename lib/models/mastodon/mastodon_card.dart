@@ -114,6 +114,7 @@ class MastodonCard {
       blocked: (_) {},
       generatorView: (_) {},
       unknown: (_) {},
+      listView: (_) {},
     );
 
     return MastodonCard(

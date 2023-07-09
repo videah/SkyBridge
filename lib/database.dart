@@ -79,6 +79,7 @@ Future<PostRecord?> embedPostToDatabase(bsky.EmbedViewRecordView view) async {
     blocked: (_) => null,
     generatorView: (_) => null,
     unknown: (_) => null,
+    listView: (_) => null,
   );
 }
 

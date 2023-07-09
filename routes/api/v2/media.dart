@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dart_frog/dart_frog.dart';
-import 'package:dcli_core/dcli_core.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/database/media_record.dart';
@@ -45,19 +45,11 @@ Future<Response> onRequest(RequestContext context) async {
       return _invalidImage();
     }
 
-    // Go through the process of writing the file to a temporary file, then
-    // uploading it to bluesky. The temporary file is cleaned up automatically
-    // after the function returns.
-    final blob = await withTempFile(
-      create: false,
-      suffix: extension,
-      (tempFilePath) async {
-        final tempFile = File(tempFilePath);
-        final finalImage = await tempFile.writeAsBytes(imageFileBytes);
-        final response = await bluesky.repositories.uploadBlob(finalImage);
-        return response.data.blob;
-      },
+    // Upload the image file to bluesky.
+    final response = await bluesky.repositories.uploadBlob(
+      Uint8List.fromList(imageFileBytes),
     );
+    final blob = response.data.blob;
 
     // We need to store the blob info in the database so it can be retrieved
     // later when the media is attached to a post.
