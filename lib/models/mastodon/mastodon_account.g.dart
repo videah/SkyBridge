@@ -51,18 +51,8 @@ int _profileInfoEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.banner;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.description;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.banner.length * 3;
+  bytesCount += 3 + object.description.length * 3;
   return bytesCount;
 }
 
@@ -86,11 +76,11 @@ ProfileInfo _profileInfoDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ProfileInfo(
-    banner: reader.readStringOrNull(offsets[0]),
-    description: reader.readStringOrNull(offsets[1]),
-    followersCount: reader.readLongOrNull(offsets[2]),
-    followsCount: reader.readLongOrNull(offsets[3]),
-    postsCount: reader.readLongOrNull(offsets[4]),
+    banner: reader.readStringOrNull(offsets[0]) ?? '',
+    description: reader.readStringOrNull(offsets[1]) ?? '',
+    followersCount: reader.readLongOrNull(offsets[2]) ?? 0,
+    followsCount: reader.readLongOrNull(offsets[3]) ?? 0,
+    postsCount: reader.readLongOrNull(offsets[4]) ?? 0,
   );
   return object;
 }
@@ -103,15 +93,15 @@ P _profileInfoDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 2:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 4:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -119,25 +109,8 @@ P _profileInfoDeserializeProp<P>(
 
 extension ProfileInfoQueryFilter
     on QueryBuilder<ProfileInfo, ProfileInfo, QFilterCondition> {
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition> bannerIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'banner',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      bannerIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'banner',
-      ));
-    });
-  }
-
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition> bannerEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -151,7 +124,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       bannerGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -166,7 +139,7 @@ extension ProfileInfoQueryFilter
   }
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition> bannerLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -181,8 +154,8 @@ extension ProfileInfoQueryFilter
   }
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition> bannerBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -271,26 +244,8 @@ extension ProfileInfoQueryFilter
   }
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      descriptionIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'description',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      descriptionIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'description',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       descriptionEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -304,7 +259,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       descriptionGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -320,7 +275,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       descriptionLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -336,8 +291,8 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       descriptionBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -425,25 +380,7 @@ extension ProfileInfoQueryFilter
   }
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      followersCountIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'followersCount',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      followersCountIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'followersCount',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      followersCountEqualTo(int? value) {
+      followersCountEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'followersCount',
@@ -454,7 +391,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       followersCountGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -468,7 +405,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       followersCountLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -482,8 +419,8 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       followersCountBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -499,25 +436,7 @@ extension ProfileInfoQueryFilter
   }
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      followsCountIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'followsCount',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      followsCountIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'followsCount',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      followsCountEqualTo(int? value) {
+      followsCountEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'followsCount',
@@ -528,7 +447,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       followsCountGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -542,7 +461,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       followsCountLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -556,8 +475,8 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       followsCountBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -573,25 +492,7 @@ extension ProfileInfoQueryFilter
   }
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      postsCountIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'postsCount',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      postsCountIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'postsCount',
-      ));
-    });
-  }
-
-  QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
-      postsCountEqualTo(int? value) {
+      postsCountEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'postsCount',
@@ -602,7 +503,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       postsCountGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -616,7 +517,7 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       postsCountLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -630,8 +531,8 @@ extension ProfileInfoQueryFilter
 
   QueryBuilder<ProfileInfo, ProfileInfo, QAfterFilterCondition>
       postsCountBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

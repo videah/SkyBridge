@@ -88,6 +88,14 @@ class MastodonNotification {
       },
     );
 
+    // Convert the posts to Mastodon posts.
+    final mastodonPosts = await Future.wait(
+      posts.map(MastodonPost.fromBlueSkyPost),
+    );
+
+    // Process parent records for replies.
+    final processedPosts = await processParentPosts(bluesky, mastodonPosts);
+
     // Construct each individual notification with the appropriate post data.
     final notifications = <MastodonNotification>[];
     Future<void> constructNotification(
@@ -97,8 +105,8 @@ class MastodonNotification {
       final record = await notificationToDatabase(notification);
 
       // Find the post that matches the URI in posts
-      final post = posts.firstWhereOrNull(
-        (post) => post.uri.toString() == uri.toString(),
+      final post = processedPosts.firstWhereOrNull(
+        (post) => post.bskyUri.toString() == uri.toString(),
       );
       final type = NotificationType.fromBluesky(notification.reason.name);
       final mastodonNotification = MastodonNotification(
@@ -106,14 +114,14 @@ class MastodonNotification {
         type: type,
         createdAt: notification.indexedAt.toUtc(),
         account: await MastodonAccount.fromActor(notification.author),
-        status: post != null ? await MastodonPost.fromBlueSkyPost(post) : null,
+        status: post,
       );
       notifications.add(mastodonNotification);
     }
 
     // All notifications are constructed asynchronously and need to be done in
     // a database transaction context.
-    await db.writeTxn(() async {
+    await databaseTransaction(() async {
       final futures = <Future<void>>[];
       pairs.forEach((notification, uri) async {
         futures.add(constructNotification(notification, uri));

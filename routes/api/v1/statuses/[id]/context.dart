@@ -4,8 +4,8 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// View posts above and below this post in the thread.
@@ -29,8 +29,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   // Get the post from the database.
   // If the post is not in the database we return 404.
-  final idNumber = int.parse(id);
-  final postRecord = await db.postRecords.get(idNumber);
+  final idNumber = BigInt.parse(id);
+  final postRecord = await db.postRecord.findUnique(
+    where: PostRecordWhereUniqueInput(id: idNumber),
+  );
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
   final posts = await bluesky.feeds.findPostThread(
@@ -41,12 +43,12 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final replies = <MastodonPost>[];
 
   // Get all the post replies.
-  final replyFuture = db.writeTxn(
+  final replyFuture = databaseTransaction(
     () async => replies.addAll(await traverseReplies(posts.data.thread, 0)),
   );
 
   // Get all the post parents.
-  final parentFuture = db.writeTxn(
+  final parentFuture = databaseTransaction(
     () async => parents.addAll(await traverseParents(posts.data.thread, 0)),
   );
 

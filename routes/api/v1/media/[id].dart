@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/media_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Get a media attachment, before it is attached to a post and posted, but
@@ -30,8 +30,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   if (bluesky == null) return authError();
 
   // Get the media attachment from the database.
-  final idNumber = int.parse(id);
-  final record = await db.mediaRecords.get(idNumber);
+  final idNumber = BigInt.parse(id);
+  final record = await db.mediaRecord.findUnique(
+    where: MediaRecordWhereUniqueInput(id: idNumber),
+  );
   if (record == null) Response(statusCode: HttpStatus.notFound);
 
   final attachment = MastodonMediaAttachment(

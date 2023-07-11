@@ -1,6 +1,6 @@
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:json_annotation/json_annotation.dart';
-import 'package:sky_bridge/models/database/user_record.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 
 part 'mastodon_relationship.g.dart';
 

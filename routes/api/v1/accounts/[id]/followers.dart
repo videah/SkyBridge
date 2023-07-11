@@ -4,8 +4,8 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Returns accounts which follow the given account.
@@ -19,8 +19,10 @@ Future<Response> onRequest(RequestContext context, String id) async {
 
   // Get the user from the database.
   // If the user is not in the database we return 404.
-  final idNumber = int.parse(id);
-  final userRecord = await db.userRecords.get(idNumber);
+  final idNumber = BigInt.parse(id);
+  final userRecord = await db.userRecord.findUnique(
+    where: UserRecordWhereUniqueInput(id: idNumber),
+  );
   if (userRecord == null) return Response(statusCode: HttpStatus.notFound);
 
   final response = await bluesky.graphs.findFollowers(actor: userRecord.did);
@@ -39,7 +41,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
   );
 
   // Convert the profiles to MastodonAccount objects.
-  final followers = await db.writeTxn(() {
+  final followers = await databaseTransaction(() {
     return Future.wait(
       profiles.map(MastodonAccount.fromActorProfile),
     );

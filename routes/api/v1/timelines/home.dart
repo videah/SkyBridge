@@ -40,7 +40,7 @@ Future<Response> onRequest(RequestContext context) async {
         cursor: prevCursor,
       );
 
-      final posts = await db.writeTxn(() async {
+      final posts = await databaseTransaction(() async {
         final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
         return Future.wait(futures);
       });
@@ -80,7 +80,7 @@ Future<Response> onRequest(RequestContext context) async {
       cursor: encodedParams.cursor,
     );
 
-    allPosts = await db.writeTxn(() async {
+    allPosts = await databaseTransaction(() async {
       final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
       return Future.wait(futures);
     });

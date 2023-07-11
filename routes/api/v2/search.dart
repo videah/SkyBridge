@@ -4,9 +4,9 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:sky_bridge/models/params/search_params.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Perform a search.
@@ -39,7 +39,9 @@ Future<Response> onRequest<T>(RequestContext context) async {
     if (postId != null) {
       // Get the post from the database.
       // If the post is not in the database we return 404.
-      final postRecord = await db.postRecords.get(int.parse(postId));
+      final postRecord = await db.postRecord.findUnique(
+        where: PostRecordWhereUniqueInput(id: BigInt.parse(postId)),
+      );
       if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
       // Get the post from bluesky, we assume we already know the post exists
@@ -48,7 +50,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
       final response = await bluesky.feeds.findPosts(uris: [uri]);
       final post = response.data.posts.first;
 
-      final mastodonPost = await db.writeTxn(
+      final mastodonPost = await databaseTransaction(
         () => MastodonPost.fromBlueSkyPost(post),
       );
 

@@ -20,4 +20,4 @@ primary_region = "lhr"
 
 [mounts]
   source="skybridge_data"
-  destination="/database"
+  destination="/app/database"

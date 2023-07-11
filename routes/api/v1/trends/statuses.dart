@@ -20,7 +20,7 @@ Future<Response> onRequest(RequestContext context) async {
 
   // Take all the posts and convert them to Mastodon ones
   // Await all the futures, getting any necessary data from the database.
-  final posts = await db.writeTxn(() async {
+  final posts = await databaseTransaction(() async {
     final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
     return Future.wait(futures);
   });

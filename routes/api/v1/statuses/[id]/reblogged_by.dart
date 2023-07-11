@@ -4,8 +4,8 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// View who reblogged a given post.
@@ -29,8 +29,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   // Get the post from the database.
   // If the post is not in the database we return 404.
-  final idNumber = int.parse(id);
-  final postRecord = await db.postRecords.get(idNumber);
+  final idNumber = BigInt.parse(id);
+  final postRecord = await db.postRecord.findUnique(
+    where: PostRecordWhereUniqueInput(id: idNumber),
+  );
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
   final response = await bluesky.feeds.findRepostedBy(
@@ -51,7 +53,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   );
 
   // Convert the profiles to MastodonAccount objects.
-  final rebloggers = await db.writeTxn(() {
+  final rebloggers = await databaseTransaction(() {
     return Future.wait(
       profiles.map(MastodonAccount.fromActorProfile),
     );

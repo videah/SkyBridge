@@ -6,12 +6,11 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/facets.dart';
-import 'package:sky_bridge/models/database/post_record.dart';
-import 'package:sky_bridge/models/database/repost_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_card.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_mention.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 part 'mastodon_post.g.dart';
@@ -54,6 +53,7 @@ class MastodonPost {
     this.editedAt,
     this.pinned,
     this.replyPostUri,
+    this.bskyUri,
   });
 
   /// Converts JSON into a [MastodonPost] instance.
@@ -92,11 +92,12 @@ class MastodonPost {
     String? language = 'en';
 
     // Handle embedded content.
-    if (post.embed != null) {
-      if (post.embed!.data is bsky.EmbedViewImages) {
-        final embed = post.embed!.data as bsky.EmbedViewImages;
+    final embed = post.embed;
+    if (embed != null) {
+      if (embed.data is bsky.EmbedViewImages) {
+        final embedded = embed.data as bsky.EmbedViewImages;
         // Convert the embed to a media attachment.
-        for (final image in embed.images) {
+        for (final image in embedded.images) {
           final attachment = MastodonMediaAttachment.fromEmbed(image);
           mediaAttachments.add(attachment);
         }
@@ -170,6 +171,7 @@ class MastodonPost {
       filtered: [],
       card: card,
       replyPostUri: view.post.record.reply?.parent.uri,
+      bskyUri: view.post.uri,
     );
   }
 
@@ -178,11 +180,12 @@ class MastodonPost {
     final mediaAttachments = <MastodonMediaAttachment>[];
     final account = await MastodonAccount.fromActor(post.author);
 
-    if (post.embed != null) {
-      if (post.embed!.data is bsky.EmbedViewImages) {
-        final embed = post.embed!.data as bsky.EmbedViewImages;
+    final embed = post.embed;
+    if (embed != null) {
+      if (embed.data is bsky.EmbedViewImages) {
+        final embedded = embed.data as bsky.EmbedViewImages;
         // Convert the embed to a media attachment.
-        for (final image in embed.images) {
+        for (final image in embedded.images) {
           final attachment = MastodonMediaAttachment.fromEmbed(image);
           mediaAttachments.add(attachment);
         }
@@ -245,14 +248,18 @@ class MastodonPost {
       filtered: [],
       card: card,
       replyPostUri: post.record.reply?.parent.uri,
+      bskyUri: post.uri,
     );
   }
 
   /// Uses the current user session to repost this [MastodonPost].
   Future<MastodonPost?> repost(bsky.Bluesky bluesky) async {
     // Convert the string ID to an int and get the record for the post.
-    final intId = int.parse(id);
-    final postRecord = await db.postRecords.get(intId);
+    final intId = BigInt.parse(id);
+    final postRecord = await db.postRecord.findUnique(
+      where: PostRecordWhereUniqueInput(id: intId),
+    );
+
     if (postRecord != null) {
       late RepostRecord repostRecord;
       final createdAt = DateTime.now().toUtc();
@@ -270,8 +277,8 @@ class MastodonPost {
       );
 
       // Write the repost to the database.
-      await db.writeTxn(() async {
-        repostRecord = await postRecord.repost(createdAt, postRecord.author);
+      await databaseTransaction(() async {
+        repostRecord = await postRecord.repost(createdAt, postRecord.authorDid);
       });
 
       final repost = copyWith(
@@ -281,7 +288,6 @@ class MastodonPost {
         favouritesCount: 0,
         reblogsCount: 0,
         repliesCount: 0,
-        language: null,
         reblog: this,
         reblogged: true,
         createdAt: createdAt,
@@ -406,7 +412,13 @@ class MastodonPost {
   /// The filter and keywords used to match this post by the current user.
   final List<String> filtered;
 
-  /// The URI of the post this post is a reply to.
+  /// The bluesky URI of this post.
+  /// Is not included in the JSON representation of a post, only used
+  /// internally.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final bsky.AtUri? bskyUri;
+
+  /// The bluesky URI of the post this post is a reply to.
   /// Is not included in the JSON representation of a post, only used
   /// internally for [processParentPosts].
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -461,7 +473,7 @@ Future<List<MastodonPost>> processParentPosts(
 
   // Map the results back to the original posts.
   final modifiedPosts = <MastodonPost>[];
-  await db.writeTxn(() async {
+  await databaseTransaction(() async {
     for (final post in posts) {
       final uri = post.replyPostUri;
       if (uri != null) {

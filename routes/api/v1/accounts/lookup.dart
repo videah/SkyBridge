@@ -19,7 +19,7 @@ Future<Response> onRequest(RequestContext context) async {
 
   // Get the profile for the given handle.
   final profile = await bluesky.actors.findProfile(actor: encodedParams.acct);
-  final account = await db.writeTxn(
+  final account = await databaseTransaction(
     () => MastodonAccount.fromActorProfile(profile.data),
   );
 

@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
-import 'package:isar/isar.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/post_record.dart';
-import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Undo a repost for a post.
@@ -32,8 +30,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   // Get the post from the database.
   // If the post is not in the database we return 404.
-  final idNumber = int.parse(id);
-  final postRecord = await db.postRecords.get(idNumber);
+  final idNumber = BigInt.parse(id);
+  final postRecord = await db.postRecord.findUnique(
+    where: PostRecordWhereUniqueInput(id: idNumber),
+  );
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
   // Get the post from bluesky, we assume we already know the post exists
@@ -44,12 +44,14 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   // Get the user who posted this from the database.
   final did = post.author.did;
-  final user = await db.userRecords.filter().didEqualTo(did).findFirst();
+  final user = await db.userRecord.findUnique(
+    where: UserRecordWhereUniqueInput(did: did),
+  );
   if (user == null) {
     throw Exception('User not found, this should not happen!: $did');
   }
 
-  final mastodonPost = await db.writeTxn(
+  final mastodonPost = await databaseTransaction(
     () => MastodonPost.fromBlueSkyPost(post),
   );
 

@@ -4,8 +4,8 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/feed_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// View posts in the given list timeline.
@@ -29,8 +29,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   if (bluesky == null) return authError();
 
   // Get the media attachment from the database.
-  final idNumber = int.parse(id);
-  final record = await db.feedRecords.get(idNumber);
+  final idNumber = BigInt.parse(id);
+  final record = await db.feedRecord.findUnique(
+    where: FeedRecordWhereUniqueInput(id: idNumber),
+  );
   if (record == null) return Response(statusCode: HttpStatus.notFound);
 
   final feed = await bluesky.feeds.findCustomFeed(
@@ -39,7 +41,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
 
   // Take all the posts and convert them to Mastodon ones
   // Await all the futures, getting any necessary data from the database.
-  final posts = await db.writeTxn(() async {
+  final posts = await databaseTransaction(() async {
     final futures = feed.data.feed.map(MastodonPost.fromFeedView).toList();
     return Future.wait(futures);
   });

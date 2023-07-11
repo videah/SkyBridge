@@ -70,11 +70,11 @@ class MastodonAccount {
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
-      header: user.profileInfo.banner ?? bannerFallback,
-      headerStatic: user.profileInfo.banner ?? bannerFallback,
-      followersCount: user.profileInfo.followersCount,
-      followingCount: user.profileInfo.followsCount,
-      statusesCount: user.profileInfo.postsCount,
+      header: user.banner,
+      headerStatic: user.banner,
+      followersCount: user.followersCount,
+      followingCount: user.followsCount,
+      statusesCount: user.postsCount,
       lastStatusAt: DateTime.now().toUtc(),
       emojis: [],
       fields: [],
@@ -103,15 +103,15 @@ class MastodonAccount {
       locked: false,
       bot: false,
       createdAt: DateTime.now(),
-      note: convertTextToLinks(user.profileInfo.description),
+      note: convertTextToLinks(user.description),
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
-      header: user.profileInfo.banner ?? bannerFallback,
-      headerStatic: user.profileInfo.banner ?? bannerFallback,
-      followersCount: user.profileInfo.followersCount,
-      followingCount: user.profileInfo.followsCount,
-      statusesCount: user.profileInfo.postsCount,
+      header: user.banner,
+      headerStatic: user.banner,
+      followersCount: user.followersCount,
+      followingCount: user.followsCount,
+      statusesCount: user.postsCount,
       lastStatusAt: DateTime.now(),
       emojis: [],
       fields: [],
@@ -207,17 +207,17 @@ class MastodonAccount {
 class ProfileInfo {
   /// Creates a new [ProfileInfo] instance.
   ProfileInfo({
-    this.banner,
-    this.followersCount,
-    this.followsCount,
-    this.postsCount,
-    this.description,
+    this.banner = '',
+    this.followersCount = 0,
+    this.followsCount = 0,
+    this.postsCount = 0,
+    this.description = '',
   });
 
   /// Creates a new [ProfileInfo] instance from an [ActorProfile].
   factory ProfileInfo.fromActorProfile(ActorProfile profile) {
     return ProfileInfo(
-      banner: profile.banner,
+      banner: profile.banner ?? '',
       followersCount: profile.followersCount,
       followsCount: profile.followsCount,
       postsCount: profile.postsCount,
@@ -226,19 +226,19 @@ class ProfileInfo {
   }
 
   /// The banner image of the user's profile.
-  final String? banner;
+  final String banner;
 
   /// The number of followers for the user.
-  final int? followersCount;
+  final int followersCount;
 
   /// The number of users the user is following.
-  final int? followsCount;
+  final int followsCount;
 
   /// The number of posts the user has made.
-  final int? postsCount;
+  final int postsCount;
 
   /// The user's profile description.
-  final String? description;
+  final String description;
 }
 
 /// Extra attributes that contains source values to be used with API methods

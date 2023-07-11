@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/post_record.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 
 /// Handles redirects for URLs like /@username/1234 which are used
 /// by the likes of Ivory to link to posts without leaving the app.
@@ -33,8 +33,10 @@ Future<Response> onRequest<T>(
   }
 
   // Get the media attachment from the database.
-  final postIdNumber = int.parse(postId);
-  final record = await db.postRecords.get(postIdNumber);
+  final postIdNumber = BigInt.parse(postId);
+  final record = await db.postRecord.findUnique(
+    where: PostRecordWhereUniqueInput(id: postIdNumber),
+  );
 
   // If there's no record, return 404.
   if (record == null) return Response(statusCode: HttpStatus.notFound);

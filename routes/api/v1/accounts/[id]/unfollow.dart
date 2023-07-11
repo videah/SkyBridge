@@ -4,8 +4,8 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 
-import 'package:sky_bridge/models/database/user_record.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_relationship.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Unfollow the given account.
@@ -29,8 +29,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   if (bluesky == null) return authError();
 
   // Get the media attachment from the database.
-  final idNumber = int.parse(id);
-  final record = await db.userRecords.get(idNumber);
+  final idNumber = BigInt.parse(id);
+  final record = await db.userRecord.findUnique(
+    where: UserRecordWhereUniqueInput(id: idNumber),
+  );
   final did = record?.did;
   if (did == null) Response(statusCode: HttpStatus.notFound);
 

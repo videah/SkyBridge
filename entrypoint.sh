@@ -12,4 +12,9 @@ if [ "$FLY_SWAP" = "true" ]; then
   echo 1 > /proc/sys/vm/overcommit_memory
 fi
 
-/app/bin/server
+cd /app || exit
+
+# Run any necessary database migrations.
+npx --yes prisma migrate deploy
+
+./bin/server

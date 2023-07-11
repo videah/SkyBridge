@@ -71,6 +71,8 @@ abstract class _$MastodonPostCWProxy {
 
   MastodonPost replyPostUri(AtUri? replyPostUri);
 
+  MastodonPost bskyUri(AtUri? bskyUri);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MastodonPost(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -110,6 +112,7 @@ abstract class _$MastodonPostCWProxy {
     DateTime? editedAt,
     bool? pinned,
     AtUri? replyPostUri,
+    AtUri? bskyUri,
   });
 }
 
@@ -229,6 +232,9 @@ class _$MastodonPostCWProxyImpl implements _$MastodonPostCWProxy {
       this(replyPostUri: replyPostUri);
 
   @override
+  MastodonPost bskyUri(AtUri? bskyUri) => this(bskyUri: bskyUri);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MastodonPost(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -269,6 +275,7 @@ class _$MastodonPostCWProxyImpl implements _$MastodonPostCWProxy {
     Object? editedAt = const $CopyWithPlaceholder(),
     Object? pinned = const $CopyWithPlaceholder(),
     Object? replyPostUri = const $CopyWithPlaceholder(),
+    Object? bskyUri = const $CopyWithPlaceholder(),
   }) {
     return MastodonPost(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -406,6 +413,10 @@ class _$MastodonPostCWProxyImpl implements _$MastodonPostCWProxy {
           ? _value.replyPostUri
           // ignore: cast_nullable_to_non_nullable
           : replyPostUri as AtUri?,
+      bskyUri: bskyUri == const $CopyWithPlaceholder()
+          ? _value.bskyUri
+          // ignore: cast_nullable_to_non_nullable
+          : bskyUri as AtUri?,
     );
   }
 }

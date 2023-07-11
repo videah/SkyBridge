@@ -4,10 +4,9 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/media_record.dart';
-import 'package:sky_bridge/models/database/post_record.dart';
 import 'package:sky_bridge/models/forms/new_post_form.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Publish a new post with the given parameters.
@@ -41,7 +40,9 @@ Future<Response> onRequest<T>(RequestContext context) async {
   bsky.ReplyRef? postReplyRef;
   final replyId = form.inReplyToId;
   if (replyId != null) {
-    final record = await db.postRecords.get(replyId);
+    final record = await db.postRecord.findUnique(
+      where: PostRecordWhereUniqueInput(id: BigInt.from(replyId)),
+    );
 
     // The post we're trying to reply to doesn't exist in the database.
     if (record == null) return Response(statusCode: HttpStatus.notFound);
@@ -75,8 +76,10 @@ Future<Response> onRequest<T>(RequestContext context) async {
   if (mediaIds != null) {
     for (final idString in mediaIds) {
       // Get the media record from the database.
-      final id = int.parse(idString);
-      final record = await db.mediaRecords.get(id);
+      final id = BigInt.parse(idString);
+      final record = await db.mediaRecord.findUnique(
+        where: MediaRecordWhereUniqueInput(id: id),
+      );
       if (record == null) continue;
 
       // Construct an embed attachment and add it to the list of images.
@@ -110,7 +113,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
   final postData = response.data.posts.first;
 
   // Construct and return the new post as a [MastodonPost].
-  final mastodonPost = await db.writeTxn(
+  final mastodonPost = await databaseTransaction(
     () => MastodonPost.fromBlueSkyPost(postData),
   );
 

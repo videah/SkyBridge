@@ -38,7 +38,7 @@ Future<Response> onRequest(RequestContext context) async {
       return Response.json(body: [], statusCode: HttpStatus.notFound);
     }
 
-    final account = await db.writeTxn(
+    final account = await databaseTransaction(
       () => MastodonAccount.fromActorProfile(profile),
     );
 
@@ -64,7 +64,7 @@ Future<Response> onRequest(RequestContext context) async {
     );
 
     // Convert all the profiles to MastodonAccounts.
-    final accounts = await db.writeTxn(() {
+    final accounts = await databaseTransaction(() {
       return Future.wait(
         profiles.map(MastodonAccount.fromActorProfile),
       );

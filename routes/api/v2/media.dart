@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/database/media_record.dart';
 import 'package:sky_bridge/models/forms/media_upload_form.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
 import 'package:sky_bridge/util.dart';
@@ -53,10 +52,9 @@ Future<Response> onRequest(RequestContext context) async {
 
     // We need to store the blob info in the database so it can be retrieved
     // later when the media is attached to a post.
-    final now = DateTime.now().toUtc();
     final description = formDataEncoded.description ?? '';
-    final record = await db.writeTxn(
-      () async => MediaRecord.fromBlob(blob, description).insert(now),
+    final record = await databaseTransaction(
+      () async => BlobExtension.fromBlob(blob, description),
     );
 
     // The API is meant to return a URL at this point but we can't actually

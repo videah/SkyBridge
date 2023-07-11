@@ -41,7 +41,7 @@ Future<Response> onRequest(RequestContext context) async {
 
           // Convert the feed generator views to [MastodonList]'s, storing
           // any info in the database we might need to access later.
-          lists = await db.writeTxn(() async {
+          lists = await databaseTransaction(() async {
             final listFutures = result.map(
               MastodonList.fromFeedGenerator,
             );
