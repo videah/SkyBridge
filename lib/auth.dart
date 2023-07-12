@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:sky_bridge/crypto.dart';
+import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
 import 'package:sky_bridge/models/preferences.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 
 /// Check a request context for a valid bearer token to determine if the
 /// request is authenticated.
@@ -14,10 +19,64 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
   if (token == null) return null;
 
   // Check if we have a session for the given DID.
-  final session = sessions[token.did];
+  final record = await db.sessionRecord.findUnique(
+    where: SessionRecordWhereUniqueInput(did: token.did),
+  );
 
   // If we already have a session then great! Otherwise, try to create one.
-  if (session != null) {
+  if (record != null) {
+    final json = jsonDecode(record.session) as Map<String, dynamic>;
+    final session = bsky.Session.fromJson(json);
+
+    final accessJwt =
+        JWT.decode(session.accessJwt).payload as Map<String, dynamic>;
+    final refreshJwt =
+        JWT.decode(session.refreshJwt).payload as Map<String, dynamic>;
+
+    final accessExp = DateTime.fromMillisecondsSinceEpoch(
+      (accessJwt['exp'] as int) * 1000,
+    );
+
+    final refreshExp = DateTime.fromMillisecondsSinceEpoch(
+      (refreshJwt['exp'] as int) * 1000,
+    );
+    final now = DateTime.now().toUtc();
+
+    // Let's handle token expiration.
+    if (now.isAfter(accessExp)) {
+      if (now.isAfter(refreshExp)) {
+        // Refresh token is expired. We gotta get a brand new session.
+        final newSession = await createBlueskySession(
+          identifier: token.identifier,
+          appPassword: token.appPassword,
+        );
+
+        // Credentials are just straight up invalid. Bail.
+        if (newSession == null) return null;
+
+        return newSession;
+      } else {
+        // The access token is expired but we have a valid refresh token,
+        // try to refresh the session.
+        final bluesky = bsky.Bluesky.fromSession(session);
+        final refreshedSession = await bluesky.servers.refreshSession(
+          refreshJwt: session.refreshJwt,
+        );
+
+        // Update the session in the database.
+        await db.sessionRecord.update(
+          where: SessionRecordWhereUniqueInput(did: refreshedSession.data.did),
+          data: SessionRecordUpdateInput(
+            session: StringFieldUpdateOperationsInput(
+              set: jsonEncode(refreshedSession.data.toJson()),
+            ),
+          ),
+        );
+
+        return refreshedSession.data;
+      }
+    }
+
     return session;
   } else {
     final newSession = await createBlueskySession(
@@ -28,9 +87,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
     // Credentials are just straight up invalid. Bail.
     if (newSession == null) return null;
 
-    // We have a valid session, store it globally for later.
-    sessions[token.did] = newSession;
-    return sessions[token.did];
+    return newSession;
   }
 }
 
@@ -88,10 +145,23 @@ Future<bsky.Session?> createBlueskySession({
 
     // If we've gotten this far, the credentials are valid.
     // Store the session in the global list for later.
-    sessions[session.data.did] = session.data;
+    await db.sessionRecord.upsert(
+      where: SessionRecordWhereUniqueInput(
+        did: session.data.did,
+      ),
+      create: SessionRecordCreateInput(
+        did: session.data.did,
+        session: jsonEncode(session.data.toJson()),
+      ),
+      update: SessionRecordUpdateInput(
+        session: StringFieldUpdateOperationsInput(
+          set: jsonEncode(session.data.toJson()),
+        ),
+      ),
+    );
     print('New session created for ${session.data.did}');
     return session.data;
-  } catch(e) {
+  } catch (e) {
     return null;
   }
 }

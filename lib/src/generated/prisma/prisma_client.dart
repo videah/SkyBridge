@@ -90,6 +90,15 @@ enum FeedRecordScalarFieldEnum implements _i1.PrismaEnum {
   final String? originalName;
 }
 
+enum SessionRecordScalarFieldEnum implements _i1.PrismaEnum {
+  id,
+  did,
+  session;
+
+  @override
+  String? get originalName => null;
+}
+
 enum SortOrder implements _i1.PrismaEnum {
   asc,
   desc;
@@ -1130,6 +1139,153 @@ class FeedRecordScalarWhereWithAggregatesInput implements _i1.JsonSerializable {
 }
 
 @_i1.jsonSerializable
+class SessionRecordWhereInput implements _i1.JsonSerializable {
+  const SessionRecordWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordWhereInput.fromJson(Map<String, dynamic> json) =>
+      _$SessionRecordWhereInputFromJson(json);
+
+  final Iterable<SessionRecordWhereInput>? AND;
+
+  final Iterable<SessionRecordWhereInput>? OR;
+
+  final Iterable<SessionRecordWhereInput>? NOT;
+
+  final IntFilter? id;
+
+  final StringFilter? did;
+
+  final StringFilter? session;
+
+  @override
+  Map<String, dynamic> toJson() => _$SessionRecordWhereInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordOrderByWithRelationInput implements _i1.JsonSerializable {
+  const SessionRecordOrderByWithRelationInput({
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordOrderByWithRelationInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordOrderByWithRelationInputFromJson(json);
+
+  final SortOrder? id;
+
+  final SortOrder? did;
+
+  final SortOrder? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordOrderByWithRelationInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordWhereUniqueInput implements _i1.JsonSerializable {
+  const SessionRecordWhereUniqueInput({
+    this.id,
+    this.did,
+  });
+
+  factory SessionRecordWhereUniqueInput.fromJson(Map<String, dynamic> json) =>
+      _$SessionRecordWhereUniqueInputFromJson(json);
+
+  final int? id;
+
+  final String? did;
+
+  @override
+  Map<String, dynamic> toJson() => _$SessionRecordWhereUniqueInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordOrderByWithAggregationInput implements _i1.JsonSerializable {
+  const SessionRecordOrderByWithAggregationInput({
+    this.id,
+    this.did,
+    this.session,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
+  });
+
+  factory SessionRecordOrderByWithAggregationInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordOrderByWithAggregationInputFromJson(json);
+
+  final SortOrder? id;
+
+  final SortOrder? did;
+
+  final SortOrder? session;
+
+  @JsonKey(name: r'_count')
+  final SessionRecordCountOrderByAggregateInput? $count;
+
+  @JsonKey(name: r'_avg')
+  final SessionRecordAvgOrderByAggregateInput? $avg;
+
+  @JsonKey(name: r'_max')
+  final SessionRecordMaxOrderByAggregateInput? $max;
+
+  @JsonKey(name: r'_min')
+  final SessionRecordMinOrderByAggregateInput? $min;
+
+  @JsonKey(name: r'_sum')
+  final SessionRecordSumOrderByAggregateInput? $sum;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordOrderByWithAggregationInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordScalarWhereWithAggregatesInput
+    implements _i1.JsonSerializable {
+  const SessionRecordScalarWhereWithAggregatesInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordScalarWhereWithAggregatesInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordScalarWhereWithAggregatesInputFromJson(json);
+
+  final Iterable<SessionRecordScalarWhereWithAggregatesInput>? AND;
+
+  final Iterable<SessionRecordScalarWhereWithAggregatesInput>? OR;
+
+  final Iterable<SessionRecordScalarWhereWithAggregatesInput>? NOT;
+
+  final IntWithAggregatesFilter? id;
+
+  final StringWithAggregatesFilter? did;
+
+  final StringWithAggregatesFilter? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordScalarWhereWithAggregatesInputToJson(this);
+}
+
+@_i1.jsonSerializable
 class UserRecordCreateInput implements _i1.JsonSerializable {
   const UserRecordCreateInput({
     required this.id,
@@ -2137,6 +2293,131 @@ class FeedRecordUncheckedUpdateManyInput implements _i1.JsonSerializable {
   @override
   Map<String, dynamic> toJson() =>
       _$FeedRecordUncheckedUpdateManyInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordCreateInput implements _i1.JsonSerializable {
+  const SessionRecordCreateInput({
+    required this.did,
+    required this.session,
+  });
+
+  factory SessionRecordCreateInput.fromJson(Map<String, dynamic> json) =>
+      _$SessionRecordCreateInputFromJson(json);
+
+  final String did;
+
+  final String session;
+
+  @override
+  Map<String, dynamic> toJson() => _$SessionRecordCreateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordUncheckedCreateInput implements _i1.JsonSerializable {
+  const SessionRecordUncheckedCreateInput({
+    this.id,
+    required this.did,
+    required this.session,
+  });
+
+  factory SessionRecordUncheckedCreateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordUncheckedCreateInputFromJson(json);
+
+  final int? id;
+
+  final String did;
+
+  final String session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordUncheckedCreateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordUpdateInput implements _i1.JsonSerializable {
+  const SessionRecordUpdateInput({
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordUpdateInput.fromJson(Map<String, dynamic> json) =>
+      _$SessionRecordUpdateInputFromJson(json);
+
+  final StringFieldUpdateOperationsInput? did;
+
+  final StringFieldUpdateOperationsInput? session;
+
+  @override
+  Map<String, dynamic> toJson() => _$SessionRecordUpdateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordUncheckedUpdateInput implements _i1.JsonSerializable {
+  const SessionRecordUncheckedUpdateInput({
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordUncheckedUpdateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordUncheckedUpdateInputFromJson(json);
+
+  final IntFieldUpdateOperationsInput? id;
+
+  final StringFieldUpdateOperationsInput? did;
+
+  final StringFieldUpdateOperationsInput? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordUncheckedUpdateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordUpdateManyMutationInput implements _i1.JsonSerializable {
+  const SessionRecordUpdateManyMutationInput({
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordUpdateManyMutationInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordUpdateManyMutationInputFromJson(json);
+
+  final StringFieldUpdateOperationsInput? did;
+
+  final StringFieldUpdateOperationsInput? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordUpdateManyMutationInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordUncheckedUpdateManyInput implements _i1.JsonSerializable {
+  const SessionRecordUncheckedUpdateManyInput({
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordUncheckedUpdateManyInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordUncheckedUpdateManyInputFromJson(json);
+
+  final IntFieldUpdateOperationsInput? id;
+
+  final StringFieldUpdateOperationsInput? did;
+
+  final StringFieldUpdateOperationsInput? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordUncheckedUpdateManyInputToJson(this);
 }
 
 @_i1.jsonSerializable
@@ -3364,6 +3645,105 @@ class StringNullableWithAggregatesFilter implements _i1.JsonSerializable {
   @override
   Map<String, dynamic> toJson() =>
       _$StringNullableWithAggregatesFilterToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordCountOrderByAggregateInput implements _i1.JsonSerializable {
+  const SessionRecordCountOrderByAggregateInput({
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordCountOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordCountOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  final SortOrder? did;
+
+  final SortOrder? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordCountOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordAvgOrderByAggregateInput implements _i1.JsonSerializable {
+  const SessionRecordAvgOrderByAggregateInput({this.id});
+
+  factory SessionRecordAvgOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordAvgOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordAvgOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordMaxOrderByAggregateInput implements _i1.JsonSerializable {
+  const SessionRecordMaxOrderByAggregateInput({
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordMaxOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordMaxOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  final SortOrder? did;
+
+  final SortOrder? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordMaxOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordMinOrderByAggregateInput implements _i1.JsonSerializable {
+  const SessionRecordMinOrderByAggregateInput({
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordMinOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordMinOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  final SortOrder? did;
+
+  final SortOrder? session;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordMinOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordSumOrderByAggregateInput implements _i1.JsonSerializable {
+  const SessionRecordSumOrderByAggregateInput({this.id});
+
+  factory SessionRecordSumOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$SessionRecordSumOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$SessionRecordSumOrderByAggregateInputToJson(this);
 }
 
 @_i1.jsonSerializable
@@ -4675,6 +5055,27 @@ class FeedRecord implements _i1.JsonSerializable {
   Map<String, dynamic> toJson() => _$FeedRecordToJson(this);
 }
 
+@_i1.jsonSerializable
+class SessionRecord implements _i1.JsonSerializable {
+  const SessionRecord({
+    required this.id,
+    required this.did,
+    required this.session,
+  });
+
+  factory SessionRecord.fromJson(Map<String, dynamic> json) =>
+      _$SessionRecordFromJson(json);
+
+  final int id;
+
+  final String did;
+
+  final String session;
+
+  @override
+  Map<String, dynamic> toJson() => _$SessionRecordToJson(this);
+}
+
 class UserRecordFluent<T> extends _i1.PrismaFluent<T> {
   const UserRecordFluent(
     super.original,
@@ -4797,6 +5198,13 @@ class MediaRecordFluent<T> extends _i1.PrismaFluent<T> {
 
 class FeedRecordFluent<T> extends _i1.PrismaFluent<T> {
   const FeedRecordFluent(
+    super.original,
+    super.$query,
+  );
+}
+
+class SessionRecordFluent<T> extends _i1.PrismaFluent<T> {
+  const SessionRecordFluent(
     super.original,
     super.$query,
   );
@@ -7834,6 +8242,511 @@ extension FeedRecordModelDelegateExtension on _i1.ModelDelegate<FeedRecord> {
   }
 }
 
+extension SessionRecordModelDelegateExtension
+    on _i1.ModelDelegate<SessionRecord> {
+  SessionRecordFluent<SessionRecord?> findUnique(
+      {required SessionRecordWhereUniqueInput where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findUniqueSessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findUniqueSessionRecord',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : null);
+    return SessionRecordFluent<SessionRecord?>(
+      future,
+      query,
+    );
+  }
+
+  SessionRecordFluent<SessionRecord> findUniqueOrThrow(
+      {required SessionRecordWhereUniqueInput where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findUniqueSessionRecordOrThrow',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findUniqueSessionRecordOrThrow',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: SessionRecord)'));
+    return SessionRecordFluent<SessionRecord>(
+      future,
+      query,
+    );
+  }
+
+  SessionRecordFluent<SessionRecord?> findFirst({
+    SessionRecordWhereInput? where,
+    Iterable<SessionRecordOrderByWithRelationInput>? orderBy,
+    SessionRecordWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    Iterable<SessionRecordScalarFieldEnum>? distinct,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+      _i2.GraphQLArg(
+        r'distinct',
+        distinct,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findFirstSessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findFirstSessionRecord',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : null);
+    return SessionRecordFluent<SessionRecord?>(
+      future,
+      query,
+    );
+  }
+
+  SessionRecordFluent<SessionRecord> findFirstOrThrow({
+    SessionRecordWhereInput? where,
+    Iterable<SessionRecordOrderByWithRelationInput>? orderBy,
+    SessionRecordWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    Iterable<SessionRecordScalarFieldEnum>? distinct,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+      _i2.GraphQLArg(
+        r'distinct',
+        distinct,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findFirstSessionRecordOrThrow',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findFirstSessionRecordOrThrow',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: SessionRecord)'));
+    return SessionRecordFluent<SessionRecord>(
+      future,
+      query,
+    );
+  }
+
+  Future<Iterable<SessionRecord>> findMany({
+    SessionRecordWhereInput? where,
+    Iterable<SessionRecordOrderByWithRelationInput>? orderBy,
+    SessionRecordWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    Iterable<SessionRecordScalarFieldEnum>? distinct,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+      _i2.GraphQLArg(
+        r'distinct',
+        distinct,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findManySessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findManySessionRecord',
+    );
+    final fields = SessionRecordScalarFieldEnum.values.toGraphQLFields();
+    compiler(Iterable<Map> findManySessionRecord) =>
+        findManySessionRecord.map((Map findManySessionRecord) =>
+            SessionRecord.fromJson(findManySessionRecord.cast()));
+    return query(fields).then((json) => json is Iterable
+        ? compiler(json.cast())
+        : throw Exception('Unable to parse response'));
+  }
+
+  SessionRecordFluent<SessionRecord> create(
+      {required SessionRecordCreateInput data}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'data',
+        data,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'createOneSessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'createOneSessionRecord',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: SessionRecord)'));
+    return SessionRecordFluent<SessionRecord>(
+      future,
+      query,
+    );
+  }
+
+  SessionRecordFluent<SessionRecord?> update({
+    required SessionRecordUpdateInput data,
+    required SessionRecordWhereUniqueInput where,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'data',
+        data,
+      ),
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'updateOneSessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'updateOneSessionRecord',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : null);
+    return SessionRecordFluent<SessionRecord?>(
+      future,
+      query,
+    );
+  }
+
+  Future<AffectedRowsOutput> updateMany({
+    required SessionRecordUpdateManyMutationInput data,
+    SessionRecordWhereInput? where,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'data',
+        data,
+      ),
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'updateManySessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'updateManySessionRecord',
+    );
+    final fields = const ['count'].map((e) => _i2.GraphQLField(e));
+    compiler(Map updateManySessionRecord) =>
+        AffectedRowsOutput.fromJson(updateManySessionRecord.cast());
+    return query(fields).then((json) => json is Map
+        ? compiler(json)
+        : throw Exception('Unable to parse response'));
+  }
+
+  SessionRecordFluent<SessionRecord> upsert({
+    required SessionRecordWhereUniqueInput where,
+    required SessionRecordCreateInput create,
+    required SessionRecordUpdateInput update,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'create',
+        create,
+      ),
+      _i2.GraphQLArg(
+        r'update',
+        update,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'upsertOneSessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'upsertOneSessionRecord',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: SessionRecord)'));
+    return SessionRecordFluent<SessionRecord>(
+      future,
+      query,
+    );
+  }
+
+  SessionRecordFluent<SessionRecord?> delete(
+      {required SessionRecordWhereUniqueInput where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'deleteOneSessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'deleteOneSessionRecord',
+    );
+    final future = query(SessionRecordScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? SessionRecord.fromJson(json.cast<String, dynamic>())
+            : null);
+    return SessionRecordFluent<SessionRecord?>(
+      future,
+      query,
+    );
+  }
+
+  Future<AffectedRowsOutput> deleteMany({SessionRecordWhereInput? where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'deleteManySessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'deleteManySessionRecord',
+    );
+    final fields = const ['count'].map((e) => _i2.GraphQLField(e));
+    compiler(Map deleteManySessionRecord) =>
+        AffectedRowsOutput.fromJson(deleteManySessionRecord.cast());
+    return query(fields).then((json) => json is Map
+        ? compiler(json)
+        : throw Exception('Unable to parse response'));
+  }
+
+  AggregateSessionRecord aggregate({
+    SessionRecordWhereInput? where,
+    Iterable<SessionRecordOrderByWithRelationInput>? orderBy,
+    SessionRecordWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'aggregateSessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'aggregateSessionRecord',
+    );
+    return AggregateSessionRecord(query);
+  }
+
+  Future<Iterable<SessionRecordGroupByOutputType>> groupBy({
+    SessionRecordWhereInput? where,
+    Iterable<SessionRecordOrderByWithAggregationInput>? orderBy,
+    required Iterable<SessionRecordScalarFieldEnum> by,
+    SessionRecordScalarWhereWithAggregatesInput? having,
+    int? take,
+    int? skip,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'by',
+        by,
+      ),
+      _i2.GraphQLArg(
+        r'having',
+        having,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'groupBySessionRecord',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'groupBySessionRecord',
+    );
+    final fields = by.map((e) => _i2.GraphQLField(e.originalName ?? e.name));
+    compiler(Iterable<Map> groupBySessionRecord) => groupBySessionRecord.map(
+        (Map groupBySessionRecord) => SessionRecordGroupByOutputType.fromJson(
+            groupBySessionRecord.cast()));
+    return query(fields).then((json) => json is Iterable
+        ? compiler(json.cast())
+        : throw Exception('Unable to parse response'));
+  }
+}
+
 @_i1.jsonSerializable
 class UserRecordGroupByOutputType implements _i1.JsonSerializable {
   const UserRecordGroupByOutputType({
@@ -7995,6 +8908,27 @@ class FeedRecordGroupByOutputType implements _i1.JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() => _$FeedRecordGroupByOutputTypeToJson(this);
+}
+
+@_i1.jsonSerializable
+class SessionRecordGroupByOutputType implements _i1.JsonSerializable {
+  const SessionRecordGroupByOutputType({
+    this.id,
+    this.did,
+    this.session,
+  });
+
+  factory SessionRecordGroupByOutputType.fromJson(Map<String, dynamic> json) =>
+      _$SessionRecordGroupByOutputTypeFromJson(json);
+
+  final int? id;
+
+  final String? did;
+
+  final String? session;
+
+  @override
+  Map<String, dynamic> toJson() => _$SessionRecordGroupByOutputTypeToJson(this);
 }
 
 @_i1.jsonSerializable
@@ -8433,6 +9367,77 @@ class AggregateFeedRecord {
       key: r'_max',
     );
     return FeedRecordMaxAggregateOutputType(query);
+  }
+}
+
+class AggregateSessionRecord {
+  const AggregateSessionRecord(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  SessionRecordCountAggregateOutputType $count() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_count',
+          fields: fields,
+        )
+      ]),
+      key: r'_count',
+    );
+    return SessionRecordCountAggregateOutputType(query);
+  }
+
+  SessionRecordAvgAggregateOutputType $avg() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_avg',
+          fields: fields,
+        )
+      ]),
+      key: r'_avg',
+    );
+    return SessionRecordAvgAggregateOutputType(query);
+  }
+
+  SessionRecordSumAggregateOutputType $sum() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_sum',
+          fields: fields,
+        )
+      ]),
+      key: r'_sum',
+    );
+    return SessionRecordSumAggregateOutputType(query);
+  }
+
+  SessionRecordMinAggregateOutputType $min() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_min',
+          fields: fields,
+        )
+      ]),
+      key: r'_min',
+    );
+    return SessionRecordMinAggregateOutputType(query);
+  }
+
+  SessionRecordMaxAggregateOutputType $max() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_max',
+          fields: fields,
+        )
+      ]),
+      key: r'_max',
+    );
+    return SessionRecordMaxAggregateOutputType(query);
   }
 }
 
@@ -10059,6 +11064,192 @@ class FeedRecordMaxAggregateOutputType {
   }
 }
 
+class SessionRecordCountAggregateOutputType {
+  const SessionRecordCountAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+
+  Future<int> did() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'did',
+          fields: fields,
+        )
+      ]),
+      key: r'did',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+
+  Future<int> session() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'session',
+          fields: fields,
+        )
+      ]),
+      key: r'session',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+
+  Future<int> $all() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_all',
+          fields: fields,
+        )
+      ]),
+      key: r'_all',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+}
+
+class SessionRecordAvgAggregateOutputType {
+  const SessionRecordAvgAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<double?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as double?));
+  }
+}
+
+class SessionRecordSumAggregateOutputType {
+  const SessionRecordSumAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+}
+
+class SessionRecordMinAggregateOutputType {
+  const SessionRecordMinAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+
+  Future<String?> did() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'did',
+          fields: fields,
+        )
+      ]),
+      key: r'did',
+    );
+    return query(const []).then((value) => (value as String?));
+  }
+
+  Future<String?> session() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'session',
+          fields: fields,
+        )
+      ]),
+      key: r'session',
+    );
+    return query(const []).then((value) => (value as String?));
+  }
+}
+
+class SessionRecordMaxAggregateOutputType {
+  const SessionRecordMaxAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+
+  Future<String?> did() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'did',
+          fields: fields,
+        )
+      ]),
+      key: r'did',
+    );
+    return query(const []).then((value) => (value as String?));
+  }
+
+  Future<String?> session() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'session',
+          fields: fields,
+        )
+      ]),
+      key: r'session',
+    );
+    return query(const []).then((value) => (value as String?));
+  }
+}
+
 @JsonSerializable(
   createFactory: false,
   createToJson: true,
@@ -10099,10 +11290,10 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
     final engine = _i5.BinaryEngine(
       logger: logger,
       schema:
-          r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgPSAiZGFydCBydW4gb3JtIgogIGVuZ2luZVR5cGUgPSAiYmluYXJ5Igp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJzcWxpdGUiCiAgdXJsICAgICAgPSAiZmlsZTouLi9kYXRhYmFzZS9za3licmlkZ2UuZGIiCn0KCm1vZGVsIFVzZXJSZWNvcmQgewogIGlkICAgICAgICAgICAgICBCaWdJbnQgICAgIEBpZAogIGRpZCAgICAgICAgICAgICBTdHJpbmcgIEB1bmlxdWUKICBiYW5uZXIgICAgICAgICAgU3RyaW5nIEBkZWZhdWx0KCIiKQogIGZvbGxvd2Vyc19jb3VudCBJbnQgQGRlZmF1bHQoMCkKICBmb2xsb3dzX2NvdW50ICAgSW50IEBkZWZhdWx0KDApCiAgcG9zdHNfY291bnQgICAgIEludCBAZGVmYXVsdCgwKQogIGRlc2NyaXB0aW9uICAgICBTdHJpbmcgQGRlZmF1bHQoIiIpCn0KCm1vZGVsIFBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICBCaWdJbnQgICAgICAgICAgICBAaWQKICBjaWQgICAgICAgICAgU3RyaW5nICAgICAgICAgQHVuaXF1ZQogIHVyaSAgICAgICAgICBTdHJpbmcKICBhdXRob3JfZGlkICAgU3RyaW5nCiAgcmVwb3N0cyBSZXBvc3RSZWNvcmRbXQp9Cgptb2RlbCBSZXBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICAgICAgQmlnSW50ICAgICAgICBAaWQKICBoYXNoX2lkICAgICAgICAgIFN0cmluZyAgICAgQHVuaXF1ZQogIG9yaWdpbmFsX3Bvc3QgICAgUG9zdFJlY29yZCBAcmVsYXRpb24oZmllbGRzOiBbb3JpZ2luYWxfcG9zdF9pZF0sIHJlZmVyZW5jZXM6IFtpZF0pCiAgb3JpZ2luYWxfcG9zdF9pZCBCaWdJbnQKfQoKbW9kZWwgTm90aWZpY2F0aW9uUmVjb3JkIHsKICBpZCAgQmlnSW50ICAgIEBpZAogIGNpZCBTdHJpbmcKICB1cmkgU3RyaW5nCn0KCm1vZGVsIE1lZGlhUmVjb3JkIHsKICBpZCAgICAgICAgICBCaWdJbnQgICAgQGlkCiAgdHlwZSAgICAgICAgU3RyaW5nCiAgbWltZV90eXBlICAgU3RyaW5nCiAgc2l6ZSAgICAgICAgSW50CiAgbGluayAgICAgICAgU3RyaW5nCiAgZGVzY3JpcHRpb24gU3RyaW5nCn0KCm1vZGVsIEZlZWRSZWNvcmQgewogIGlkICAgICAgICAgQmlnSW50ICAgICBAaWQKICBjaWQgICAgICAgIFN0cmluZwogIHVyaSAgICAgICAgU3RyaW5nCiAgYXV0aG9yX2RpZCBTdHJpbmc/Cn0K',
+          r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgPSAiZGFydCBydW4gb3JtIgogIGVuZ2luZVR5cGUgPSAiYmluYXJ5Igp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJzcWxpdGUiCiAgdXJsICAgICAgPSAiZmlsZTouLi9kYXRhYmFzZS9za3licmlkZ2UuZGIiCn0KCm1vZGVsIFVzZXJSZWNvcmQgewogIGlkICAgICAgICAgICAgICBCaWdJbnQgICAgIEBpZAogIGRpZCAgICAgICAgICAgICBTdHJpbmcgIEB1bmlxdWUKICBiYW5uZXIgICAgICAgICAgU3RyaW5nIEBkZWZhdWx0KCIiKQogIGZvbGxvd2Vyc19jb3VudCBJbnQgQGRlZmF1bHQoMCkKICBmb2xsb3dzX2NvdW50ICAgSW50IEBkZWZhdWx0KDApCiAgcG9zdHNfY291bnQgICAgIEludCBAZGVmYXVsdCgwKQogIGRlc2NyaXB0aW9uICAgICBTdHJpbmcgQGRlZmF1bHQoIiIpCn0KCm1vZGVsIFBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICBCaWdJbnQgICAgICAgICAgICBAaWQKICBjaWQgICAgICAgICAgU3RyaW5nICAgICAgICAgQHVuaXF1ZQogIHVyaSAgICAgICAgICBTdHJpbmcKICBhdXRob3JfZGlkICAgU3RyaW5nCiAgcmVwb3N0cyBSZXBvc3RSZWNvcmRbXQp9Cgptb2RlbCBSZXBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICAgICAgQmlnSW50ICAgICAgICBAaWQKICBoYXNoX2lkICAgICAgICAgIFN0cmluZyAgICAgQHVuaXF1ZQogIG9yaWdpbmFsX3Bvc3QgICAgUG9zdFJlY29yZCBAcmVsYXRpb24oZmllbGRzOiBbb3JpZ2luYWxfcG9zdF9pZF0sIHJlZmVyZW5jZXM6IFtpZF0pCiAgb3JpZ2luYWxfcG9zdF9pZCBCaWdJbnQKfQoKbW9kZWwgTm90aWZpY2F0aW9uUmVjb3JkIHsKICBpZCAgQmlnSW50ICAgIEBpZAogIGNpZCBTdHJpbmcKICB1cmkgU3RyaW5nCn0KCm1vZGVsIE1lZGlhUmVjb3JkIHsKICBpZCAgICAgICAgICBCaWdJbnQgICAgQGlkCiAgdHlwZSAgICAgICAgU3RyaW5nCiAgbWltZV90eXBlICAgU3RyaW5nCiAgc2l6ZSAgICAgICAgSW50CiAgbGluayAgICAgICAgU3RyaW5nCiAgZGVzY3JpcHRpb24gU3RyaW5nCn0KCm1vZGVsIEZlZWRSZWNvcmQgewogIGlkICAgICAgICAgQmlnSW50ICAgICBAaWQKICBjaWQgICAgICAgIFN0cmluZwogIHVyaSAgICAgICAgU3RyaW5nCiAgYXV0aG9yX2RpZCBTdHJpbmc/Cn0KCm1vZGVsIFNlc3Npb25SZWNvcmQgewogIGlkIEludCBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIGRpZCBTdHJpbmcgQHVuaXF1ZQogIHNlc3Npb24gU3RyaW5nCn0=',
       datasources: datasources?.toJson().cast() ?? const {},
       executable:
-          r'/Users/videah/.npm/_npx/2778af9cee32ff87/node_modules/prisma/query-engine-darwin-arm64',
+          r'/Users/videah/.npm/_npx/b465c30ae0f33351/node_modules/prisma/query-engine-darwin-arm64',
     );
     return PrismaClient._internal(engine);
   }
@@ -10152,6 +11343,12 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
         transaction: _transaction,
       );
   _i1.ModelDelegate<FeedRecord> get feedRecord => _i1.ModelDelegate<FeedRecord>(
+        _engine,
+        headers: _headers,
+        transaction: _transaction,
+      );
+  _i1.ModelDelegate<SessionRecord> get sessionRecord =>
+      _i1.ModelDelegate<SessionRecord>(
         _engine,
         headers: _headers,
         transaction: _transaction,

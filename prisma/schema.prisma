@@ -57,3 +57,9 @@ model FeedRecord {
   uri        String
   author_did String?
 }
+
+model SessionRecord {
+  id Int @id @default(autoincrement())
+  did String @unique
+  session String
+}

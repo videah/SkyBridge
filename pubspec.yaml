@@ -14,10 +14,10 @@ dependencies:
   copy_with_extension: ^5.0.2
   crypto: ^3.0.2
   dart_frog: ^0.3.0
+  dart_jsonwebtoken: ^2.8.2
   dcli_core: ^3.0.3
   dotenv: ^4.1.0
   html: ^0.15.3
-  isar: ^3.1.0+1
   json_annotation: ^4.8.0
   orm: ^3.4.4
   path: ^1.8.3

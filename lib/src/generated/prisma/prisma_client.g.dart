@@ -1243,6 +1243,188 @@ Map<String, dynamic> _$FeedRecordScalarWhereWithAggregatesInputToJson(
   return val;
 }
 
+SessionRecordWhereInput _$SessionRecordWhereInputFromJson(
+        Map<String, dynamic> json) =>
+    SessionRecordWhereInput(
+      AND: (json['AND'] as List<dynamic>?)?.map(
+          (e) => SessionRecordWhereInput.fromJson(e as Map<String, dynamic>)),
+      OR: (json['OR'] as List<dynamic>?)?.map(
+          (e) => SessionRecordWhereInput.fromJson(e as Map<String, dynamic>)),
+      NOT: (json['NOT'] as List<dynamic>?)?.map(
+          (e) => SessionRecordWhereInput.fromJson(e as Map<String, dynamic>)),
+      id: json['id'] == null
+          ? null
+          : IntFilter.fromJson(json['id'] as Map<String, dynamic>),
+      did: json['did'] == null
+          ? null
+          : StringFilter.fromJson(json['did'] as Map<String, dynamic>),
+      session: json['session'] == null
+          ? null
+          : StringFilter.fromJson(json['session'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$SessionRecordWhereInputToJson(
+    SessionRecordWhereInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('AND', instance.AND?.map((e) => e.toJson()).toList());
+  writeNotNull('OR', instance.OR?.map((e) => e.toJson()).toList());
+  writeNotNull('NOT', instance.NOT?.map((e) => e.toJson()).toList());
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('did', instance.did?.toJson());
+  writeNotNull('session', instance.session?.toJson());
+  return val;
+}
+
+SessionRecordOrderByWithRelationInput
+    _$SessionRecordOrderByWithRelationInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordOrderByWithRelationInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          did: $enumDecodeNullable(_$SortOrderEnumMap, json['did']),
+          session: $enumDecodeNullable(_$SortOrderEnumMap, json['session']),
+        );
+
+Map<String, dynamic> _$SessionRecordOrderByWithRelationInputToJson(
+    SessionRecordOrderByWithRelationInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('did', _$SortOrderEnumMap[instance.did]);
+  writeNotNull('session', _$SortOrderEnumMap[instance.session]);
+  return val;
+}
+
+SessionRecordWhereUniqueInput _$SessionRecordWhereUniqueInputFromJson(
+        Map<String, dynamic> json) =>
+    SessionRecordWhereUniqueInput(
+      id: json['id'] as int?,
+      did: json['did'] as String?,
+    );
+
+Map<String, dynamic> _$SessionRecordWhereUniqueInputToJson(
+    SessionRecordWhereUniqueInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('did', instance.did);
+  return val;
+}
+
+SessionRecordOrderByWithAggregationInput
+    _$SessionRecordOrderByWithAggregationInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordOrderByWithAggregationInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          did: $enumDecodeNullable(_$SortOrderEnumMap, json['did']),
+          session: $enumDecodeNullable(_$SortOrderEnumMap, json['session']),
+          $count: json['_count'] == null
+              ? null
+              : SessionRecordCountOrderByAggregateInput.fromJson(
+                  json['_count'] as Map<String, dynamic>),
+          $avg: json['_avg'] == null
+              ? null
+              : SessionRecordAvgOrderByAggregateInput.fromJson(
+                  json['_avg'] as Map<String, dynamic>),
+          $max: json['_max'] == null
+              ? null
+              : SessionRecordMaxOrderByAggregateInput.fromJson(
+                  json['_max'] as Map<String, dynamic>),
+          $min: json['_min'] == null
+              ? null
+              : SessionRecordMinOrderByAggregateInput.fromJson(
+                  json['_min'] as Map<String, dynamic>),
+          $sum: json['_sum'] == null
+              ? null
+              : SessionRecordSumOrderByAggregateInput.fromJson(
+                  json['_sum'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$SessionRecordOrderByWithAggregationInputToJson(
+    SessionRecordOrderByWithAggregationInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('did', _$SortOrderEnumMap[instance.did]);
+  writeNotNull('session', _$SortOrderEnumMap[instance.session]);
+  writeNotNull('_count', instance.$count?.toJson());
+  writeNotNull('_avg', instance.$avg?.toJson());
+  writeNotNull('_max', instance.$max?.toJson());
+  writeNotNull('_min', instance.$min?.toJson());
+  writeNotNull('_sum', instance.$sum?.toJson());
+  return val;
+}
+
+SessionRecordScalarWhereWithAggregatesInput
+    _$SessionRecordScalarWhereWithAggregatesInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordScalarWhereWithAggregatesInput(
+          AND: (json['AND'] as List<dynamic>?)?.map((e) =>
+              SessionRecordScalarWhereWithAggregatesInput.fromJson(
+                  e as Map<String, dynamic>)),
+          OR: (json['OR'] as List<dynamic>?)?.map((e) =>
+              SessionRecordScalarWhereWithAggregatesInput.fromJson(
+                  e as Map<String, dynamic>)),
+          NOT: (json['NOT'] as List<dynamic>?)?.map((e) =>
+              SessionRecordScalarWhereWithAggregatesInput.fromJson(
+                  e as Map<String, dynamic>)),
+          id: json['id'] == null
+              ? null
+              : IntWithAggregatesFilter.fromJson(
+                  json['id'] as Map<String, dynamic>),
+          did: json['did'] == null
+              ? null
+              : StringWithAggregatesFilter.fromJson(
+                  json['did'] as Map<String, dynamic>),
+          session: json['session'] == null
+              ? null
+              : StringWithAggregatesFilter.fromJson(
+                  json['session'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$SessionRecordScalarWhereWithAggregatesInputToJson(
+    SessionRecordScalarWhereWithAggregatesInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('AND', instance.AND?.map((e) => e.toJson()).toList());
+  writeNotNull('OR', instance.OR?.map((e) => e.toJson()).toList());
+  writeNotNull('NOT', instance.NOT?.map((e) => e.toJson()).toList());
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('did', instance.did?.toJson());
+  writeNotNull('session', instance.session?.toJson());
+  return val;
+}
+
 UserRecordCreateInput _$UserRecordCreateInputFromJson(
         Map<String, dynamic> json) =>
     UserRecordCreateInput(
@@ -2517,6 +2699,167 @@ Map<String, dynamic> _$FeedRecordUncheckedUpdateManyInputToJson(
   return val;
 }
 
+SessionRecordCreateInput _$SessionRecordCreateInputFromJson(
+        Map<String, dynamic> json) =>
+    SessionRecordCreateInput(
+      did: json['did'] as String,
+      session: json['session'] as String,
+    );
+
+Map<String, dynamic> _$SessionRecordCreateInputToJson(
+        SessionRecordCreateInput instance) =>
+    <String, dynamic>{
+      'did': instance.did,
+      'session': instance.session,
+    };
+
+SessionRecordUncheckedCreateInput _$SessionRecordUncheckedCreateInputFromJson(
+        Map<String, dynamic> json) =>
+    SessionRecordUncheckedCreateInput(
+      id: json['id'] as int?,
+      did: json['did'] as String,
+      session: json['session'] as String,
+    );
+
+Map<String, dynamic> _$SessionRecordUncheckedCreateInputToJson(
+    SessionRecordUncheckedCreateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['did'] = instance.did;
+  val['session'] = instance.session;
+  return val;
+}
+
+SessionRecordUpdateInput _$SessionRecordUpdateInputFromJson(
+        Map<String, dynamic> json) =>
+    SessionRecordUpdateInput(
+      did: json['did'] == null
+          ? null
+          : StringFieldUpdateOperationsInput.fromJson(
+              json['did'] as Map<String, dynamic>),
+      session: json['session'] == null
+          ? null
+          : StringFieldUpdateOperationsInput.fromJson(
+              json['session'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$SessionRecordUpdateInputToJson(
+    SessionRecordUpdateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('did', instance.did?.toJson());
+  writeNotNull('session', instance.session?.toJson());
+  return val;
+}
+
+SessionRecordUncheckedUpdateInput _$SessionRecordUncheckedUpdateInputFromJson(
+        Map<String, dynamic> json) =>
+    SessionRecordUncheckedUpdateInput(
+      id: json['id'] == null
+          ? null
+          : IntFieldUpdateOperationsInput.fromJson(
+              json['id'] as Map<String, dynamic>),
+      did: json['did'] == null
+          ? null
+          : StringFieldUpdateOperationsInput.fromJson(
+              json['did'] as Map<String, dynamic>),
+      session: json['session'] == null
+          ? null
+          : StringFieldUpdateOperationsInput.fromJson(
+              json['session'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$SessionRecordUncheckedUpdateInputToJson(
+    SessionRecordUncheckedUpdateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('did', instance.did?.toJson());
+  writeNotNull('session', instance.session?.toJson());
+  return val;
+}
+
+SessionRecordUpdateManyMutationInput
+    _$SessionRecordUpdateManyMutationInputFromJson(Map<String, dynamic> json) =>
+        SessionRecordUpdateManyMutationInput(
+          did: json['did'] == null
+              ? null
+              : StringFieldUpdateOperationsInput.fromJson(
+                  json['did'] as Map<String, dynamic>),
+          session: json['session'] == null
+              ? null
+              : StringFieldUpdateOperationsInput.fromJson(
+                  json['session'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$SessionRecordUpdateManyMutationInputToJson(
+    SessionRecordUpdateManyMutationInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('did', instance.did?.toJson());
+  writeNotNull('session', instance.session?.toJson());
+  return val;
+}
+
+SessionRecordUncheckedUpdateManyInput
+    _$SessionRecordUncheckedUpdateManyInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordUncheckedUpdateManyInput(
+          id: json['id'] == null
+              ? null
+              : IntFieldUpdateOperationsInput.fromJson(
+                  json['id'] as Map<String, dynamic>),
+          did: json['did'] == null
+              ? null
+              : StringFieldUpdateOperationsInput.fromJson(
+                  json['did'] as Map<String, dynamic>),
+          session: json['session'] == null
+              ? null
+              : StringFieldUpdateOperationsInput.fromJson(
+                  json['session'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$SessionRecordUncheckedUpdateManyInputToJson(
+    SessionRecordUncheckedUpdateManyInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('did', instance.did?.toJson());
+  writeNotNull('session', instance.session?.toJson());
+  return val;
+}
+
 BigIntFilter _$BigIntFilterFromJson(Map<String, dynamic> json) => BigIntFilter(
       equals: json['equals'] == null
           ? null
@@ -3779,6 +4122,123 @@ Map<String, dynamic> _$StringNullableWithAggregatesFilterToJson(
   writeNotNull('_count', instance.$count?.toJson());
   writeNotNull('_min', instance.$min?.toJson());
   writeNotNull('_max', instance.$max?.toJson());
+  return val;
+}
+
+SessionRecordCountOrderByAggregateInput
+    _$SessionRecordCountOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordCountOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          did: $enumDecodeNullable(_$SortOrderEnumMap, json['did']),
+          session: $enumDecodeNullable(_$SortOrderEnumMap, json['session']),
+        );
+
+Map<String, dynamic> _$SessionRecordCountOrderByAggregateInputToJson(
+    SessionRecordCountOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('did', _$SortOrderEnumMap[instance.did]);
+  writeNotNull('session', _$SortOrderEnumMap[instance.session]);
+  return val;
+}
+
+SessionRecordAvgOrderByAggregateInput
+    _$SessionRecordAvgOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordAvgOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+        );
+
+Map<String, dynamic> _$SessionRecordAvgOrderByAggregateInputToJson(
+    SessionRecordAvgOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  return val;
+}
+
+SessionRecordMaxOrderByAggregateInput
+    _$SessionRecordMaxOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordMaxOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          did: $enumDecodeNullable(_$SortOrderEnumMap, json['did']),
+          session: $enumDecodeNullable(_$SortOrderEnumMap, json['session']),
+        );
+
+Map<String, dynamic> _$SessionRecordMaxOrderByAggregateInputToJson(
+    SessionRecordMaxOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('did', _$SortOrderEnumMap[instance.did]);
+  writeNotNull('session', _$SortOrderEnumMap[instance.session]);
+  return val;
+}
+
+SessionRecordMinOrderByAggregateInput
+    _$SessionRecordMinOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordMinOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          did: $enumDecodeNullable(_$SortOrderEnumMap, json['did']),
+          session: $enumDecodeNullable(_$SortOrderEnumMap, json['session']),
+        );
+
+Map<String, dynamic> _$SessionRecordMinOrderByAggregateInputToJson(
+    SessionRecordMinOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('did', _$SortOrderEnumMap[instance.did]);
+  writeNotNull('session', _$SortOrderEnumMap[instance.session]);
+  return val;
+}
+
+SessionRecordSumOrderByAggregateInput
+    _$SessionRecordSumOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        SessionRecordSumOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+        );
+
+Map<String, dynamic> _$SessionRecordSumOrderByAggregateInputToJson(
+    SessionRecordSumOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
   return val;
 }
 
@@ -5100,6 +5560,20 @@ Map<String, dynamic> _$FeedRecordToJson(FeedRecord instance) {
   return val;
 }
 
+SessionRecord _$SessionRecordFromJson(Map<String, dynamic> json) =>
+    SessionRecord(
+      id: json['id'] as int,
+      did: json['did'] as String,
+      session: json['session'] as String,
+    );
+
+Map<String, dynamic> _$SessionRecordToJson(SessionRecord instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'did': instance.did,
+      'session': instance.session,
+    };
+
 UserRecordGroupByOutputType _$UserRecordGroupByOutputTypeFromJson(
         Map<String, dynamic> json) =>
     UserRecordGroupByOutputType(
@@ -5261,6 +5735,30 @@ Map<String, dynamic> _$FeedRecordGroupByOutputTypeToJson(
   writeNotNull('cid', instance.cid);
   writeNotNull('uri', instance.uri);
   writeNotNull('author_did', instance.authorDid);
+  return val;
+}
+
+SessionRecordGroupByOutputType _$SessionRecordGroupByOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    SessionRecordGroupByOutputType(
+      id: json['id'] as int?,
+      did: json['did'] as String?,
+      session: json['session'] as String?,
+    );
+
+Map<String, dynamic> _$SessionRecordGroupByOutputTypeToJson(
+    SessionRecordGroupByOutputType instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('did', instance.did);
+  writeNotNull('session', instance.session);
   return val;
 }
 

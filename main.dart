@@ -100,6 +100,7 @@ Future<void> init(InternetAddress ip, int port) async {
         'NotificationRecord',
         'MediaRecord',
         'FeedRecord',
+        'SessionRecord',
       ];
 
       await db.$queryRaw('PRAGMA foreign_keys=OFF;');
