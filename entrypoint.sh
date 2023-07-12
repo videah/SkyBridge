@@ -15,6 +15,6 @@ fi
 cd /app || exit
 
 # Run any necessary database migrations.
-npx --yes prisma migrate deploy
+npx --yes prisma@4.16.2 migrate deploy
 
 ./bin/server

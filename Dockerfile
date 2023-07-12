@@ -16,7 +16,7 @@ COPY . .
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
 apt-get install -y nodejs
 
-RUN npm i prisma
+RUN npm i prisma@4.16.2
 RUN npx prisma generate
 
 # Generate a production build.
@@ -33,7 +33,7 @@ FROM dart:stable AS runtime
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
 apt-get install -y nodejs
 
-RUN npm i prisma
+RUN npm i prisma@4.16.2
 
 COPY --from=odroe/prisma-dart:latest / /runtime
 COPY --from=build /runtime/ /
