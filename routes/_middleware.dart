@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:shelf_cors_headers/shelf_cors_headers.dart';
 import 'package:sky_bridge/auth.dart';
+import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 
 Handler middleware(Handler handler) {
   return (RequestContext context) async {
@@ -23,33 +27,22 @@ Handler middleware(Handler handler) {
       // This middleware is only for handling expired tokens.
       if (error != 'ExpiredToken') rethrow;
 
-      // If we are at this point we have an expired token.
-      // We're going to try to refresh it and then re-run the handler.
-      final session = await sessionFromContext(context);
-      if (session == null) return authError();
-      final bluesky = bsky.Bluesky.fromSession(session);
+      final header = context.request.headers['Authorization'];
+      final token = validateBearerToken(header);
 
-      print('Expired token for ${session.did}, attempting refresh...');
+      final response = Response.json(
+        statusCode: HttpStatus.unauthorized,
+        body: {'error': 'The access token is invalid'},
+      );
 
-      // Try refreshing the session with the refresh token.
-      try {
-        final newSession = await bluesky.servers.refreshSession(
-          refreshJwt: session.refreshJwt,
+      if (token != null) {
+        print('Deleting expired session for did: ${token.did}');
+        await db.sessionRecord.delete(
+          where: SessionRecordWhereUniqueInput(
+            did: token.did,
+          ),
         );
-
-        // Success! Swap out the old session for the new one.
-        sessions[session.did] = newSession.data;
-        print('Successfully refreshed session for ${session.did}.');
-      } catch (e) {
-        // If we fail to refresh the session, there's nothing we can do.
-        // We'll just remove the session and return an error.
-        print('Failed to refresh session for ${session.did}, dropping...');
-        sessions.remove(session.did);
-        return authError();
       }
-
-      // Try again now that we have a new session.
-      final response = await handler(context);
 
       // Reset Cache-Control so that we don't cache responses.
       return response.copyWith(

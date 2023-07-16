@@ -65,7 +65,9 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
 
         // Update the session in the database.
         await db.sessionRecord.update(
-          where: SessionRecordWhereUniqueInput(did: refreshedSession.data.did),
+          where: SessionRecordWhereUniqueInput(
+            did: refreshedSession.data.did,
+          ),
           data: SessionRecordUpdateInput(
             session: StringFieldUpdateOperationsInput(
               set: jsonEncode(refreshedSession.data.toJson()),
