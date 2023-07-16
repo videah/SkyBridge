@@ -1,6 +1,7 @@
 import 'package:dart_frog/dart_frog.dart';
-import 'package:sky_bridge/auth.dart';
+import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_instance.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Obtain general information about the server.
@@ -12,6 +13,8 @@ Future<Response> onRequest(RequestContext context) async {
     () => throw Exception('SKYBRIDGE_BASEURL not set!'),
   );
 
+  final userCount = await db.sessionRecord.aggregate().$count().id();
+
   return threadedJsonResponse(
     body: MastodonInstance(
       domain: url,
@@ -21,7 +24,7 @@ Future<Response> onRequest(RequestContext context) async {
       description: 'A Mastodon bridge for Bluesky.',
       usage: UsageInfo(
         users: UsersUsageInfo(
-          activeMonth: sessions.length,
+          activeMonth: userCount,
         ),
       ),
       thumbnail: {},

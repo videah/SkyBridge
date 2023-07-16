@@ -1,17 +1,21 @@
 import 'package:dart_frog/dart_frog.dart';
-import 'package:sky_bridge/auth.dart';
+import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_instance.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_instance_v1.dart';
+import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
 /// Obtain general information about the server.
 /// GET /api/v1/instance HTTP/1.1
 /// See: https://docs.joinmastodon.org/methods/instance/#v1
-Future<Response> onRequest(RequestContext context) {
+Future<Response> onRequest(RequestContext context) async {
   final url = env.getOrElse(
     'SKYBRIDGE_BASEURL',
     () => throw Exception('SKYBRIDGE_BASEURL not set!'),
   );
+
+  final userCount = await db.sessionRecord.aggregate().$count().id();
+  final postCount = await db.postRecord.aggregate().$count().id();
 
   return threadedJsonResponse(
     body: MastodonInstanceV1(
@@ -23,8 +27,8 @@ Future<Response> onRequest(RequestContext context) {
       version: '4.1.2',
       urls: {},
       stats: StatInfo(
-        userCount: sessions.length,
-        statusCount: 99999,
+        userCount: userCount,
+        statusCount: postCount,
         domainCount: 1,
       ),
       languages: ['en'],

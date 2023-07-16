@@ -10,6 +10,7 @@ import '../routes/index.dart' as index;
 import '../routes/oauth/token.dart' as oauth_token;
 import '../routes/oauth/revoke.dart' as oauth_revoke;
 import '../routes/oauth/authorize.dart' as oauth_authorize;
+import '../routes/nodeinfo/2.0.dart' as nodeinfo_2_0;
 import '../routes/api/v2/search.dart' as api_v2_search;
 import '../routes/api/v2/media.dart' as api_v2_media;
 import '../routes/api/v2/instance.dart' as api_v2_instance;
@@ -43,6 +44,7 @@ import '../routes/api/v1/accounts/[id]/following.dart' as api_v1_accounts_$id_fo
 import '../routes/api/v1/accounts/[id]/followers.dart' as api_v1_accounts_$id_followers;
 import '../routes/api/v1/accounts/[id]/follow.dart' as api_v1_accounts_$id_follow;
 import '../routes/[userId]/[postId].dart' as $user_id_$post_id;
+import '../routes/.well-known/nodeinfo.dart' as well_known_nodeinfo;
 
 import '../routes/_middleware.dart' as middleware;
 
@@ -76,8 +78,16 @@ Handler buildRootHandler() {
     ..mount('/api/v1/trends', (context) => buildApiV1TrendsHandler()(context))
     ..mount('/api/v1', (context) => buildApiV1Handler()(context))
     ..mount('/api/v2', (context) => buildApiV2Handler()(context))
+    ..mount('/nodeinfo', (context) => buildNodeinfoHandler()(context))
     ..mount('/oauth', (context) => buildOauthHandler()(context))
     ..mount('/', (context) => buildHandler()(context));
+  return pipeline.addHandler(router);
+}
+
+Handler buildWellKnownHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/nodeinfo', (context) => well_known_nodeinfo.onRequest(context,));
   return pipeline.addHandler(router);
 }
 
@@ -176,6 +186,13 @@ Handler buildApiV2Handler() {
   final pipeline = const Pipeline();
   final router = Router()
     ..all('/search', (context) => api_v2_search.onRequest(context,))..all('/media', (context) => api_v2_media.onRequest(context,))..all('/instance', (context) => api_v2_instance.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildNodeinfoHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/2.0', (context) => nodeinfo_2_0.onRequest(context,));
   return pipeline.addHandler(router);
 }
 

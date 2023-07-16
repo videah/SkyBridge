@@ -203,6 +203,14 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
         (RequestContext context) => buildOauthHandler()(context),
       )
       ..mount(
+        '/.well-known',
+        (RequestContext context) => buildWellKnownHandler()(context),
+      )
+      ..mount(
+        '/nodeinfo',
+        (RequestContext context) => buildNodeinfoHandler()(context),
+      )
+      ..mount(
         '/<userId>',
         (RequestContext context, String userId) => build$userIdHandler(userId)(
           context,
