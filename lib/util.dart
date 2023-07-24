@@ -231,7 +231,7 @@ String boolToString(bool? value) => value?.toString() ?? 'false';
 
 /// Convert a string to a bool. Used for converting parameter values.
 bool handleBoolParameter(String? value) {
-  return value == '1' || value == 'true';
+  return value == '1' || value == 'true' || value == 'on';
 }
 
 /// Get the file extension of an image from its bytes.

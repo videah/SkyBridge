@@ -112,6 +112,7 @@ Future<Response> _post(RequestContext context) async {
     scope: auth.scope,
     identifier: form.identifier,
     appPassword: form.appPassword,
+    showRepliesInHome: form.showRepliesInHome,
   );
 
   final signedCode = packObject(code.toJson());
