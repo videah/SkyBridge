@@ -7,7 +7,65 @@ import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
 import 'package:sky_bridge/models/preferences.dart';
+import 'package:sky_bridge/models/session_rate_limit.dart';
 import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
+
+/// Holding session rate limits in memory.
+final sessionRateLimits = <String, AuthRateLimit>{};
+
+/// Takes an IP address and ensures that authentication attempts are not
+/// being made too frequently. Bluesky now has quite aggressive rate limiting
+/// for authentication attempts, so we have to do the same.
+///
+/// Returns true if the IP has hit the rate limit, false otherwise.
+void incrementFailedAuthAttempt(RequestContext context) {
+  final ip = context.request.headers['X-Forwarded-For'] ??
+      context.request.connectionInfo.remoteAddress.address;
+
+  final limit = sessionRateLimits.putIfAbsent(
+    ip,
+    AuthRateLimit.new,
+  )
+    ..increment();
+
+  sessionRateLimits[ip] = limit;
+}
+
+bool isIpRateLimited(RequestContext context) {
+  final ip = context.request.headers['X-Forwarded-For'] ??
+      context.request.connectionInfo.remoteAddress.address;
+
+  final limit = sessionRateLimits[ip];
+  if (limit == null) return false;
+
+  // We've hit the rate limit.
+  if (limit.attempts >= 5) {
+    final now = DateTime.now().toUtc();
+
+    // If the last time the limit was hit is null, set it to now.
+    limit.lastTimeLimitWasHit ??= now;
+
+    // If the last hit was more than 30 minutes ago, reset the limit.
+    final diff = now.difference(limit.lastTimeLimitWasHit!);
+    if (diff.inMinutes > 30) {
+      limit
+        ..attempts = 1
+        ..lastTimeLimitWasHit = null;
+    }
+
+    // Update values.
+    sessionRateLimits[ip] = limit;
+  }
+
+  return limit.lastTimeLimitWasHit != null;
+}
+
+/// Reset the rate limit for a given IP address.
+void resetIpRateLimit(RequestContext context) {
+  final ip = context.request.headers['X-Forwarded-For'] ??
+      context.request.connectionInfo.remoteAddress.address;
+  sessionRateLimits.remove(ip);
+}
 
 /// Check a request context for a valid bearer token to determine if the
 /// request is authenticated.
@@ -46,13 +104,23 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
     if (now.isAfter(accessExp)) {
       if (now.isAfter(refreshExp)) {
         // Refresh token is expired. We gotta get a brand new session.
+        // Check if the IP is rate limited for authentication attempts.
+        final isRateLimited = isIpRateLimited(context);
+        if (isRateLimited) return null;
+
         final newSession = await createBlueskySession(
           identifier: token.identifier,
           appPassword: token.appPassword,
         );
 
         // Credentials are just straight up invalid. Bail.
-        if (newSession == null) return null;
+        if (newSession == null) {
+          incrementFailedAuthAttempt(context);
+          return null;
+        }
+
+        // Reset the IP rate limit.
+        resetIpRateLimit(context);
 
         return newSession;
       } else {
@@ -81,13 +149,23 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
 
     return session;
   } else {
+    // Check if the IP is rate limited for authentication attempts.
+    final isRateLimited = isIpRateLimited(context);
+    if (isRateLimited) return null;
+
     final newSession = await createBlueskySession(
       identifier: token.identifier,
       appPassword: token.appPassword,
     );
 
     // Credentials are just straight up invalid. Bail.
-    if (newSession == null) return null;
+    if (newSession == null) {
+      incrementFailedAuthAttempt(context);
+      return null;
+    }
+
+    // Reset the IP rate limit.
+    resetIpRateLimit(context);
 
     return newSession;
   }
