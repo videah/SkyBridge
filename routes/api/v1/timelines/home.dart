@@ -66,7 +66,7 @@ Future<Response> onRequest(RequestContext context) async {
       );
       prevCursor = feed.data.cursor;
 
-      if (posts.length < 25) {
+      if (posts.length < 25 || allPosts.length > 400) {
         // Bail early and don't try to fetch more posts if the batch was tiny
         done = true;
       }
