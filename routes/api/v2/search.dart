@@ -30,12 +30,25 @@ Future<Response> onRequest<T>(RequestContext context) async {
   if (params.limit == 1 &&
       params.resolve == true &&
       params.type == SearchType.statuses) {
-    // Do some Regex with /^(.+)\/@([^/]+)\/(\d+)$/
-    final match = RegExp(r'^(.+)\/@([^/]+)\/(\d+)$')
+
+    // If the query is attempting to find a quote post, Ivory will send
+    // a query with the SkyBridge instance URI in the query in a format
+    // that Mastodon uses.
+    final quoteMatch = RegExp(r'^(.+)\/@([^/]+)\/(\d+)$')
         .firstMatch(params.query)
         ?.groups([1, 2, 3]);
+    final postId = quoteMatch?[2];
 
-    final postId = match?[2];
+    // If the query is attempting to repost to a different account, Ivory will
+    // send a query with the original bsky URI in the query (as opposed to the
+    // SkyBridge instance's URI).
+    final repostMatch = RegExp(
+      'https://.*?/profile/(.*?)/post/([a-zA-Z0-9]+)',
+    ).firstMatch(params.query)?.groups([1, 2]);
+    final repostHandle = repostMatch?[0];
+    final repostPostId = repostMatch?[1];
+
+    // Check if the query is a quote post.
     if (postId != null) {
       // Get the post from the database.
       // If the post is not in the database we return 404.
@@ -47,6 +60,33 @@ Future<Response> onRequest<T>(RequestContext context) async {
       // Get the post from bluesky, we assume we already know the post exists
       // and don't bother adding to the database or anything.
       final uri = bsky.AtUri.parse(postRecord!.uri);
+      final response = await bluesky.feeds.findPosts(uris: [uri]);
+      final post = response.data.posts.first;
+
+      final mastodonPost = await databaseTransaction(
+        () => MastodonPost.fromBlueSkyPost(post),
+      );
+
+      // Process replies.
+      final processedPost = await processParentPosts(bluesky, [mastodonPost]);
+
+      return threadedJsonResponse(
+        body: {
+          'hashtags': [],
+          'accounts': [],
+          'statuses': [processedPost.first],
+        },
+      );
+    }
+
+    // Check if the query is an attempted repost to a different account.
+    if (repostHandle != null && repostPostId != null) {
+      // We resolve the DID and try and find the post directly from bluesky.
+      final did = await bluesky.identities.findDID(handle: repostHandle);
+      final uri = bsky.AtUri.parse(
+        'at://${did.data.did}/app.bsky.feed.post/$repostPostId',
+      );
+
       final response = await bluesky.feeds.findPosts(uris: [uri]);
       final post = response.data.posts.first;
 
