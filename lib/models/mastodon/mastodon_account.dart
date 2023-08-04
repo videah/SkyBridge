@@ -58,6 +58,11 @@ class MastodonAccount {
     final avatarFallback = 'https://$base/pfp_fallback.png';
     final bannerFallback = 'https://$base/bnr_fallback.png';
 
+    /* Get the user banner, if it exists.
+    If not, ensure an empty string never gets passed through, so that clients
+    such as Ice Cubes (that always expect a valid URL) don't break. */
+    final userBanner = user.banner.isNotEmpty ? user.banner : null;
+
     return MastodonAccount(
       id: user.id.toString(),
       username: profile.handle,
@@ -70,8 +75,8 @@ class MastodonAccount {
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
-      header: user.banner,
-      headerStatic: user.banner,
+      header: userBanner ?? bannerFallback,
+      headerStatic: userBanner ?? bannerFallback,
       followersCount: user.followersCount,
       followingCount: user.followsCount,
       statusesCount: user.postsCount,
@@ -95,6 +100,11 @@ class MastodonAccount {
     final avatarFallback = 'https://$base/pfp_fallback.png';
     final bannerFallback = 'https://$base/bnr_fallback.png';
 
+    /* Get the user banner, if it exists.
+    If not, ensure an empty string never gets passed through, so that clients
+    such as Ice Cubes (that always expect a valid URL) don't break. */
+    final userBanner = user.banner.isNotEmpty ? user.banner : null;
+
     return MastodonAccount(
       id: user.id.toString(),
       username: profile.handle,
@@ -107,8 +117,8 @@ class MastodonAccount {
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
-      header: user.banner,
-      headerStatic: user.banner,
+      header: userBanner ?? bannerFallback,
+      headerStatic: userBanner ?? bannerFallback,
       followersCount: user.followersCount,
       followingCount: user.followsCount,
       statusesCount: user.postsCount,
