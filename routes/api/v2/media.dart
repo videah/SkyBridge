@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_frog/dart_frog.dart';
+import 'package:image_compression/image_compression.dart';
 import 'package:sky_bridge/auth.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/forms/media_upload_form.dart';
@@ -33,7 +34,7 @@ Future<Response> onRequest(RequestContext context) async {
     // Currently the ATProto library we're using relies on the file extension
     // rather than a magic number to determine the file type, so we need to
     // do this ahead of time.
-    final imageFileBytes = await imageFile.readAsBytes();
+    var imageFileBytes = Uint8List.fromList(await imageFile.readAsBytes());
     final extension = imageBytesToExtension(imageFileBytes);
 
     // If we can't determine the extension from the image header bail out.
@@ -44,10 +45,47 @@ Future<Response> onRequest(RequestContext context) async {
       return _invalidImage();
     }
 
+    // Get the file size in bytes.
+    final fileSize = imageFileBytes.length;
+
+    // Check the file size is within the limits.
+    // If not, compress the image.
+    if (fileSize > 976560) {
+      print('File size is too large, compressing.');
+
+      final file = ImageFile(
+        rawBytes: imageFileBytes,
+        filePath: '/tmp/${imageFile.name}',
+        contentType: extension,
+      );
+
+      // Compress until the file size is within the limits, 5 attempts.
+      for (var i = 0; i < 5; i++) {
+        print('Compressing attempt ${i + 1} of 5. Quality: ${80 - (i * 5)}');
+        final config = ImageFileConfiguration(
+          input: file,
+          config: Configuration(
+            jpgQuality: 80 - (i * 5),
+          ),
+        );
+
+        final compressedImage = await compressInQueue(config);
+        if (compressedImage.sizeInBytes < 976560) {
+          // We've compressed the image enough, break out of the loop.
+          imageFileBytes = compressedImage.rawBytes;
+          break;
+        } else {
+          // If the image is still too big after 5 attempts, bail out.
+          if (i == 4) {
+            print('Could not compress image to within size limits.');
+            return _invalidImage();
+          }
+        }
+      }
+    }
+
     // Upload the image file to bluesky.
-    final response = await bluesky.repositories.uploadBlob(
-      Uint8List.fromList(imageFileBytes),
-    );
+    final response = await bluesky.repositories.uploadBlob(imageFileBytes);
     final blob = response.data.blob;
 
     // We need to store the blob info in the database so it can be retrieved

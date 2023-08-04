@@ -18,6 +18,7 @@ dependencies:
   dcli_core: ^3.0.3
   dotenv: ^4.1.0
   html: ^0.15.3
+  image_compression: ^1.0.4
   json_annotation: ^4.8.0
   orm: ^3.4.4
   path: ^1.8.3
