@@ -5,9 +5,9 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/models/auth_rate_limit.dart';
 import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
 import 'package:sky_bridge/models/preferences.dart';
-import 'package:sky_bridge/models/session_rate_limit.dart';
 import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 
 /// Holding session rate limits in memory.
@@ -31,6 +31,7 @@ void incrementFailedAuthAttempt(RequestContext context) {
   sessionRateLimits[ip] = limit;
 }
 
+/// Determines if an IP address has hit the rate limit for authentication.
 bool isIpRateLimited(RequestContext context) {
   final ip = context.request.headers['X-Forwarded-For'] ??
       context.request.connectionInfo.remoteAddress.address;
