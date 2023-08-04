@@ -39,10 +39,10 @@ class SearchAccountParams {
   ///
   /// Bluesky does not use WebFinger so we just trim the base url from the
   /// query and search for the handle.
-  @JsonKey(toJson: boolToInt, fromJson: intToBool)
+  @JsonKey(toJson: boolToInt, fromJson: handleBoolParameter)
   final bool resolve;
 
   /// Only return accounts the current user is following.
-  @JsonKey(toJson: boolToInt, fromJson: intToBool)
+  @JsonKey(toJson: boolToInt, fromJson: handleBoolParameter)
   final bool following;
 }

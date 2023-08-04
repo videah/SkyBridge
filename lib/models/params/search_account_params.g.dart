@@ -14,10 +14,10 @@ SearchAccountParams _$SearchAccountParamsFromJson(Map<String, dynamic> json) =>
           json['offset'] == null ? 0 : stringToInt(json['offset'] as String?),
       resolve: json['resolve'] == null
           ? false
-          : intToBool(json['resolve'] as String?),
+          : handleBoolParameter(json['resolve'] as String?),
       following: json['following'] == null
           ? false
-          : intToBool(json['following'] as String?),
+          : handleBoolParameter(json['following'] as String?),
     );
 
 Map<String, dynamic> _$SearchAccountParamsToJson(

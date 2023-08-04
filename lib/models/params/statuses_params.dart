@@ -21,7 +21,7 @@ class StatusesParams {
   Map<String, dynamic> toJson() => _$StatusesParamsToJson(this);
 
   /// Filters out statuses that are reblogs if set to true (default: false).
-  @JsonKey(name: 'exclude_reblogs', toJson: boolToInt, fromJson: intToBool)
+  @JsonKey(name: 'exclude_reblogs', toJson: boolToInt, fromJson: handleBoolParameter)
   final bool excludeReblogs;
 
   /// Maximum number of statuses to get (default: 20).
@@ -29,6 +29,6 @@ class StatusesParams {
   final int limit;
 
   /// Should we filter for pinned posts only?
-  @JsonKey(toJson: boolToInt, fromJson: intToBool)
+  @JsonKey(toJson: boolToInt, fromJson: handleBoolParameter)
   final bool pinned;
 }
