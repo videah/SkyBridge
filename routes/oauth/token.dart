@@ -18,10 +18,17 @@ Future<Response> onRequest(RequestContext context) async {
 
     final type = context.request.headers[HttpHeaders.contentTypeHeader] ?? '';
     Map<String, dynamic> body;
+
     if (type.contains('application/json')) {
       body = await request.json() as Map<String, dynamic>;
     } else {
       body = await request.formData();
+    }
+
+    // If the body is empty, we'll try to get the query parameters.
+    // Clients like Mammoth use the query parameters instead of the body.
+    if (body.isEmpty) {
+      body = context.request.uri.queryParameters;
     }
 
     final oauth = OAuthTokenRequest.fromJson(body);
