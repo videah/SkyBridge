@@ -34,10 +34,10 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final record = await db.mediaRecord.findUnique(
     where: MediaRecordWhereUniqueInput(id: idNumber),
   );
-  if (record == null) Response(statusCode: HttpStatus.notFound);
+  if (record == null) return Response(statusCode: HttpStatus.notFound);
 
   final attachment = MastodonMediaAttachment(
-    id: record!.id.toString(),
+    id: record.id.toString(),
     type: MediaType.image,
     previewUrl: '',
     url: '',

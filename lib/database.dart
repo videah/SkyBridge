@@ -431,14 +431,19 @@ extension BlobExtension on MediaRecord {
       ),
     );
 
-    return MediaRecord(
-      id: id,
-      type: blob.type,
-      mimeType: blob.mimeType,
-      size: blob.size,
-      link: blob.ref.link,
-      description: description,
+    // Create a new media record.
+    final mediaRecord = await db.mediaRecord.create(
+      data: MediaRecordCreateInput(
+        id: id,
+        type: blob.type,
+        mimeType: blob.mimeType,
+        size: blob.size,
+        link: blob.ref.link,
+        description: description,
+      ),
     );
+
+    return mediaRecord;
   }
 
   /// Converts this [MediaRecord] back into a [bsky.Blob].
