@@ -13,7 +13,7 @@ dependencies:
   collection: ^1.17.1
   copy_with_extension: ^5.0.2
   crypto: ^3.0.2
-  dart_frog: ^0.3.0
+  dart_frog: ^1.0.0
   dart_jsonwebtoken: ^2.8.2
   dcli_core: ^3.0.3
   dotenv: ^4.1.0
@@ -32,7 +32,7 @@ dev_dependencies:
   fixnum: ^1.1.0
   isar_generator: ^3.1.0+1
   json_serializable: ^6.6.1
-  mocktail: ^0.3.0
+  mocktail: ^1.0.0
   test: ^1.19.2
   very_good_analysis: ^5.0.0+1
 
