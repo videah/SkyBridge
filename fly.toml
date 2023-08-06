@@ -21,3 +21,10 @@ primary_region = "lhr"
 [mounts]
   source="skybridge_data"
   destination="/app/database"
+
+[[http_service.checks]]
+  grace_period = "30s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/api/v2/instance"
