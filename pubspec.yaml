@@ -8,8 +8,8 @@ environment:
 
 dependencies:
   atproto: ^0.6.4
-  bluesky: ^0.8.5
-  bluesky_text: ^0.3.1
+  bluesky: ^0.8.11
+  bluesky_text: ^0.4.0
   collection: ^1.17.1
   copy_with_extension: ^5.0.2
   crypto: ^3.0.2
