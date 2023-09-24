@@ -132,7 +132,8 @@ Future<List<MastodonPost>> traverseReplies(
     record: (record) async {
       // Get the current depth post and add it to the list.
       final currentPost = await MastodonPost.fromBlueSkyPost(record.data.post);
-      result.add(currentPost);
+      // Skip the first post.
+      if (depth > 0) result.add(currentPost);
 
       // We don't want to traverse too deep, 6 is just a number I pulled out
       // of thin air. Need to look into how deep Bluesky goes.
