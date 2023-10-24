@@ -109,10 +109,10 @@ packages:
     dependency: "direct main"
     description:
       name: bluesky_text
-      sha256: "5bc3dc50f7907bc7ba4729bea72c2ffbb4cc3d19a78629dfafd029492e62c384"
+      sha256: "1c52365e84e0ec8ce4a4bf46088be870b9aa152c0f825e9e93389900ccd685d4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.1"
+    version: "0.5.15"
   boolean_selector:
     dependency: transitive
     description:
@@ -489,14 +489,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  icann_tlds:
-    dependency: transitive
-    description:
-      name: icann_tlds
-      sha256: c94080902bec5a863ef6fecf5a490d18496a4b4584959fe9933c492a0673b00d
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   ieee754:
     dependency: transitive
     description:
@@ -1061,10 +1053,10 @@ packages:
     dependency: transitive
     description:
       name: xrpc
-      sha256: "1911af773345ab14a80357b894183389542fc6b21b3bb2830b5a622ccee417ac"
+      sha256: e5bf5bc201734056517bbaeb6558e09f9ac0b601ef0436acf23287cb54417649
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.2"
   xxh3:
     dependency: transitive
     description:
