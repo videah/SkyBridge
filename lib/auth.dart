@@ -14,7 +14,7 @@ import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 /// for authentication attempts, so we have to do the same.
 ///
 /// Returns true if the IP has hit the rate limit, false otherwise.
-void incrementFailedAuthAttempt(RequestContext context) async {
+Future<void> incrementFailedAuthAttempt(RequestContext context) async {
   final ip = context.request.headers['X-Forwarded-For'] ??
       context.request.connectionInfo.remoteAddress.address;
 
