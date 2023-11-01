@@ -44,6 +44,8 @@ model NotificationRecord {
   id  BigInt    @id
   cid String
   uri String
+
+  @@index(fields: [cid])
 }
 
 model MediaRecord {
