@@ -157,14 +157,6 @@ class MastodonPost {
         )
         .toList();
 
-    // Replace the tags in the content with links to the tag pages.
-    for (final tag in tags) {
-      content = content.replaceAll(
-        '#${tag.name}',
-        '<a href="${tag.url}" rel="nofollow noopener noreferrer" target="_blank">#${tag.name}</a>',
-      );
-    }
-
     return MastodonPost(
       id: id.toString(),
       createdAt: post.indexedAt.toUtc(),
@@ -258,15 +250,6 @@ class MastodonPost {
           ),
         )
         .toList();
-
-    // Replace the tags in the content with links to the tag pages.
-    for (final tag in tags) {
-      content = content.replaceAllMapped(
-        RegExp(r'\B#' + tag.name + r'\b'),
-        (match) =>
-            '<a href="${tag.url}" rel="nofollow noopener noreferrer" target="_blank">${match.group(0)}</a>',
-      );
-    }
 
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),

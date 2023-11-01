@@ -122,6 +122,15 @@ Future<ProcessedFacets> processFacets(
           '<span class="h-card"><a href="$url" class="u-url mention" rel="nofollow noopener noreferrer" target="_blank">$facetText</a></span>',
         );
         mentions.add(MentionTuple(facet: mention, handle: facetText));
+      } else if (feature.data is bsky.FacetTag) {
+        // Facet is a tag, attach tag url to <a> tag.
+        final url = 'https://$base/tags/$facetText';
+        output.add(
+          '<a href="$url" class="mention" rel="nofollow noopener noreferrer" target="_blank">$facetText</a>',
+        );
+      } else {
+        // Facet is something else, just add the text.
+        output.add(escape.convert(facetText));
       }
       lastPos = facet.index.byteEnd;
     }
