@@ -226,7 +226,7 @@ Future<UserRecord> actorProfileToDatabase(bsky.ActorProfile actor) async {
   if (existing == null) {
     // Doesn't exist, create a new record.
     final id = hashBlueskyToId(actor.did);
-    final info = ProfileInfo.fromActorProfile(actor);
+    final info = await ProfileInfo.fromActorProfile(actor);
 
     return db.userRecord.upsert(
       where: UserRecordWhereUniqueInput(did: actor.did),

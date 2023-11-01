@@ -254,22 +254,6 @@ String sanitizeText(String text) {
   return sanitizedText ?? '';
 }
 
-/// Converts all links in a string to HTML links.
-String convertTextToLinks(String? text) {
-  if (text == null) return '';
-  // TODO(videah): This regex is not perfect, would like to cover more cases.
-  final linkRegex = RegExp(r'(?<!@)\b(https?://(?:\S+?\.)?\S+\.\S+)\b');
-
-  // Remove all HTML tags inserted by the user.
-  final sanitizedText = sanitizeText(text);
-
-  return sanitizedText.replaceAllMapped(linkRegex, (match) {
-    final url = match.group(0);
-    return '<a href="$url">$url</a>';
-  });
-}
-
-
 /// [Uri.toString] lowercases the host, which breaks the URI
 /// for some clients. This is just a simple function that preserves the casing.
 String stringifyModifiedUri(Uri uri, String originalUri) {

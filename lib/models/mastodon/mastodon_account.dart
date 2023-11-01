@@ -1,7 +1,8 @@
-import 'package:bluesky/bluesky.dart';
-import 'package:isar/isar.dart';
+import 'package:bluesky/bluesky.dart' as bsky;
+import 'package:bluesky_text/bluesky_text.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
+import 'package:sky_bridge/facets.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_post.dart';
 import 'package:sky_bridge/util.dart';
 
@@ -42,9 +43,9 @@ class MastodonAccount {
   /// Converts the [MastodonAccount] to JSON.
   Map<String, dynamic> toJson() => _$MastodonAccountToJson(this);
 
-  /// Creates a [MastodonAccount] from an [ActorProfile].
+  /// Creates a [MastodonAccount] from an [bsky.ActorProfile].
   static Future<MastodonAccount> fromActorProfile(
-    ActorProfile profile,
+    bsky.ActorProfile profile,
   ) async {
     // Assign/get a user ID from the database.
     final user = await actorProfileToDatabase(profile);
@@ -71,7 +72,7 @@ class MastodonAccount {
       locked: false,
       bot: false,
       createdAt: profile.indexedAt ?? DateTime.now().toUtc(),
-      note: convertTextToLinks(profile.description),
+      note: await processProfileDescription(profile.description ?? ''),
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
@@ -86,8 +87,8 @@ class MastodonAccount {
     );
   }
 
-  /// Creates a [MastodonAccount] from an [Actor].
-  static Future<MastodonAccount> fromActor(Actor profile) async {
+  /// Creates a [MastodonAccount] from an [bsky.Actor].
+  static Future<MastodonAccount> fromActor(bsky.Actor profile) async {
     // Assign/get a user ID from the database.
     final user = await actorToDatabase(profile);
 
@@ -113,7 +114,7 @@ class MastodonAccount {
       locked: false,
       bot: false,
       createdAt: profile.indexedAt ?? DateTime.now().toUtc(),
-      note: convertTextToLinks(user.description),
+      note: await processProfileDescription(profile.description ?? user.description),
       url: 'https://bsky.social/${profile.handle}',
       avatar: profile.avatar ?? avatarFallback,
       avatarStatic: profile.avatar ?? avatarFallback,
@@ -213,7 +214,6 @@ class MastodonAccount {
 /// Bluesky posts don't contain profile information, so we have to
 /// fetch it separately. This class is used to pass around that information
 /// with type safety.
-@embedded
 class ProfileInfo {
   /// Creates a new [ProfileInfo] instance.
   ProfileInfo({
@@ -224,14 +224,14 @@ class ProfileInfo {
     this.description = '',
   });
 
-  /// Creates a new [ProfileInfo] instance from an [ActorProfile].
-  factory ProfileInfo.fromActorProfile(ActorProfile profile) {
+  /// Creates a new [ProfileInfo] instance from an [bsky.ActorProfile].
+  static Future<ProfileInfo>fromActorProfile(bsky.ActorProfile profile) async {
     return ProfileInfo(
       banner: profile.banner ?? '',
       followersCount: profile.followersCount,
       followsCount: profile.followsCount,
       postsCount: profile.postsCount,
-      description: convertTextToLinks(profile.description ?? ''),
+      description: await processProfileDescription(profile.description ?? ''),
     );
   }
 
@@ -358,4 +358,14 @@ class AccountRole {
 
   /// Whether the role is publicly visible as a badge on user profiles.
   final bool highlighted;
+}
+
+/// Processes handles and links in a profile description.
+Future<String> processProfileDescription(String description) async {
+  final text = BlueskyText(description);
+  final textFacets = await text.entities.toFacets();
+  final facets = textFacets.map(bsky.Facet.fromJson).toList();
+  final processedBio = await processFacets(facets, description);
+
+  return processedBio.htmlText;
 }
