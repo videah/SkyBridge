@@ -35,7 +35,8 @@ class NewPostForm {
   final int? inReplyToId;
 }
 
-BlueskyText stringToBluesky(String? value) => BlueskyText(value ?? '');
+BlueskyText stringToBluesky(String? value) =>
+    BlueskyText(value ?? '', enableMarkdown: false);
 String blueskyToString(BlueskyText? text) => text?.value ?? '';
 
 /// Ivory still has code lingering from Tweetbot that handles post IDs as [int]
