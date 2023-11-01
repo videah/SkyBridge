@@ -1,6 +1,7 @@
 import 'package:atproto/atproto.dart' as at;
 import 'package:atproto/atproto.dart';
 import 'package:bluesky/bluesky.dart' as bsky;
+import 'package:bluesky_text/bluesky_text.dart';
 import 'package:collection/collection.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -10,6 +11,7 @@ import 'package:sky_bridge/models/mastodon/mastodon_account.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_card.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_media_attachment.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_mention.dart';
+import 'package:sky_bridge/models/mastodon/mastodon_tag.dart';
 import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
 
@@ -139,6 +141,16 @@ class MastodonPost {
       }
     }
 
+    // Map hashtags included in the text to Mastodon tags.
+    final tags = BlueskyText(content).tags.map((tag) =>
+        MastodonTag(
+          name: tag.value,
+          url: '',
+        ),
+    ).toList();
+
+    print(tags);
+
     return MastodonPost(
       id: id.toString(),
       createdAt: post.indexedAt.toUtc(),
@@ -165,7 +177,7 @@ class MastodonPost {
       account: account,
       mediaAttachments: mediaAttachments,
       mentions: processed.mentions,
-      tags: [],
+      tags: tags,
       emojis: [],
       pinned: false,
       filtered: [],
@@ -217,6 +229,14 @@ class MastodonPost {
       }
     }
 
+    // Map hashtags included in the text to Mastodon tags.
+    final tags = BlueskyText(content).tags.map((tag) =>
+        MastodonTag(
+          name: tag.value,
+          url: '',
+        ),
+    ).toList();
+
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),
       createdAt: post.indexedAt.toUtc(),
@@ -242,7 +262,7 @@ class MastodonPost {
       account: account,
       mediaAttachments: mediaAttachments,
       mentions: processed.mentions,
-      tags: [],
+      tags: tags,
       emojis: [],
       pinned: false,
       filtered: [],
@@ -341,7 +361,7 @@ class MastodonPost {
 
   /// Hashtags used within the post content.
   /// Bluesky has no concept of hashtags at the moment so this is always empty.
-  final List<Map<String, dynamic>> tags;
+  final List<MastodonTag> tags;
 
   /// Custom emoji to be used when rendering the post content.
   final List<Map<String, dynamic>> emojis;

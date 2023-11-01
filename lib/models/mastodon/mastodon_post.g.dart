@@ -33,7 +33,7 @@ abstract class _$MastodonPostCWProxy {
 
   MastodonPost mentions(List<MastodonMention> mentions);
 
-  MastodonPost tags(List<Map<String, dynamic>> tags);
+  MastodonPost tags(List<MastodonTag> tags);
 
   MastodonPost emojis(List<Map<String, dynamic>> emojis);
 
@@ -93,7 +93,7 @@ abstract class _$MastodonPostCWProxy {
     MastodonAccount? account,
     List<MastodonMediaAttachment>? mediaAttachments,
     List<MastodonMention>? mentions,
-    List<Map<String, dynamic>>? tags,
+    List<MastodonTag>? tags,
     List<Map<String, dynamic>>? emojis,
     Map<String, String?>? application,
     List<String>? filtered,
@@ -170,7 +170,7 @@ class _$MastodonPostCWProxyImpl implements _$MastodonPostCWProxy {
       this(mentions: mentions);
 
   @override
-  MastodonPost tags(List<Map<String, dynamic>> tags) => this(tags: tags);
+  MastodonPost tags(List<MastodonTag> tags) => this(tags: tags);
 
   @override
   MastodonPost emojis(List<Map<String, dynamic>> emojis) =>
@@ -339,7 +339,7 @@ class _$MastodonPostCWProxyImpl implements _$MastodonPostCWProxy {
       tags: tags == const $CopyWithPlaceholder() || tags == null
           ? _value.tags
           // ignore: cast_nullable_to_non_nullable
-          : tags as List<Map<String, dynamic>>,
+          : tags as List<MastodonTag>,
       emojis: emojis == const $CopyWithPlaceholder() || emojis == null
           ? _value.emojis
           // ignore: cast_nullable_to_non_nullable
@@ -452,7 +452,7 @@ MastodonPost _$MastodonPostFromJson(Map<String, dynamic> json) => MastodonPost(
           .map((e) => MastodonMention.fromJson(e as Map<String, dynamic>))
           .toList(),
       tags: (json['tags'] as List<dynamic>)
-          .map((e) => e as Map<String, dynamic>)
+          .map((e) => MastodonTag.fromJson(e as Map<String, dynamic>))
           .toList(),
       emojis: (json['emojis'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
