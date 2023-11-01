@@ -19,6 +19,8 @@ model UserRecord {
   follows_count   Int @default(0)
   posts_count     Int @default(0)
   description     String @default("")
+
+  @@index(fields: [did])
 }
 
 model PostRecord {
@@ -27,6 +29,8 @@ model PostRecord {
   uri          String
   author_did   String
   reposts RepostRecord[]
+
+  @@index(fields: [cid])
 }
 
 model RepostRecord {
