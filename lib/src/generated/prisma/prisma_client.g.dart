@@ -1425,6 +1425,206 @@ Map<String, dynamic> _$SessionRecordScalarWhereWithAggregatesInputToJson(
   return val;
 }
 
+AuthRateLimitWhereInput _$AuthRateLimitWhereInputFromJson(
+        Map<String, dynamic> json) =>
+    AuthRateLimitWhereInput(
+      AND: (json['AND'] as List<dynamic>?)?.map(
+          (e) => AuthRateLimitWhereInput.fromJson(e as Map<String, dynamic>)),
+      OR: (json['OR'] as List<dynamic>?)?.map(
+          (e) => AuthRateLimitWhereInput.fromJson(e as Map<String, dynamic>)),
+      NOT: (json['NOT'] as List<dynamic>?)?.map(
+          (e) => AuthRateLimitWhereInput.fromJson(e as Map<String, dynamic>)),
+      id: json['id'] == null
+          ? null
+          : IntFilter.fromJson(json['id'] as Map<String, dynamic>),
+      ipAddress: json['ip_address'] == null
+          ? null
+          : StringFilter.fromJson(json['ip_address'] as Map<String, dynamic>),
+      attempts: json['attempts'] == null
+          ? null
+          : IntFilter.fromJson(json['attempts'] as Map<String, dynamic>),
+      lastAttempt: json['last_attempt'] == null
+          ? null
+          : DateTimeNullableFilter.fromJson(
+              json['last_attempt'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$AuthRateLimitWhereInputToJson(
+    AuthRateLimitWhereInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('AND', instance.AND?.map((e) => e.toJson()).toList());
+  writeNotNull('OR', instance.OR?.map((e) => e.toJson()).toList());
+  writeNotNull('NOT', instance.NOT?.map((e) => e.toJson()).toList());
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('ip_address', instance.ipAddress?.toJson());
+  writeNotNull('attempts', instance.attempts?.toJson());
+  writeNotNull('last_attempt', instance.lastAttempt?.toJson());
+  return val;
+}
+
+AuthRateLimitOrderByWithRelationInput
+    _$AuthRateLimitOrderByWithRelationInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitOrderByWithRelationInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          ipAddress:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['ip_address']),
+          attempts: $enumDecodeNullable(_$SortOrderEnumMap, json['attempts']),
+          lastAttempt:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['last_attempt']),
+        );
+
+Map<String, dynamic> _$AuthRateLimitOrderByWithRelationInputToJson(
+    AuthRateLimitOrderByWithRelationInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('ip_address', _$SortOrderEnumMap[instance.ipAddress]);
+  writeNotNull('attempts', _$SortOrderEnumMap[instance.attempts]);
+  writeNotNull('last_attempt', _$SortOrderEnumMap[instance.lastAttempt]);
+  return val;
+}
+
+AuthRateLimitWhereUniqueInput _$AuthRateLimitWhereUniqueInputFromJson(
+        Map<String, dynamic> json) =>
+    AuthRateLimitWhereUniqueInput(
+      id: json['id'] as int?,
+      ipAddress: json['ip_address'] as String?,
+    );
+
+Map<String, dynamic> _$AuthRateLimitWhereUniqueInputToJson(
+    AuthRateLimitWhereUniqueInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('ip_address', instance.ipAddress);
+  return val;
+}
+
+AuthRateLimitOrderByWithAggregationInput
+    _$AuthRateLimitOrderByWithAggregationInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitOrderByWithAggregationInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          ipAddress:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['ip_address']),
+          attempts: $enumDecodeNullable(_$SortOrderEnumMap, json['attempts']),
+          lastAttempt:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['last_attempt']),
+          $count: json['_count'] == null
+              ? null
+              : AuthRateLimitCountOrderByAggregateInput.fromJson(
+                  json['_count'] as Map<String, dynamic>),
+          $avg: json['_avg'] == null
+              ? null
+              : AuthRateLimitAvgOrderByAggregateInput.fromJson(
+                  json['_avg'] as Map<String, dynamic>),
+          $max: json['_max'] == null
+              ? null
+              : AuthRateLimitMaxOrderByAggregateInput.fromJson(
+                  json['_max'] as Map<String, dynamic>),
+          $min: json['_min'] == null
+              ? null
+              : AuthRateLimitMinOrderByAggregateInput.fromJson(
+                  json['_min'] as Map<String, dynamic>),
+          $sum: json['_sum'] == null
+              ? null
+              : AuthRateLimitSumOrderByAggregateInput.fromJson(
+                  json['_sum'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$AuthRateLimitOrderByWithAggregationInputToJson(
+    AuthRateLimitOrderByWithAggregationInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('ip_address', _$SortOrderEnumMap[instance.ipAddress]);
+  writeNotNull('attempts', _$SortOrderEnumMap[instance.attempts]);
+  writeNotNull('last_attempt', _$SortOrderEnumMap[instance.lastAttempt]);
+  writeNotNull('_count', instance.$count?.toJson());
+  writeNotNull('_avg', instance.$avg?.toJson());
+  writeNotNull('_max', instance.$max?.toJson());
+  writeNotNull('_min', instance.$min?.toJson());
+  writeNotNull('_sum', instance.$sum?.toJson());
+  return val;
+}
+
+AuthRateLimitScalarWhereWithAggregatesInput
+    _$AuthRateLimitScalarWhereWithAggregatesInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitScalarWhereWithAggregatesInput(
+          AND: (json['AND'] as List<dynamic>?)?.map((e) =>
+              AuthRateLimitScalarWhereWithAggregatesInput.fromJson(
+                  e as Map<String, dynamic>)),
+          OR: (json['OR'] as List<dynamic>?)?.map((e) =>
+              AuthRateLimitScalarWhereWithAggregatesInput.fromJson(
+                  e as Map<String, dynamic>)),
+          NOT: (json['NOT'] as List<dynamic>?)?.map((e) =>
+              AuthRateLimitScalarWhereWithAggregatesInput.fromJson(
+                  e as Map<String, dynamic>)),
+          id: json['id'] == null
+              ? null
+              : IntWithAggregatesFilter.fromJson(
+                  json['id'] as Map<String, dynamic>),
+          ipAddress: json['ip_address'] == null
+              ? null
+              : StringWithAggregatesFilter.fromJson(
+                  json['ip_address'] as Map<String, dynamic>),
+          attempts: json['attempts'] == null
+              ? null
+              : IntWithAggregatesFilter.fromJson(
+                  json['attempts'] as Map<String, dynamic>),
+          lastAttempt: json['last_attempt'] == null
+              ? null
+              : DateTimeNullableWithAggregatesFilter.fromJson(
+                  json['last_attempt'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$AuthRateLimitScalarWhereWithAggregatesInputToJson(
+    AuthRateLimitScalarWhereWithAggregatesInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('AND', instance.AND?.map((e) => e.toJson()).toList());
+  writeNotNull('OR', instance.OR?.map((e) => e.toJson()).toList());
+  writeNotNull('NOT', instance.NOT?.map((e) => e.toJson()).toList());
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('ip_address', instance.ipAddress?.toJson());
+  writeNotNull('attempts', instance.attempts?.toJson());
+  writeNotNull('last_attempt', instance.lastAttempt?.toJson());
+  return val;
+}
+
 UserRecordCreateInput _$UserRecordCreateInputFromJson(
         Map<String, dynamic> json) =>
     UserRecordCreateInput(
@@ -2860,6 +3060,220 @@ Map<String, dynamic> _$SessionRecordUncheckedUpdateManyInputToJson(
   return val;
 }
 
+AuthRateLimitCreateInput _$AuthRateLimitCreateInputFromJson(
+        Map<String, dynamic> json) =>
+    AuthRateLimitCreateInput(
+      ipAddress: json['ip_address'] as String,
+      attempts: json['attempts'] as int?,
+      lastAttempt: _$JsonConverterFromJson<String, DateTime>(
+          json['last_attempt'], const DateTimeJsonConverter().fromJson),
+    );
+
+Map<String, dynamic> _$AuthRateLimitCreateInputToJson(
+    AuthRateLimitCreateInput instance) {
+  final val = <String, dynamic>{
+    'ip_address': instance.ipAddress,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('attempts', instance.attempts);
+  writeNotNull(
+      'last_attempt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lastAttempt, const DateTimeJsonConverter().toJson));
+  return val;
+}
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);
+
+AuthRateLimitUncheckedCreateInput _$AuthRateLimitUncheckedCreateInputFromJson(
+        Map<String, dynamic> json) =>
+    AuthRateLimitUncheckedCreateInput(
+      id: json['id'] as int?,
+      ipAddress: json['ip_address'] as String,
+      attempts: json['attempts'] as int?,
+      lastAttempt: _$JsonConverterFromJson<String, DateTime>(
+          json['last_attempt'], const DateTimeJsonConverter().fromJson),
+    );
+
+Map<String, dynamic> _$AuthRateLimitUncheckedCreateInputToJson(
+    AuthRateLimitUncheckedCreateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['ip_address'] = instance.ipAddress;
+  writeNotNull('attempts', instance.attempts);
+  writeNotNull(
+      'last_attempt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lastAttempt, const DateTimeJsonConverter().toJson));
+  return val;
+}
+
+AuthRateLimitUpdateInput _$AuthRateLimitUpdateInputFromJson(
+        Map<String, dynamic> json) =>
+    AuthRateLimitUpdateInput(
+      ipAddress: json['ip_address'] == null
+          ? null
+          : StringFieldUpdateOperationsInput.fromJson(
+              json['ip_address'] as Map<String, dynamic>),
+      attempts: json['attempts'] == null
+          ? null
+          : IntFieldUpdateOperationsInput.fromJson(
+              json['attempts'] as Map<String, dynamic>),
+      lastAttempt: json['last_attempt'] == null
+          ? null
+          : NullableDateTimeFieldUpdateOperationsInput.fromJson(
+              json['last_attempt'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$AuthRateLimitUpdateInputToJson(
+    AuthRateLimitUpdateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('ip_address', instance.ipAddress?.toJson());
+  writeNotNull('attempts', instance.attempts?.toJson());
+  writeNotNull('last_attempt', instance.lastAttempt?.toJson());
+  return val;
+}
+
+AuthRateLimitUncheckedUpdateInput _$AuthRateLimitUncheckedUpdateInputFromJson(
+        Map<String, dynamic> json) =>
+    AuthRateLimitUncheckedUpdateInput(
+      id: json['id'] == null
+          ? null
+          : IntFieldUpdateOperationsInput.fromJson(
+              json['id'] as Map<String, dynamic>),
+      ipAddress: json['ip_address'] == null
+          ? null
+          : StringFieldUpdateOperationsInput.fromJson(
+              json['ip_address'] as Map<String, dynamic>),
+      attempts: json['attempts'] == null
+          ? null
+          : IntFieldUpdateOperationsInput.fromJson(
+              json['attempts'] as Map<String, dynamic>),
+      lastAttempt: json['last_attempt'] == null
+          ? null
+          : NullableDateTimeFieldUpdateOperationsInput.fromJson(
+              json['last_attempt'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$AuthRateLimitUncheckedUpdateInputToJson(
+    AuthRateLimitUncheckedUpdateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('ip_address', instance.ipAddress?.toJson());
+  writeNotNull('attempts', instance.attempts?.toJson());
+  writeNotNull('last_attempt', instance.lastAttempt?.toJson());
+  return val;
+}
+
+AuthRateLimitUpdateManyMutationInput
+    _$AuthRateLimitUpdateManyMutationInputFromJson(Map<String, dynamic> json) =>
+        AuthRateLimitUpdateManyMutationInput(
+          ipAddress: json['ip_address'] == null
+              ? null
+              : StringFieldUpdateOperationsInput.fromJson(
+                  json['ip_address'] as Map<String, dynamic>),
+          attempts: json['attempts'] == null
+              ? null
+              : IntFieldUpdateOperationsInput.fromJson(
+                  json['attempts'] as Map<String, dynamic>),
+          lastAttempt: json['last_attempt'] == null
+              ? null
+              : NullableDateTimeFieldUpdateOperationsInput.fromJson(
+                  json['last_attempt'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$AuthRateLimitUpdateManyMutationInputToJson(
+    AuthRateLimitUpdateManyMutationInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('ip_address', instance.ipAddress?.toJson());
+  writeNotNull('attempts', instance.attempts?.toJson());
+  writeNotNull('last_attempt', instance.lastAttempt?.toJson());
+  return val;
+}
+
+AuthRateLimitUncheckedUpdateManyInput
+    _$AuthRateLimitUncheckedUpdateManyInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitUncheckedUpdateManyInput(
+          id: json['id'] == null
+              ? null
+              : IntFieldUpdateOperationsInput.fromJson(
+                  json['id'] as Map<String, dynamic>),
+          ipAddress: json['ip_address'] == null
+              ? null
+              : StringFieldUpdateOperationsInput.fromJson(
+                  json['ip_address'] as Map<String, dynamic>),
+          attempts: json['attempts'] == null
+              ? null
+              : IntFieldUpdateOperationsInput.fromJson(
+                  json['attempts'] as Map<String, dynamic>),
+          lastAttempt: json['last_attempt'] == null
+              ? null
+              : NullableDateTimeFieldUpdateOperationsInput.fromJson(
+                  json['last_attempt'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$AuthRateLimitUncheckedUpdateManyInputToJson(
+    AuthRateLimitUncheckedUpdateManyInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id?.toJson());
+  writeNotNull('ip_address', instance.ipAddress?.toJson());
+  writeNotNull('attempts', instance.attempts?.toJson());
+  writeNotNull('last_attempt', instance.lastAttempt?.toJson());
+  return val;
+}
+
 BigIntFilter _$BigIntFilterFromJson(Map<String, dynamic> json) => BigIntFilter(
       equals: json['equals'] == null
           ? null
@@ -4242,6 +4656,276 @@ Map<String, dynamic> _$SessionRecordSumOrderByAggregateInputToJson(
   return val;
 }
 
+DateTimeNullableFilter _$DateTimeNullableFilterFromJson(
+        Map<String, dynamic> json) =>
+    DateTimeNullableFilter(
+      equals: _$JsonConverterFromJson<String, DateTime>(
+          json['equals'], const DateTimeJsonConverter().fromJson),
+      $in: (json['in'] as List<dynamic>?)
+          ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+      notIn: (json['notIn'] as List<dynamic>?)
+          ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+      lt: _$JsonConverterFromJson<String, DateTime>(
+          json['lt'], const DateTimeJsonConverter().fromJson),
+      lte: _$JsonConverterFromJson<String, DateTime>(
+          json['lte'], const DateTimeJsonConverter().fromJson),
+      gt: _$JsonConverterFromJson<String, DateTime>(
+          json['gt'], const DateTimeJsonConverter().fromJson),
+      gte: _$JsonConverterFromJson<String, DateTime>(
+          json['gte'], const DateTimeJsonConverter().fromJson),
+      not: json['not'] == null
+          ? null
+          : NestedDateTimeNullableFilter.fromJson(
+              json['not'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$DateTimeNullableFilterToJson(
+    DateTimeNullableFilter instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'equals',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.equals, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'in', instance.$in?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull('notIn',
+      instance.notIn?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull(
+      'lt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'lte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lte, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gte, const DateTimeJsonConverter().toJson));
+  writeNotNull('not', instance.not?.toJson());
+  return val;
+}
+
+AuthRateLimitCountOrderByAggregateInput
+    _$AuthRateLimitCountOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitCountOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          ipAddress:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['ip_address']),
+          attempts: $enumDecodeNullable(_$SortOrderEnumMap, json['attempts']),
+          lastAttempt:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['last_attempt']),
+        );
+
+Map<String, dynamic> _$AuthRateLimitCountOrderByAggregateInputToJson(
+    AuthRateLimitCountOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('ip_address', _$SortOrderEnumMap[instance.ipAddress]);
+  writeNotNull('attempts', _$SortOrderEnumMap[instance.attempts]);
+  writeNotNull('last_attempt', _$SortOrderEnumMap[instance.lastAttempt]);
+  return val;
+}
+
+AuthRateLimitAvgOrderByAggregateInput
+    _$AuthRateLimitAvgOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitAvgOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          attempts: $enumDecodeNullable(_$SortOrderEnumMap, json['attempts']),
+        );
+
+Map<String, dynamic> _$AuthRateLimitAvgOrderByAggregateInputToJson(
+    AuthRateLimitAvgOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('attempts', _$SortOrderEnumMap[instance.attempts]);
+  return val;
+}
+
+AuthRateLimitMaxOrderByAggregateInput
+    _$AuthRateLimitMaxOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitMaxOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          ipAddress:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['ip_address']),
+          attempts: $enumDecodeNullable(_$SortOrderEnumMap, json['attempts']),
+          lastAttempt:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['last_attempt']),
+        );
+
+Map<String, dynamic> _$AuthRateLimitMaxOrderByAggregateInputToJson(
+    AuthRateLimitMaxOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('ip_address', _$SortOrderEnumMap[instance.ipAddress]);
+  writeNotNull('attempts', _$SortOrderEnumMap[instance.attempts]);
+  writeNotNull('last_attempt', _$SortOrderEnumMap[instance.lastAttempt]);
+  return val;
+}
+
+AuthRateLimitMinOrderByAggregateInput
+    _$AuthRateLimitMinOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitMinOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          ipAddress:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['ip_address']),
+          attempts: $enumDecodeNullable(_$SortOrderEnumMap, json['attempts']),
+          lastAttempt:
+              $enumDecodeNullable(_$SortOrderEnumMap, json['last_attempt']),
+        );
+
+Map<String, dynamic> _$AuthRateLimitMinOrderByAggregateInputToJson(
+    AuthRateLimitMinOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('ip_address', _$SortOrderEnumMap[instance.ipAddress]);
+  writeNotNull('attempts', _$SortOrderEnumMap[instance.attempts]);
+  writeNotNull('last_attempt', _$SortOrderEnumMap[instance.lastAttempt]);
+  return val;
+}
+
+AuthRateLimitSumOrderByAggregateInput
+    _$AuthRateLimitSumOrderByAggregateInputFromJson(
+            Map<String, dynamic> json) =>
+        AuthRateLimitSumOrderByAggregateInput(
+          id: $enumDecodeNullable(_$SortOrderEnumMap, json['id']),
+          attempts: $enumDecodeNullable(_$SortOrderEnumMap, json['attempts']),
+        );
+
+Map<String, dynamic> _$AuthRateLimitSumOrderByAggregateInputToJson(
+    AuthRateLimitSumOrderByAggregateInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', _$SortOrderEnumMap[instance.id]);
+  writeNotNull('attempts', _$SortOrderEnumMap[instance.attempts]);
+  return val;
+}
+
+DateTimeNullableWithAggregatesFilter
+    _$DateTimeNullableWithAggregatesFilterFromJson(Map<String, dynamic> json) =>
+        DateTimeNullableWithAggregatesFilter(
+          equals: _$JsonConverterFromJson<String, DateTime>(
+              json['equals'], const DateTimeJsonConverter().fromJson),
+          $in: (json['in'] as List<dynamic>?)
+              ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+          notIn: (json['notIn'] as List<dynamic>?)
+              ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+          lt: _$JsonConverterFromJson<String, DateTime>(
+              json['lt'], const DateTimeJsonConverter().fromJson),
+          lte: _$JsonConverterFromJson<String, DateTime>(
+              json['lte'], const DateTimeJsonConverter().fromJson),
+          gt: _$JsonConverterFromJson<String, DateTime>(
+              json['gt'], const DateTimeJsonConverter().fromJson),
+          gte: _$JsonConverterFromJson<String, DateTime>(
+              json['gte'], const DateTimeJsonConverter().fromJson),
+          not: json['not'] == null
+              ? null
+              : NestedDateTimeNullableWithAggregatesFilter.fromJson(
+                  json['not'] as Map<String, dynamic>),
+          $count: json['_count'] == null
+              ? null
+              : NestedIntNullableFilter.fromJson(
+                  json['_count'] as Map<String, dynamic>),
+          $min: json['_min'] == null
+              ? null
+              : NestedDateTimeNullableFilter.fromJson(
+                  json['_min'] as Map<String, dynamic>),
+          $max: json['_max'] == null
+              ? null
+              : NestedDateTimeNullableFilter.fromJson(
+                  json['_max'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$DateTimeNullableWithAggregatesFilterToJson(
+    DateTimeNullableWithAggregatesFilter instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'equals',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.equals, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'in', instance.$in?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull('notIn',
+      instance.notIn?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull(
+      'lt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'lte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lte, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gte, const DateTimeJsonConverter().toJson));
+  writeNotNull('not', instance.not?.toJson());
+  writeNotNull('_count', instance.$count?.toJson());
+  writeNotNull('_min', instance.$min?.toJson());
+  writeNotNull('_max', instance.$max?.toJson());
+  return val;
+}
+
 BigIntFieldUpdateOperationsInput _$BigIntFieldUpdateOperationsInputFromJson(
         Map<String, dynamic> json) =>
     BigIntFieldUpdateOperationsInput(
@@ -4611,6 +5295,31 @@ Map<String, dynamic> _$NullableStringFieldUpdateOperationsInputToJson(
   }
 
   writeNotNull('set', instance.set);
+  return val;
+}
+
+NullableDateTimeFieldUpdateOperationsInput
+    _$NullableDateTimeFieldUpdateOperationsInputFromJson(
+            Map<String, dynamic> json) =>
+        NullableDateTimeFieldUpdateOperationsInput(
+          set: _$JsonConverterFromJson<String, DateTime>(
+              json['set'], const DateTimeJsonConverter().fromJson),
+        );
+
+Map<String, dynamic> _$NullableDateTimeFieldUpdateOperationsInputToJson(
+    NullableDateTimeFieldUpdateOperationsInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'set',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.set, const DateTimeJsonConverter().toJson));
   return val;
 }
 
@@ -5070,6 +5779,144 @@ Map<String, dynamic> _$NestedIntNullableFilterToJson(
   writeNotNull('gt', instance.gt);
   writeNotNull('gte', instance.gte);
   writeNotNull('not', instance.not?.toJson());
+  return val;
+}
+
+NestedDateTimeNullableFilter _$NestedDateTimeNullableFilterFromJson(
+        Map<String, dynamic> json) =>
+    NestedDateTimeNullableFilter(
+      equals: _$JsonConverterFromJson<String, DateTime>(
+          json['equals'], const DateTimeJsonConverter().fromJson),
+      $in: (json['in'] as List<dynamic>?)
+          ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+      notIn: (json['notIn'] as List<dynamic>?)
+          ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+      lt: _$JsonConverterFromJson<String, DateTime>(
+          json['lt'], const DateTimeJsonConverter().fromJson),
+      lte: _$JsonConverterFromJson<String, DateTime>(
+          json['lte'], const DateTimeJsonConverter().fromJson),
+      gt: _$JsonConverterFromJson<String, DateTime>(
+          json['gt'], const DateTimeJsonConverter().fromJson),
+      gte: _$JsonConverterFromJson<String, DateTime>(
+          json['gte'], const DateTimeJsonConverter().fromJson),
+      not: json['not'] == null
+          ? null
+          : NestedDateTimeNullableFilter.fromJson(
+              json['not'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$NestedDateTimeNullableFilterToJson(
+    NestedDateTimeNullableFilter instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'equals',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.equals, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'in', instance.$in?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull('notIn',
+      instance.notIn?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull(
+      'lt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'lte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lte, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gte, const DateTimeJsonConverter().toJson));
+  writeNotNull('not', instance.not?.toJson());
+  return val;
+}
+
+NestedDateTimeNullableWithAggregatesFilter
+    _$NestedDateTimeNullableWithAggregatesFilterFromJson(
+            Map<String, dynamic> json) =>
+        NestedDateTimeNullableWithAggregatesFilter(
+          equals: _$JsonConverterFromJson<String, DateTime>(
+              json['equals'], const DateTimeJsonConverter().fromJson),
+          $in: (json['in'] as List<dynamic>?)
+              ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+          notIn: (json['notIn'] as List<dynamic>?)
+              ?.map((e) => const DateTimeJsonConverter().fromJson(e as String)),
+          lt: _$JsonConverterFromJson<String, DateTime>(
+              json['lt'], const DateTimeJsonConverter().fromJson),
+          lte: _$JsonConverterFromJson<String, DateTime>(
+              json['lte'], const DateTimeJsonConverter().fromJson),
+          gt: _$JsonConverterFromJson<String, DateTime>(
+              json['gt'], const DateTimeJsonConverter().fromJson),
+          gte: _$JsonConverterFromJson<String, DateTime>(
+              json['gte'], const DateTimeJsonConverter().fromJson),
+          not: json['not'] == null
+              ? null
+              : NestedDateTimeNullableWithAggregatesFilter.fromJson(
+                  json['not'] as Map<String, dynamic>),
+          $count: json['_count'] == null
+              ? null
+              : NestedIntNullableFilter.fromJson(
+                  json['_count'] as Map<String, dynamic>),
+          $min: json['_min'] == null
+              ? null
+              : NestedDateTimeNullableFilter.fromJson(
+                  json['_min'] as Map<String, dynamic>),
+          $max: json['_max'] == null
+              ? null
+              : NestedDateTimeNullableFilter.fromJson(
+                  json['_max'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$NestedDateTimeNullableWithAggregatesFilterToJson(
+    NestedDateTimeNullableWithAggregatesFilter instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'equals',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.equals, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'in', instance.$in?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull('notIn',
+      instance.notIn?.map(const DateTimeJsonConverter().toJson).toList());
+  writeNotNull(
+      'lt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'lte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lte, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gt, const DateTimeJsonConverter().toJson));
+  writeNotNull(
+      'gte',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.gte, const DateTimeJsonConverter().toJson));
+  writeNotNull('not', instance.not?.toJson());
+  writeNotNull('_count', instance.$count?.toJson());
+  writeNotNull('_min', instance.$min?.toJson());
+  writeNotNull('_max', instance.$max?.toJson());
   return val;
 }
 
@@ -5574,6 +6421,35 @@ Map<String, dynamic> _$SessionRecordToJson(SessionRecord instance) =>
       'session': instance.session,
     };
 
+AuthRateLimit _$AuthRateLimitFromJson(Map<String, dynamic> json) =>
+    AuthRateLimit(
+      id: json['id'] as int,
+      ipAddress: json['ip_address'] as String,
+      attempts: json['attempts'] as int,
+      lastAttempt: _$JsonConverterFromJson<String, DateTime>(
+          json['last_attempt'], const DateTimeJsonConverter().fromJson),
+    );
+
+Map<String, dynamic> _$AuthRateLimitToJson(AuthRateLimit instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'ip_address': instance.ipAddress,
+    'attempts': instance.attempts,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'last_attempt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lastAttempt, const DateTimeJsonConverter().toJson));
+  return val;
+}
+
 UserRecordGroupByOutputType _$UserRecordGroupByOutputTypeFromJson(
         Map<String, dynamic> json) =>
     UserRecordGroupByOutputType(
@@ -5759,6 +6635,36 @@ Map<String, dynamic> _$SessionRecordGroupByOutputTypeToJson(
   writeNotNull('id', instance.id);
   writeNotNull('did', instance.did);
   writeNotNull('session', instance.session);
+  return val;
+}
+
+AuthRateLimitGroupByOutputType _$AuthRateLimitGroupByOutputTypeFromJson(
+        Map<String, dynamic> json) =>
+    AuthRateLimitGroupByOutputType(
+      id: json['id'] as int?,
+      ipAddress: json['ip_address'] as String?,
+      attempts: json['attempts'] as int?,
+      lastAttempt: _$JsonConverterFromJson<String, DateTime>(
+          json['last_attempt'], const DateTimeJsonConverter().fromJson),
+    );
+
+Map<String, dynamic> _$AuthRateLimitGroupByOutputTypeToJson(
+    AuthRateLimitGroupByOutputType instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('ip_address', instance.ipAddress);
+  writeNotNull('attempts', instance.attempts);
+  writeNotNull(
+      'last_attempt',
+      _$JsonConverterToJson<String, DateTime>(
+          instance.lastAttempt, const DateTimeJsonConverter().toJson));
   return val;
 }
 

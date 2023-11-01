@@ -99,6 +99,20 @@ enum SessionRecordScalarFieldEnum implements _i1.PrismaEnum {
   String? get originalName => null;
 }
 
+enum AuthRateLimitScalarFieldEnum implements _i1.PrismaEnum {
+  id,
+  @JsonValue('ip_address')
+  ipAddress(r'ip_address'),
+  attempts,
+  @JsonValue('last_attempt')
+  lastAttempt(r'last_attempt');
+
+  const AuthRateLimitScalarFieldEnum([this.originalName]);
+
+  @override
+  final String? originalName;
+}
+
 enum SortOrder implements _i1.PrismaEnum {
   asc,
   desc;
@@ -1286,6 +1300,174 @@ class SessionRecordScalarWhereWithAggregatesInput
 }
 
 @_i1.jsonSerializable
+class AuthRateLimitWhereInput implements _i1.JsonSerializable {
+  const AuthRateLimitWhereInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitWhereInput.fromJson(Map<String, dynamic> json) =>
+      _$AuthRateLimitWhereInputFromJson(json);
+
+  final Iterable<AuthRateLimitWhereInput>? AND;
+
+  final Iterable<AuthRateLimitWhereInput>? OR;
+
+  final Iterable<AuthRateLimitWhereInput>? NOT;
+
+  final IntFilter? id;
+
+  @JsonKey(name: r'ip_address')
+  final StringFilter? ipAddress;
+
+  final IntFilter? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final DateTimeNullableFilter? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() => _$AuthRateLimitWhereInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitOrderByWithRelationInput implements _i1.JsonSerializable {
+  const AuthRateLimitOrderByWithRelationInput({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitOrderByWithRelationInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitOrderByWithRelationInputFromJson(json);
+
+  final SortOrder? id;
+
+  @JsonKey(name: r'ip_address')
+  final SortOrder? ipAddress;
+
+  final SortOrder? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final SortOrder? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitOrderByWithRelationInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitWhereUniqueInput implements _i1.JsonSerializable {
+  const AuthRateLimitWhereUniqueInput({
+    this.id,
+    this.ipAddress,
+  });
+
+  factory AuthRateLimitWhereUniqueInput.fromJson(Map<String, dynamic> json) =>
+      _$AuthRateLimitWhereUniqueInputFromJson(json);
+
+  final int? id;
+
+  @JsonKey(name: r'ip_address')
+  final String? ipAddress;
+
+  @override
+  Map<String, dynamic> toJson() => _$AuthRateLimitWhereUniqueInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitOrderByWithAggregationInput implements _i1.JsonSerializable {
+  const AuthRateLimitOrderByWithAggregationInput({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+    this.$count,
+    this.$avg,
+    this.$max,
+    this.$min,
+    this.$sum,
+  });
+
+  factory AuthRateLimitOrderByWithAggregationInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitOrderByWithAggregationInputFromJson(json);
+
+  final SortOrder? id;
+
+  @JsonKey(name: r'ip_address')
+  final SortOrder? ipAddress;
+
+  final SortOrder? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final SortOrder? lastAttempt;
+
+  @JsonKey(name: r'_count')
+  final AuthRateLimitCountOrderByAggregateInput? $count;
+
+  @JsonKey(name: r'_avg')
+  final AuthRateLimitAvgOrderByAggregateInput? $avg;
+
+  @JsonKey(name: r'_max')
+  final AuthRateLimitMaxOrderByAggregateInput? $max;
+
+  @JsonKey(name: r'_min')
+  final AuthRateLimitMinOrderByAggregateInput? $min;
+
+  @JsonKey(name: r'_sum')
+  final AuthRateLimitSumOrderByAggregateInput? $sum;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitOrderByWithAggregationInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitScalarWhereWithAggregatesInput
+    implements _i1.JsonSerializable {
+  const AuthRateLimitScalarWhereWithAggregatesInput({
+    this.AND,
+    this.OR,
+    this.NOT,
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitScalarWhereWithAggregatesInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitScalarWhereWithAggregatesInputFromJson(json);
+
+  final Iterable<AuthRateLimitScalarWhereWithAggregatesInput>? AND;
+
+  final Iterable<AuthRateLimitScalarWhereWithAggregatesInput>? OR;
+
+  final Iterable<AuthRateLimitScalarWhereWithAggregatesInput>? NOT;
+
+  final IntWithAggregatesFilter? id;
+
+  @JsonKey(name: r'ip_address')
+  final StringWithAggregatesFilter? ipAddress;
+
+  final IntWithAggregatesFilter? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final DateTimeNullableWithAggregatesFilter? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitScalarWhereWithAggregatesInputToJson(this);
+}
+
+@_i1.jsonSerializable
 class UserRecordCreateInput implements _i1.JsonSerializable {
   const UserRecordCreateInput({
     required this.id,
@@ -2418,6 +2600,161 @@ class SessionRecordUncheckedUpdateManyInput implements _i1.JsonSerializable {
   @override
   Map<String, dynamic> toJson() =>
       _$SessionRecordUncheckedUpdateManyInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitCreateInput implements _i1.JsonSerializable {
+  const AuthRateLimitCreateInput({
+    required this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitCreateInput.fromJson(Map<String, dynamic> json) =>
+      _$AuthRateLimitCreateInputFromJson(json);
+
+  @JsonKey(name: r'ip_address')
+  final String ipAddress;
+
+  final int? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final DateTime? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() => _$AuthRateLimitCreateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitUncheckedCreateInput implements _i1.JsonSerializable {
+  const AuthRateLimitUncheckedCreateInput({
+    this.id,
+    required this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitUncheckedCreateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitUncheckedCreateInputFromJson(json);
+
+  final int? id;
+
+  @JsonKey(name: r'ip_address')
+  final String ipAddress;
+
+  final int? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final DateTime? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitUncheckedCreateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitUpdateInput implements _i1.JsonSerializable {
+  const AuthRateLimitUpdateInput({
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitUpdateInput.fromJson(Map<String, dynamic> json) =>
+      _$AuthRateLimitUpdateInputFromJson(json);
+
+  @JsonKey(name: r'ip_address')
+  final StringFieldUpdateOperationsInput? ipAddress;
+
+  final IntFieldUpdateOperationsInput? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final NullableDateTimeFieldUpdateOperationsInput? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() => _$AuthRateLimitUpdateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitUncheckedUpdateInput implements _i1.JsonSerializable {
+  const AuthRateLimitUncheckedUpdateInput({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitUncheckedUpdateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitUncheckedUpdateInputFromJson(json);
+
+  final IntFieldUpdateOperationsInput? id;
+
+  @JsonKey(name: r'ip_address')
+  final StringFieldUpdateOperationsInput? ipAddress;
+
+  final IntFieldUpdateOperationsInput? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final NullableDateTimeFieldUpdateOperationsInput? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitUncheckedUpdateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitUpdateManyMutationInput implements _i1.JsonSerializable {
+  const AuthRateLimitUpdateManyMutationInput({
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitUpdateManyMutationInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitUpdateManyMutationInputFromJson(json);
+
+  @JsonKey(name: r'ip_address')
+  final StringFieldUpdateOperationsInput? ipAddress;
+
+  final IntFieldUpdateOperationsInput? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final NullableDateTimeFieldUpdateOperationsInput? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitUpdateManyMutationInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitUncheckedUpdateManyInput implements _i1.JsonSerializable {
+  const AuthRateLimitUncheckedUpdateManyInput({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitUncheckedUpdateManyInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitUncheckedUpdateManyInputFromJson(json);
+
+  final IntFieldUpdateOperationsInput? id;
+
+  @JsonKey(name: r'ip_address')
+  final StringFieldUpdateOperationsInput? ipAddress;
+
+  final IntFieldUpdateOperationsInput? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final NullableDateTimeFieldUpdateOperationsInput? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitUncheckedUpdateManyInputToJson(this);
 }
 
 @_i1.jsonSerializable
@@ -3747,6 +4084,218 @@ class SessionRecordSumOrderByAggregateInput implements _i1.JsonSerializable {
 }
 
 @_i1.jsonSerializable
+class DateTimeNullableFilter implements _i1.JsonSerializable {
+  const DateTimeNullableFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
+
+  factory DateTimeNullableFilter.fromJson(Map<String, dynamic> json) =>
+      _$DateTimeNullableFilterFromJson(json);
+
+  final DateTime? equals;
+
+  @JsonKey(name: r'in')
+  final Iterable<DateTime>? $in;
+
+  final Iterable<DateTime>? notIn;
+
+  final DateTime? lt;
+
+  final DateTime? lte;
+
+  final DateTime? gt;
+
+  final DateTime? gte;
+
+  final NestedDateTimeNullableFilter? not;
+
+  @override
+  Map<String, dynamic> toJson() => _$DateTimeNullableFilterToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitCountOrderByAggregateInput implements _i1.JsonSerializable {
+  const AuthRateLimitCountOrderByAggregateInput({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitCountOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitCountOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  @JsonKey(name: r'ip_address')
+  final SortOrder? ipAddress;
+
+  final SortOrder? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final SortOrder? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitCountOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitAvgOrderByAggregateInput implements _i1.JsonSerializable {
+  const AuthRateLimitAvgOrderByAggregateInput({
+    this.id,
+    this.attempts,
+  });
+
+  factory AuthRateLimitAvgOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitAvgOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  final SortOrder? attempts;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitAvgOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitMaxOrderByAggregateInput implements _i1.JsonSerializable {
+  const AuthRateLimitMaxOrderByAggregateInput({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitMaxOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitMaxOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  @JsonKey(name: r'ip_address')
+  final SortOrder? ipAddress;
+
+  final SortOrder? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final SortOrder? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitMaxOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitMinOrderByAggregateInput implements _i1.JsonSerializable {
+  const AuthRateLimitMinOrderByAggregateInput({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitMinOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitMinOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  @JsonKey(name: r'ip_address')
+  final SortOrder? ipAddress;
+
+  final SortOrder? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final SortOrder? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitMinOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitSumOrderByAggregateInput implements _i1.JsonSerializable {
+  const AuthRateLimitSumOrderByAggregateInput({
+    this.id,
+    this.attempts,
+  });
+
+  factory AuthRateLimitSumOrderByAggregateInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$AuthRateLimitSumOrderByAggregateInputFromJson(json);
+
+  final SortOrder? id;
+
+  final SortOrder? attempts;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$AuthRateLimitSumOrderByAggregateInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class DateTimeNullableWithAggregatesFilter implements _i1.JsonSerializable {
+  const DateTimeNullableWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  factory DateTimeNullableWithAggregatesFilter.fromJson(
+          Map<String, dynamic> json) =>
+      _$DateTimeNullableWithAggregatesFilterFromJson(json);
+
+  final DateTime? equals;
+
+  @JsonKey(name: r'in')
+  final Iterable<DateTime>? $in;
+
+  final Iterable<DateTime>? notIn;
+
+  final DateTime? lt;
+
+  final DateTime? lte;
+
+  final DateTime? gt;
+
+  final DateTime? gte;
+
+  final NestedDateTimeNullableWithAggregatesFilter? not;
+
+  @JsonKey(name: r'_count')
+  final NestedIntNullableFilter? $count;
+
+  @JsonKey(name: r'_min')
+  final NestedDateTimeNullableFilter? $min;
+
+  @JsonKey(name: r'_max')
+  final NestedDateTimeNullableFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DateTimeNullableWithAggregatesFilterToJson(this);
+}
+
+@_i1.jsonSerializable
 class BigIntFieldUpdateOperationsInput implements _i1.JsonSerializable {
   const BigIntFieldUpdateOperationsInput({
     this.set,
@@ -4036,6 +4585,22 @@ class NullableStringFieldUpdateOperationsInput implements _i1.JsonSerializable {
   @override
   Map<String, dynamic> toJson() =>
       _$NullableStringFieldUpdateOperationsInputToJson(this);
+}
+
+@_i1.jsonSerializable
+class NullableDateTimeFieldUpdateOperationsInput
+    implements _i1.JsonSerializable {
+  const NullableDateTimeFieldUpdateOperationsInput({this.set});
+
+  factory NullableDateTimeFieldUpdateOperationsInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$NullableDateTimeFieldUpdateOperationsInputFromJson(json);
+
+  final DateTime? set;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$NullableDateTimeFieldUpdateOperationsInputToJson(this);
 }
 
 @_i1.jsonSerializable
@@ -4512,6 +5077,95 @@ class NestedIntNullableFilter implements _i1.JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() => _$NestedIntNullableFilterToJson(this);
+}
+
+@_i1.jsonSerializable
+class NestedDateTimeNullableFilter implements _i1.JsonSerializable {
+  const NestedDateTimeNullableFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+  });
+
+  factory NestedDateTimeNullableFilter.fromJson(Map<String, dynamic> json) =>
+      _$NestedDateTimeNullableFilterFromJson(json);
+
+  final DateTime? equals;
+
+  @JsonKey(name: r'in')
+  final Iterable<DateTime>? $in;
+
+  final Iterable<DateTime>? notIn;
+
+  final DateTime? lt;
+
+  final DateTime? lte;
+
+  final DateTime? gt;
+
+  final DateTime? gte;
+
+  final NestedDateTimeNullableFilter? not;
+
+  @override
+  Map<String, dynamic> toJson() => _$NestedDateTimeNullableFilterToJson(this);
+}
+
+@_i1.jsonSerializable
+class NestedDateTimeNullableWithAggregatesFilter
+    implements _i1.JsonSerializable {
+  const NestedDateTimeNullableWithAggregatesFilter({
+    this.equals,
+    this.$in,
+    this.notIn,
+    this.lt,
+    this.lte,
+    this.gt,
+    this.gte,
+    this.not,
+    this.$count,
+    this.$min,
+    this.$max,
+  });
+
+  factory NestedDateTimeNullableWithAggregatesFilter.fromJson(
+          Map<String, dynamic> json) =>
+      _$NestedDateTimeNullableWithAggregatesFilterFromJson(json);
+
+  final DateTime? equals;
+
+  @JsonKey(name: r'in')
+  final Iterable<DateTime>? $in;
+
+  final Iterable<DateTime>? notIn;
+
+  final DateTime? lt;
+
+  final DateTime? lte;
+
+  final DateTime? gt;
+
+  final DateTime? gte;
+
+  final NestedDateTimeNullableWithAggregatesFilter? not;
+
+  @JsonKey(name: r'_count')
+  final NestedIntNullableFilter? $count;
+
+  @JsonKey(name: r'_min')
+  final NestedDateTimeNullableFilter? $min;
+
+  @JsonKey(name: r'_max')
+  final NestedDateTimeNullableFilter? $max;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$NestedDateTimeNullableWithAggregatesFilterToJson(this);
 }
 
 @_i1.jsonSerializable
@@ -5076,6 +5730,32 @@ class SessionRecord implements _i1.JsonSerializable {
   Map<String, dynamic> toJson() => _$SessionRecordToJson(this);
 }
 
+@_i1.jsonSerializable
+class AuthRateLimit implements _i1.JsonSerializable {
+  const AuthRateLimit({
+    required this.id,
+    required this.ipAddress,
+    required this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimit.fromJson(Map<String, dynamic> json) =>
+      _$AuthRateLimitFromJson(json);
+
+  final int id;
+
+  @JsonKey(name: r'ip_address')
+  final String ipAddress;
+
+  final int attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final DateTime? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() => _$AuthRateLimitToJson(this);
+}
+
 class UserRecordFluent<T> extends _i1.PrismaFluent<T> {
   const UserRecordFluent(
     super.original,
@@ -5205,6 +5885,13 @@ class FeedRecordFluent<T> extends _i1.PrismaFluent<T> {
 
 class SessionRecordFluent<T> extends _i1.PrismaFluent<T> {
   const SessionRecordFluent(
+    super.original,
+    super.$query,
+  );
+}
+
+class AuthRateLimitFluent<T> extends _i1.PrismaFluent<T> {
+  const AuthRateLimitFluent(
     super.original,
     super.$query,
   );
@@ -8747,6 +9434,511 @@ extension SessionRecordModelDelegateExtension
   }
 }
 
+extension AuthRateLimitModelDelegateExtension
+    on _i1.ModelDelegate<AuthRateLimit> {
+  AuthRateLimitFluent<AuthRateLimit?> findUnique(
+      {required AuthRateLimitWhereUniqueInput where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findUniqueAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findUniqueAuthRateLimit',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : null);
+    return AuthRateLimitFluent<AuthRateLimit?>(
+      future,
+      query,
+    );
+  }
+
+  AuthRateLimitFluent<AuthRateLimit> findUniqueOrThrow(
+      {required AuthRateLimitWhereUniqueInput where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findUniqueAuthRateLimitOrThrow',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findUniqueAuthRateLimitOrThrow',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: AuthRateLimit)'));
+    return AuthRateLimitFluent<AuthRateLimit>(
+      future,
+      query,
+    );
+  }
+
+  AuthRateLimitFluent<AuthRateLimit?> findFirst({
+    AuthRateLimitWhereInput? where,
+    Iterable<AuthRateLimitOrderByWithRelationInput>? orderBy,
+    AuthRateLimitWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    Iterable<AuthRateLimitScalarFieldEnum>? distinct,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+      _i2.GraphQLArg(
+        r'distinct',
+        distinct,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findFirstAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findFirstAuthRateLimit',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : null);
+    return AuthRateLimitFluent<AuthRateLimit?>(
+      future,
+      query,
+    );
+  }
+
+  AuthRateLimitFluent<AuthRateLimit> findFirstOrThrow({
+    AuthRateLimitWhereInput? where,
+    Iterable<AuthRateLimitOrderByWithRelationInput>? orderBy,
+    AuthRateLimitWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    Iterable<AuthRateLimitScalarFieldEnum>? distinct,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+      _i2.GraphQLArg(
+        r'distinct',
+        distinct,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findFirstAuthRateLimitOrThrow',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findFirstAuthRateLimitOrThrow',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: AuthRateLimit)'));
+    return AuthRateLimitFluent<AuthRateLimit>(
+      future,
+      query,
+    );
+  }
+
+  Future<Iterable<AuthRateLimit>> findMany({
+    AuthRateLimitWhereInput? where,
+    Iterable<AuthRateLimitOrderByWithRelationInput>? orderBy,
+    AuthRateLimitWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+    Iterable<AuthRateLimitScalarFieldEnum>? distinct,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+      _i2.GraphQLArg(
+        r'distinct',
+        distinct,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'findManyAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'findManyAuthRateLimit',
+    );
+    final fields = AuthRateLimitScalarFieldEnum.values.toGraphQLFields();
+    compiler(Iterable<Map> findManyAuthRateLimit) =>
+        findManyAuthRateLimit.map((Map findManyAuthRateLimit) =>
+            AuthRateLimit.fromJson(findManyAuthRateLimit.cast()));
+    return query(fields).then((json) => json is Iterable
+        ? compiler(json.cast())
+        : throw Exception('Unable to parse response'));
+  }
+
+  AuthRateLimitFluent<AuthRateLimit> create(
+      {required AuthRateLimitCreateInput data}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'data',
+        data,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'createOneAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'createOneAuthRateLimit',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: AuthRateLimit)'));
+    return AuthRateLimitFluent<AuthRateLimit>(
+      future,
+      query,
+    );
+  }
+
+  AuthRateLimitFluent<AuthRateLimit?> update({
+    required AuthRateLimitUpdateInput data,
+    required AuthRateLimitWhereUniqueInput where,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'data',
+        data,
+      ),
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'updateOneAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'updateOneAuthRateLimit',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : null);
+    return AuthRateLimitFluent<AuthRateLimit?>(
+      future,
+      query,
+    );
+  }
+
+  Future<AffectedRowsOutput> updateMany({
+    required AuthRateLimitUpdateManyMutationInput data,
+    AuthRateLimitWhereInput? where,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'data',
+        data,
+      ),
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'updateManyAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'updateManyAuthRateLimit',
+    );
+    final fields = const ['count'].map((e) => _i2.GraphQLField(e));
+    compiler(Map updateManyAuthRateLimit) =>
+        AffectedRowsOutput.fromJson(updateManyAuthRateLimit.cast());
+    return query(fields).then((json) => json is Map
+        ? compiler(json)
+        : throw Exception('Unable to parse response'));
+  }
+
+  AuthRateLimitFluent<AuthRateLimit> upsert({
+    required AuthRateLimitWhereUniqueInput where,
+    required AuthRateLimitCreateInput create,
+    required AuthRateLimitUpdateInput update,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'create',
+        create,
+      ),
+      _i2.GraphQLArg(
+        r'update',
+        update,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'upsertOneAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'upsertOneAuthRateLimit',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : throw Exception(
+                'Not found OutputTypeRefType.string(value: AuthRateLimit)'));
+    return AuthRateLimitFluent<AuthRateLimit>(
+      future,
+      query,
+    );
+  }
+
+  AuthRateLimitFluent<AuthRateLimit?> delete(
+      {required AuthRateLimitWhereUniqueInput where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'deleteOneAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'deleteOneAuthRateLimit',
+    );
+    final future = query(AuthRateLimitScalarFieldEnum.values.toGraphQLFields())
+        .then((json) => json is Map
+            ? AuthRateLimit.fromJson(json.cast<String, dynamic>())
+            : null);
+    return AuthRateLimitFluent<AuthRateLimit?>(
+      future,
+      query,
+    );
+  }
+
+  Future<AffectedRowsOutput> deleteMany({AuthRateLimitWhereInput? where}) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      )
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $mutation([
+        _i2.GraphQLField(
+          r'deleteManyAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'deleteManyAuthRateLimit',
+    );
+    final fields = const ['count'].map((e) => _i2.GraphQLField(e));
+    compiler(Map deleteManyAuthRateLimit) =>
+        AffectedRowsOutput.fromJson(deleteManyAuthRateLimit.cast());
+    return query(fields).then((json) => json is Map
+        ? compiler(json)
+        : throw Exception('Unable to parse response'));
+  }
+
+  AggregateAuthRateLimit aggregate({
+    AuthRateLimitWhereInput? where,
+    Iterable<AuthRateLimitOrderByWithRelationInput>? orderBy,
+    AuthRateLimitWhereUniqueInput? cursor,
+    int? take,
+    int? skip,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'cursor',
+        cursor,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'aggregateAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'aggregateAuthRateLimit',
+    );
+    return AggregateAuthRateLimit(query);
+  }
+
+  Future<Iterable<AuthRateLimitGroupByOutputType>> groupBy({
+    AuthRateLimitWhereInput? where,
+    Iterable<AuthRateLimitOrderByWithAggregationInput>? orderBy,
+    required Iterable<AuthRateLimitScalarFieldEnum> by,
+    AuthRateLimitScalarWhereWithAggregatesInput? having,
+    int? take,
+    int? skip,
+  }) {
+    final args = [
+      _i2.GraphQLArg(
+        r'where',
+        where,
+      ),
+      _i2.GraphQLArg(
+        r'orderBy',
+        orderBy,
+      ),
+      _i2.GraphQLArg(
+        r'by',
+        by,
+      ),
+      _i2.GraphQLArg(
+        r'having',
+        having,
+      ),
+      _i2.GraphQLArg(
+        r'take',
+        take,
+      ),
+      _i2.GraphQLArg(
+        r'skip',
+        skip,
+      ),
+    ];
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'groupByAuthRateLimit',
+          fields: fields,
+          args: args,
+        )
+      ]),
+      key: r'groupByAuthRateLimit',
+    );
+    final fields = by.map((e) => _i2.GraphQLField(e.originalName ?? e.name));
+    compiler(Iterable<Map> groupByAuthRateLimit) => groupByAuthRateLimit.map(
+        (Map groupByAuthRateLimit) => AuthRateLimitGroupByOutputType.fromJson(
+            groupByAuthRateLimit.cast()));
+    return query(fields).then((json) => json is Iterable
+        ? compiler(json.cast())
+        : throw Exception('Unable to parse response'));
+  }
+}
+
 @_i1.jsonSerializable
 class UserRecordGroupByOutputType implements _i1.JsonSerializable {
   const UserRecordGroupByOutputType({
@@ -8929,6 +10121,32 @@ class SessionRecordGroupByOutputType implements _i1.JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() => _$SessionRecordGroupByOutputTypeToJson(this);
+}
+
+@_i1.jsonSerializable
+class AuthRateLimitGroupByOutputType implements _i1.JsonSerializable {
+  const AuthRateLimitGroupByOutputType({
+    this.id,
+    this.ipAddress,
+    this.attempts,
+    this.lastAttempt,
+  });
+
+  factory AuthRateLimitGroupByOutputType.fromJson(Map<String, dynamic> json) =>
+      _$AuthRateLimitGroupByOutputTypeFromJson(json);
+
+  final int? id;
+
+  @JsonKey(name: r'ip_address')
+  final String? ipAddress;
+
+  final int? attempts;
+
+  @JsonKey(name: r'last_attempt')
+  final DateTime? lastAttempt;
+
+  @override
+  Map<String, dynamic> toJson() => _$AuthRateLimitGroupByOutputTypeToJson(this);
 }
 
 @_i1.jsonSerializable
@@ -9438,6 +10656,77 @@ class AggregateSessionRecord {
       key: r'_max',
     );
     return SessionRecordMaxAggregateOutputType(query);
+  }
+}
+
+class AggregateAuthRateLimit {
+  const AggregateAuthRateLimit(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  AuthRateLimitCountAggregateOutputType $count() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_count',
+          fields: fields,
+        )
+      ]),
+      key: r'_count',
+    );
+    return AuthRateLimitCountAggregateOutputType(query);
+  }
+
+  AuthRateLimitAvgAggregateOutputType $avg() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_avg',
+          fields: fields,
+        )
+      ]),
+      key: r'_avg',
+    );
+    return AuthRateLimitAvgAggregateOutputType(query);
+  }
+
+  AuthRateLimitSumAggregateOutputType $sum() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_sum',
+          fields: fields,
+        )
+      ]),
+      key: r'_sum',
+    );
+    return AuthRateLimitSumAggregateOutputType(query);
+  }
+
+  AuthRateLimitMinAggregateOutputType $min() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_min',
+          fields: fields,
+        )
+      ]),
+      key: r'_min',
+    );
+    return AuthRateLimitMinAggregateOutputType(query);
+  }
+
+  AuthRateLimitMaxAggregateOutputType $max() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_max',
+          fields: fields,
+        )
+      ]),
+      key: r'_max',
+    );
+    return AuthRateLimitMaxAggregateOutputType(query);
   }
 }
 
@@ -11250,6 +12539,259 @@ class SessionRecordMaxAggregateOutputType {
   }
 }
 
+class AuthRateLimitCountAggregateOutputType {
+  const AuthRateLimitCountAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+
+  Future<int> ipAddress() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'ip_address',
+          fields: fields,
+        )
+      ]),
+      key: r'ip_address',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+
+  Future<int> attempts() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'attempts',
+          fields: fields,
+        )
+      ]),
+      key: r'attempts',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+
+  Future<int> lastAttempt() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'last_attempt',
+          fields: fields,
+        )
+      ]),
+      key: r'last_attempt',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+
+  Future<int> $all() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'_all',
+          fields: fields,
+        )
+      ]),
+      key: r'_all',
+    );
+    return query(const []).then((value) => (value as int));
+  }
+}
+
+class AuthRateLimitAvgAggregateOutputType {
+  const AuthRateLimitAvgAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<double?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as double?));
+  }
+
+  Future<double?> attempts() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'attempts',
+          fields: fields,
+        )
+      ]),
+      key: r'attempts',
+    );
+    return query(const []).then((value) => (value as double?));
+  }
+}
+
+class AuthRateLimitSumAggregateOutputType {
+  const AuthRateLimitSumAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+
+  Future<int?> attempts() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'attempts',
+          fields: fields,
+        )
+      ]),
+      key: r'attempts',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+}
+
+class AuthRateLimitMinAggregateOutputType {
+  const AuthRateLimitMinAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+
+  Future<String?> ipAddress() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'ip_address',
+          fields: fields,
+        )
+      ]),
+      key: r'ip_address',
+    );
+    return query(const []).then((value) => (value as String?));
+  }
+
+  Future<int?> attempts() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'attempts',
+          fields: fields,
+        )
+      ]),
+      key: r'attempts',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+
+  Future<DateTime?> lastAttempt() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'last_attempt',
+          fields: fields,
+        )
+      ]),
+      key: r'last_attempt',
+    );
+    return query(const [])
+        .then((value) => value is String ? DateTime.parse(value) : null);
+  }
+}
+
+class AuthRateLimitMaxAggregateOutputType {
+  const AuthRateLimitMaxAggregateOutputType(this.$query);
+
+  final _i1.PrismaFluentQuery $query;
+
+  Future<int?> id() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'id',
+          fields: fields,
+        )
+      ]),
+      key: r'id',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+
+  Future<String?> ipAddress() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'ip_address',
+          fields: fields,
+        )
+      ]),
+      key: r'ip_address',
+    );
+    return query(const []).then((value) => (value as String?));
+  }
+
+  Future<int?> attempts() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'attempts',
+          fields: fields,
+        )
+      ]),
+      key: r'attempts',
+    );
+    return query(const []).then((value) => (value as int?));
+  }
+
+  Future<DateTime?> lastAttempt() {
+    final query = _i1.PrismaFluent.queryBuilder(
+      query: (fields) => $query([
+        _i2.GraphQLField(
+          r'last_attempt',
+          fields: fields,
+        )
+      ]),
+      key: r'last_attempt',
+    );
+    return query(const [])
+        .then((value) => value is String ? DateTime.parse(value) : null);
+  }
+}
+
 @JsonSerializable(
   createFactory: false,
   createToJson: true,
@@ -11290,7 +12832,7 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
     final engine = _i5.BinaryEngine(
       logger: logger,
       schema:
-          r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgPSAiZGFydCBydW4gb3JtIgogIGVuZ2luZVR5cGUgPSAiYmluYXJ5Igp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJzcWxpdGUiCiAgdXJsICAgICAgPSAiZmlsZTouLi9kYXRhYmFzZS9za3licmlkZ2UuZGIiCn0KCm1vZGVsIFVzZXJSZWNvcmQgewogIGlkICAgICAgICAgICAgICBCaWdJbnQgICAgIEBpZAogIGRpZCAgICAgICAgICAgICBTdHJpbmcgIEB1bmlxdWUKICBiYW5uZXIgICAgICAgICAgU3RyaW5nIEBkZWZhdWx0KCIiKQogIGZvbGxvd2Vyc19jb3VudCBJbnQgQGRlZmF1bHQoMCkKICBmb2xsb3dzX2NvdW50ICAgSW50IEBkZWZhdWx0KDApCiAgcG9zdHNfY291bnQgICAgIEludCBAZGVmYXVsdCgwKQogIGRlc2NyaXB0aW9uICAgICBTdHJpbmcgQGRlZmF1bHQoIiIpCn0KCm1vZGVsIFBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICBCaWdJbnQgICAgICAgICAgICBAaWQKICBjaWQgICAgICAgICAgU3RyaW5nICAgICAgICAgQHVuaXF1ZQogIHVyaSAgICAgICAgICBTdHJpbmcKICBhdXRob3JfZGlkICAgU3RyaW5nCiAgcmVwb3N0cyBSZXBvc3RSZWNvcmRbXQp9Cgptb2RlbCBSZXBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICAgICAgQmlnSW50ICAgICAgICBAaWQKICBoYXNoX2lkICAgICAgICAgIFN0cmluZyAgICAgQHVuaXF1ZQogIG9yaWdpbmFsX3Bvc3QgICAgUG9zdFJlY29yZCBAcmVsYXRpb24oZmllbGRzOiBbb3JpZ2luYWxfcG9zdF9pZF0sIHJlZmVyZW5jZXM6IFtpZF0pCiAgb3JpZ2luYWxfcG9zdF9pZCBCaWdJbnQKfQoKbW9kZWwgTm90aWZpY2F0aW9uUmVjb3JkIHsKICBpZCAgQmlnSW50ICAgIEBpZAogIGNpZCBTdHJpbmcKICB1cmkgU3RyaW5nCn0KCm1vZGVsIE1lZGlhUmVjb3JkIHsKICBpZCAgICAgICAgICBCaWdJbnQgICAgQGlkCiAgdHlwZSAgICAgICAgU3RyaW5nCiAgbWltZV90eXBlICAgU3RyaW5nCiAgc2l6ZSAgICAgICAgSW50CiAgbGluayAgICAgICAgU3RyaW5nCiAgZGVzY3JpcHRpb24gU3RyaW5nCn0KCm1vZGVsIEZlZWRSZWNvcmQgewogIGlkICAgICAgICAgQmlnSW50ICAgICBAaWQKICBjaWQgICAgICAgIFN0cmluZwogIHVyaSAgICAgICAgU3RyaW5nCiAgYXV0aG9yX2RpZCBTdHJpbmc/Cn0KCm1vZGVsIFNlc3Npb25SZWNvcmQgewogIGlkIEludCBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIGRpZCBTdHJpbmcgQHVuaXF1ZQogIHNlc3Npb24gU3RyaW5nCn0=',
+          r'Ly8gVGhpcyBpcyB5b3VyIFByaXNtYSBzY2hlbWEgZmlsZSwKLy8gbGVhcm4gbW9yZSBhYm91dCBpdCBpbiB0aGUgZG9jczogaHR0cHM6Ly9wcmlzLmx5L2QvcHJpc21hLXNjaGVtYQoKZ2VuZXJhdG9yIGNsaWVudCB7CiAgcHJvdmlkZXIgPSAiZGFydCBydW4gb3JtIgogIGVuZ2luZVR5cGUgPSAiYmluYXJ5Igp9CgpkYXRhc291cmNlIGRiIHsKICBwcm92aWRlciA9ICJzcWxpdGUiCiAgdXJsICAgICAgPSAiZmlsZTouLi9kYXRhYmFzZS9za3licmlkZ2UuZGIiCn0KCm1vZGVsIFVzZXJSZWNvcmQgewogIGlkICAgICAgICAgICAgICBCaWdJbnQgICAgIEBpZAogIGRpZCAgICAgICAgICAgICBTdHJpbmcgIEB1bmlxdWUKICBiYW5uZXIgICAgICAgICAgU3RyaW5nIEBkZWZhdWx0KCIiKQogIGZvbGxvd2Vyc19jb3VudCBJbnQgQGRlZmF1bHQoMCkKICBmb2xsb3dzX2NvdW50ICAgSW50IEBkZWZhdWx0KDApCiAgcG9zdHNfY291bnQgICAgIEludCBAZGVmYXVsdCgwKQogIGRlc2NyaXB0aW9uICAgICBTdHJpbmcgQGRlZmF1bHQoIiIpCn0KCm1vZGVsIFBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICBCaWdJbnQgICAgICAgICAgICBAaWQKICBjaWQgICAgICAgICAgU3RyaW5nICAgICAgICAgQHVuaXF1ZQogIHVyaSAgICAgICAgICBTdHJpbmcKICBhdXRob3JfZGlkICAgU3RyaW5nCiAgcmVwb3N0cyBSZXBvc3RSZWNvcmRbXQp9Cgptb2RlbCBSZXBvc3RSZWNvcmQgewogIGlkICAgICAgICAgICAgICAgQmlnSW50ICAgICAgICBAaWQKICBoYXNoX2lkICAgICAgICAgIFN0cmluZyAgICAgQHVuaXF1ZQogIG9yaWdpbmFsX3Bvc3QgICAgUG9zdFJlY29yZCBAcmVsYXRpb24oZmllbGRzOiBbb3JpZ2luYWxfcG9zdF9pZF0sIHJlZmVyZW5jZXM6IFtpZF0pCiAgb3JpZ2luYWxfcG9zdF9pZCBCaWdJbnQKfQoKbW9kZWwgTm90aWZpY2F0aW9uUmVjb3JkIHsKICBpZCAgQmlnSW50ICAgIEBpZAogIGNpZCBTdHJpbmcKICB1cmkgU3RyaW5nCn0KCm1vZGVsIE1lZGlhUmVjb3JkIHsKICBpZCAgICAgICAgICBCaWdJbnQgICAgQGlkCiAgdHlwZSAgICAgICAgU3RyaW5nCiAgbWltZV90eXBlICAgU3RyaW5nCiAgc2l6ZSAgICAgICAgSW50CiAgbGluayAgICAgICAgU3RyaW5nCiAgZGVzY3JpcHRpb24gU3RyaW5nCn0KCm1vZGVsIEZlZWRSZWNvcmQgewogIGlkICAgICAgICAgQmlnSW50ICAgICBAaWQKICBjaWQgICAgICAgIFN0cmluZwogIHVyaSAgICAgICAgU3RyaW5nCiAgYXV0aG9yX2RpZCBTdHJpbmc/Cn0KCm1vZGVsIFNlc3Npb25SZWNvcmQgewogIGlkIEludCBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIGRpZCBTdHJpbmcgQHVuaXF1ZQogIHNlc3Npb24gU3RyaW5nCn0KCm1vZGVsIEF1dGhSYXRlTGltaXQgewogIGlkIEludCBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQogIGlwX2FkZHJlc3MgU3RyaW5nIEB1bmlxdWUKICBhdHRlbXB0cyBJbnQgQGRlZmF1bHQoMCkKICBsYXN0X2F0dGVtcHQgRGF0ZVRpbWU/Cn0=',
       datasources: datasources?.toJson().cast() ?? const {},
       executable:
           r'/Users/videah/.npm/_npx/b465c30ae0f33351/node_modules/prisma/query-engine-darwin-arm64',
@@ -11349,6 +12891,12 @@ class PrismaClient extends _i1.BasePrismaClient<PrismaClient> {
       );
   _i1.ModelDelegate<SessionRecord> get sessionRecord =>
       _i1.ModelDelegate<SessionRecord>(
+        _engine,
+        headers: _headers,
+        transaction: _transaction,
+      );
+  _i1.ModelDelegate<AuthRateLimit> get authRateLimit =>
+      _i1.ModelDelegate<AuthRateLimit>(
         _engine,
         headers: _headers,
         transaction: _transaction,

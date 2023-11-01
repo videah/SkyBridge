@@ -5,38 +5,46 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
-import 'package:sky_bridge/models/auth_rate_limit.dart';
 import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
 import 'package:sky_bridge/models/preferences.dart';
 import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
-
-/// Holding session rate limits in memory.
-final sessionRateLimits = <String, AuthRateLimit>{};
 
 /// Takes an IP address and ensures that authentication attempts are not
 /// being made too frequently. Bluesky now has quite aggressive rate limiting
 /// for authentication attempts, so we have to do the same.
 ///
 /// Returns true if the IP has hit the rate limit, false otherwise.
-void incrementFailedAuthAttempt(RequestContext context) {
+void incrementFailedAuthAttempt(RequestContext context) async {
   final ip = context.request.headers['X-Forwarded-For'] ??
       context.request.connectionInfo.remoteAddress.address;
 
-  final limit = sessionRateLimits.putIfAbsent(
-    ip,
-    AuthRateLimit.new,
-  )
-    ..increment();
-
-  sessionRateLimits[ip] = limit;
+  // Check if we already have a rate limit for this IP in the database.
+  await db.authRateLimit.upsert(
+    where: AuthRateLimitWhereUniqueInput(
+      ipAddress: ip,
+    ),
+    create: AuthRateLimitCreateInput(
+      ipAddress: ip,
+      attempts: 1,
+    ),
+    update: const AuthRateLimitUpdateInput(
+      attempts: IntFieldUpdateOperationsInput(
+        increment: 1,
+      ),
+    ),
+  );
 }
 
 /// Determines if an IP address has hit the rate limit for authentication.
-bool isIpRateLimited(RequestContext context) {
+Future<bool> isIpRateLimited(RequestContext context) async {
   final ip = context.request.headers['X-Forwarded-For'] ??
       context.request.connectionInfo.remoteAddress.address;
 
-  final limit = sessionRateLimits[ip];
+  final limit = await db.authRateLimit.findUnique(
+    where: AuthRateLimitWhereUniqueInput(
+      ipAddress: ip,
+    ),
+  );
   if (limit == null) return false;
 
   // We've hit the rate limit.
@@ -44,28 +52,61 @@ bool isIpRateLimited(RequestContext context) {
     final now = DateTime.now().toUtc();
 
     // If the last time the limit was hit is null, set it to now.
-    limit.lastTimeLimitWasHit ??= now;
-
-    // If the last hit was more than 30 minutes ago, reset the limit.
-    final diff = now.difference(limit.lastTimeLimitWasHit!);
-    if (diff.inMinutes > 30) {
-      limit
-        ..attempts = 1
-        ..lastTimeLimitWasHit = null;
+    if (limit.lastAttempt == null) {
+      await db.authRateLimit.update(
+        where: AuthRateLimitWhereUniqueInput(
+          ipAddress: ip,
+        ),
+        data: AuthRateLimitUpdateInput(
+          lastAttempt: NullableDateTimeFieldUpdateOperationsInput(
+            set: now,
+          ),
+        ),
+      );
     }
 
-    // Update values.
-    sessionRateLimits[ip] = limit;
+    // If the last hit was more than 30 minutes ago, reset the limit.
+    final diff = now.difference(limit.lastAttempt ?? now);
+    if (diff.inMinutes > 30) {
+      await db.authRateLimit.update(
+        where: AuthRateLimitWhereUniqueInput(
+          ipAddress: ip,
+        ),
+        data: AuthRateLimitUpdateInput(
+          attempts: const IntFieldUpdateOperationsInput(
+            set: 1,
+          ),
+          lastAttempt: NullableDateTimeFieldUpdateOperationsInput(
+            set: now,
+          ),
+        ),
+      );
+    }
   }
 
-  return limit.lastTimeLimitWasHit != null;
+  return limit.lastAttempt != null;
 }
 
 /// Reset the rate limit for a given IP address.
-void resetIpRateLimit(RequestContext context) {
+Future<void> resetIpRateLimit(RequestContext context) async {
   final ip = context.request.headers['X-Forwarded-For'] ??
       context.request.connectionInfo.remoteAddress.address;
-  sessionRateLimits.remove(ip);
+
+  // Check if we already have a rate limit for this IP in the database.
+  // If we do, delete it.
+  final record = await db.authRateLimit.findUnique(
+    where: AuthRateLimitWhereUniqueInput(
+      ipAddress: ip,
+    ),
+  );
+
+  if (record != null) {
+    await db.authRateLimit.delete(
+      where: AuthRateLimitWhereUniqueInput(
+        ipAddress: ip,
+      ),
+    );
+  }
 }
 
 /// Check a request context for a valid bearer token to determine if the
@@ -106,7 +147,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
       if (now.isAfter(refreshExp)) {
         // Refresh token is expired. We gotta get a brand new session.
         // Check if the IP is rate limited for authentication attempts.
-        final isRateLimited = isIpRateLimited(context);
+        final isRateLimited = await isIpRateLimited(context);
         if (isRateLimited) return null;
 
         final newSession = await createBlueskySession(
@@ -121,7 +162,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
         }
 
         // Reset the IP rate limit.
-        resetIpRateLimit(context);
+        await resetIpRateLimit(context);
 
         return newSession;
       } else {
@@ -151,7 +192,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
     return session;
   } else {
     // Check if the IP is rate limited for authentication attempts.
-    final isRateLimited = isIpRateLimited(context);
+    final isRateLimited = await isIpRateLimited(context);
     if (isRateLimited) return null;
 
     final newSession = await createBlueskySession(
@@ -166,7 +207,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
     }
 
     // Reset the IP rate limit.
-    resetIpRateLimit(context);
+    await resetIpRateLimit(context);
 
     return newSession;
   }

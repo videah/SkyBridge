@@ -63,3 +63,10 @@ model SessionRecord {
   did String @unique
   session String
 }
+
+model AuthRateLimit {
+  id Int @id @default(autoincrement())
+  ip_address String @unique
+  attempts Int @default(0)
+  last_attempt DateTime?
+}
