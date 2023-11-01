@@ -124,7 +124,9 @@ Future<ProcessedFacets> processFacets(
         mentions.add(MentionTuple(facet: mention, handle: facetText));
       } else if (feature.data is bsky.FacetTag) {
         // Facet is a tag, attach tag url to <a> tag.
-        final url = 'https://$base/tags/$facetText';
+        // Strip hashtag from facet text.
+        final tagName = facetText.substring(1);
+        final url = 'https://$base/tags/$tagName';
         output.add(
           '<a href="$url" class="mention" rel="nofollow noopener noreferrer" target="_blank">$facetText</a>',
         );
