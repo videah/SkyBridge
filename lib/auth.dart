@@ -168,8 +168,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
       } else {
         // The access token is expired but we have a valid refresh token,
         // try to refresh the session.
-        final bluesky = bsky.Bluesky.fromSession(session);
-        final refreshedSession = await bluesky.servers.refreshSession(
+        final refreshedSession = await bsky.refreshSession(
           refreshJwt: session.refreshJwt,
         );
 
