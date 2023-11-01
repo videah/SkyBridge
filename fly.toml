@@ -28,3 +28,8 @@ primary_region = "lhr"
   method = "GET"
   timeout = "5s"
   path = "/api/v2/instance"
+
+[http_service.concurrency]
+  type = "requests"
+  hard_limit = 999999
+  soft_limit = 9999
