@@ -26,6 +26,9 @@ Future<Response> onRequest(RequestContext context) async {
       await preference.map(
         adultContent: (_) {},
         contentLabel: (_) {},
+        personalDetails: (_) {},
+        feedView: (_) {},
+        threadView: (_) {},
         savedFeeds: (feedUris) async {
           // Get the feed generator views for each saved feed, giving us info
           // like the name of the feed and the accompanying IDs.

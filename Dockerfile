@@ -13,13 +13,23 @@ RUN dart pub global activate dart_frog_cli
 COPY . .
 
 # Install Node.js LTS.
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
-apt-get install -y nodejs
+RUN set -uex; \
+    apt-get update; \
+    apt-get install -y ca-certificates curl gnupg; \
+    mkdir -p /etc/apt/keyrings; \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+     | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
+    NODE_MAJOR=18; \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
+     > /etc/apt/sources.list.d/nodesource.list; \
+    apt-get -qy update; \
+    apt-get -qy install nodejs;
 
 RUN npm i prisma@4.16.2
 RUN npx prisma generate
 
 # Generate a production build.
+RUN dart pub global activate dart_frog_cli 0.3.8
 RUN dart pub global run dart_frog_cli:dart_frog build
 
 # Ensure packages are still up-to-date if anything has changed.
@@ -30,13 +40,21 @@ RUN dart compile exe build/server/server.dart -o build/bin/server
 # libraries and configuration files stored in `/runtime/` from the build stage.
 FROM dart:stable AS runtime
 
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - &&\
-apt-get install -y nodejs
+RUN set -uex; \
+    apt-get update; \
+    apt-get install -y ca-certificates curl gnupg; \
+    mkdir -p /etc/apt/keyrings; \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+     | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
+    NODE_MAJOR=18; \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
+     > /etc/apt/sources.list.d/nodesource.list; \
+    apt-get -qy update; \
+    apt-get -qy install nodejs;
 
 RUN npm i prisma@4.16.2
 
 COPY --from=odroe/prisma-dart:latest / /runtime
-COPY --from=build /runtime/ /
 COPY --from=build /app/build/bin/server /app/bin/
 COPY --from=build /app/build/public /app/public/
 COPY --from=build /app/entrypoint.sh /app/
