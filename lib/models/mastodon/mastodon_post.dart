@@ -98,9 +98,17 @@ class MastodonPost {
     if (embed != null) {
       if (embed.data is bsky.EmbedViewImages) {
         final embedded = embed.data as bsky.EmbedViewImages;
-        // Convert the embed to a media attachment.
-        for (final image in embedded.images) {
-          final attachment = MastodonMediaAttachment.fromEmbed(image);
+        final embeddedImages = post.record.embed!.data as bsky.EmbedImages;
+
+        // Loop through both lists and match both based on index.
+        for (var i = 0; i < embedded.images.length; i++) {
+          final imageView = embedded.images[i];
+          final imageData = embeddedImages.images[i];
+
+          final attachment = MastodonMediaAttachment.fromEmbed(
+            imageView,
+            imageData,
+          );
           mediaAttachments.add(attachment);
         }
       }
@@ -202,9 +210,17 @@ class MastodonPost {
     if (embed != null) {
       if (embed.data is bsky.EmbedViewImages) {
         final embedded = embed.data as bsky.EmbedViewImages;
-        // Convert the embed to a media attachment.
-        for (final image in embedded.images) {
-          final attachment = MastodonMediaAttachment.fromEmbed(image);
+        final embeddedImages = post.record.embed!.data as bsky.EmbedImages;
+
+        // Loop through both lists and match both based on index.
+        for (var i = 0; i < embedded.images.length; i++) {
+          final imageView = embedded.images[i];
+          final imageData = embeddedImages.images[i];
+
+          final attachment = MastodonMediaAttachment.fromEmbed(
+            imageView,
+            imageData,
+          );
           mediaAttachments.add(attachment);
         }
       }

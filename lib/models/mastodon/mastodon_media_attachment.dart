@@ -15,12 +15,24 @@ class MastodonMediaAttachment {
     required this.blurhash,
     this.url,
     this.remoteUrl,
+    this.meta,
   });
 
   /// Converts a [bsky.EmbedViewImagesView] to a [MastodonMediaAttachment].
-  factory MastodonMediaAttachment.fromEmbed(bsky.EmbedViewImagesView embed) {
+  factory MastodonMediaAttachment.fromEmbed(
+    bsky.EmbedViewImagesView embed,
+    bsky.Image? image,
+  ) {
     // If embed.alt is empty, we return null instead.
     final description = embed.alt.isEmpty ? null : embed.alt;
+
+    final meta = MediaAttachmentMetadata(
+      original: Metadata(
+        width: image?.aspectRatio?.width ?? 1,
+        height: image?.aspectRatio?.height ?? 1,
+      ),
+    );
+
     return MastodonMediaAttachment(
       id: '0',
       type: MediaType.image,
@@ -28,6 +40,7 @@ class MastodonMediaAttachment {
       previewUrl: embed.thumbnail,
       remoteUrl: embed.fullsize,
       description: description,
+      meta: meta,
       blurhash: '0',
     );
   }
@@ -64,6 +77,11 @@ class MastodonMediaAttachment {
   /// A hash computed by the BlurHash algorithm, for generating colorful
   /// preview thumbnails when media has not been downloaded yet.
   final String blurhash;
+
+  /// Metadata about the attachment, meant to be retrieved using Paperclip.
+  /// We only have access to the aspect ratio of the image, and we're assuming
+  /// that the client is not lying about the aspect ratio.
+  final MediaAttachmentMetadata? meta;
 }
 
 /// The type of a [MastodonMediaAttachment].
@@ -87,4 +105,44 @@ enum MediaType {
   /// Unsupported or unrecognized type.
   @JsonValue('unknown')
   unknown,
+}
+
+/// Represents metadata about a [MastodonMediaAttachment].
+@JsonSerializable()
+class MediaAttachmentMetadata {
+  /// Constructs an instance of [MediaAttachmentMetadata].
+  const MediaAttachmentMetadata({required this.original});
+
+  /// Converts JSON into a [MediaAttachmentMetadata] instance.
+  factory MediaAttachmentMetadata.fromJson(Map<String, dynamic> json) =>
+      _$MediaAttachmentMetadataFromJson(json);
+
+  /// The metadata of the original image.
+  final Metadata original;
+
+  /// Converts the [MediaAttachmentMetadata] to JSON.
+  Map<String, dynamic> toJson() => _$MediaAttachmentMetadataToJson(this);
+}
+
+/// Image metadata taken from Paperclip.
+@JsonSerializable()
+class Metadata {
+  /// Constructs an instance of [Metadata].
+  const Metadata({required this.width, required this.height});
+
+  /// Converts JSON into a [Metadata] instance.
+  factory Metadata.fromJson(Map<String, dynamic> json) =>
+      _$MetadataFromJson(json);
+
+  /// The width of an image.
+  final int width;
+
+  /// The height of an image.
+  final int height;
+
+  /// The aspect ratio of an image.
+  double get aspect => width / height;
+
+  /// Converts the [Metadata] to JSON.
+  Map<String, dynamic> toJson() => _$MetadataToJson(this);
 }
