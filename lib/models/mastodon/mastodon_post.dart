@@ -141,15 +141,29 @@ class MastodonPost {
       }
     }
 
-    // Map hashtags included in the text to Mastodon tags.
-    final tags = BlueskyText(content).tags.map((tag) =>
-        MastodonTag(
-          name: tag.value,
-          url: '',
-        ),
-    ).toList();
+    final baseUrl = env.getOrElse(
+      'SKYBRIDGE_BASEURL',
+      () => throw Exception('SKYBRIDGE_BASEURL not set!'),
+    );
 
-    print(tags);
+    // Map hashtags included in the text to Mastodon tags.
+    final tags = BlueskyText(content)
+        .tags
+        .map(
+          (tag) => MastodonTag(
+            name: tag.value,
+            url: '$baseUrl/tags/${tag.value}',
+          ),
+        )
+        .toList();
+
+    // Replace the tags in the content with links to the tag pages.
+    for (final tag in tags) {
+      content = content.replaceAll(
+        '#${tag.name}',
+        '<a href="${tag.url}" rel="nofollow noopener noreferrer" target="_blank">#${tag.name}</a>',
+      );
+    }
 
     return MastodonPost(
       id: id.toString(),
@@ -229,13 +243,30 @@ class MastodonPost {
       }
     }
 
+    final baseUrl = env.getOrElse(
+      'SKYBRIDGE_BASEURL',
+      () => throw Exception('SKYBRIDGE_BASEURL not set!'),
+    );
+
     // Map hashtags included in the text to Mastodon tags.
-    final tags = BlueskyText(content).tags.map((tag) =>
-        MastodonTag(
-          name: tag.value,
-          url: '',
-        ),
-    ).toList();
+    final tags = BlueskyText(content)
+        .tags
+        .map(
+          (tag) => MastodonTag(
+            name: tag.value,
+            url: '$baseUrl/tags/${tag.value}',
+          ),
+        )
+        .toList();
+
+    // Replace the tags in the content with links to the tag pages.
+    for (final tag in tags) {
+      content = content.replaceAllMapped(
+        RegExp(r'\B#' + tag.name + r'\b'),
+        (match) =>
+            '<a href="${tag.url}" rel="nofollow noopener noreferrer" target="_blank">${match.group(0)}</a>',
+      );
+    }
 
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),
