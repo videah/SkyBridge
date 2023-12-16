@@ -128,9 +128,9 @@ class MastodonPost {
       // the account that reposted it.
       id = (await repostToDatabase(view)).id;
 
-      account = await MastodonAccount.fromActor(repost.data.by);
+      account = await MastodonAccount.fromActor(repost.data.by.toActor());
     } else {
-      account = await MastodonAccount.fromActor(post.author);
+      account = await MastodonAccount.fromActor(post.author.toActor());
     }
 
     // Construct URL/URI
@@ -204,7 +204,7 @@ class MastodonPost {
   /// Converts a [bsky.Post] to a [MastodonPost].
   static Future<MastodonPost> fromBlueSkyPost(bsky.Post post) async {
     final mediaAttachments = <MastodonMediaAttachment>[];
-    final account = await MastodonAccount.fromActor(post.author);
+    final account = await MastodonAccount.fromActor(post.author.toActor());
 
     final embed = post.embed;
     if (embed != null) {
