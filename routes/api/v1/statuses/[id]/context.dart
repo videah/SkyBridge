@@ -35,7 +35,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   );
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
-  final posts = await bluesky.feeds.findPostThread(
+  final posts = await bluesky.feed.getPostThread(
     uri: bsky.AtUri.parse(postRecord!.uri),
   );
 

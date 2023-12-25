@@ -21,7 +21,7 @@ Future<Response> onRequest(RequestContext context) async {
     var lists = <MastodonList>[];
 
     // Get saved feeds from the user's preferences.
-    final response = await bluesky.actors.findPreferences();
+    final response = await bluesky.actor.getPreferences();
     for (final preference in response.data.preferences) {
       await preference.map(
         adultContent: (_) {},
@@ -35,7 +35,7 @@ Future<Response> onRequest(RequestContext context) async {
           final result = await chunkResults<bsky.FeedGeneratorView, bsky.AtUri>(
             items: feedUris.data.savedUris,
             callback: (chunk) async {
-              final response = await bluesky.feeds.findGenerators(
+              final response = await bluesky.feed.getFeedGenerators(
                 uris: feedUris.data.savedUris,
               );
               return response.data.feeds;

@@ -31,19 +31,18 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   );
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
+  // Get the post from bluesky, we assume we already know the post exists
+  // and don't bother adding to the database or anything.
+  final uri = bsky.AtUri.parse(postRecord!.uri);
+  final response = await bluesky.feed.getPosts(uris: [uri]);
+  final post = response.data.posts.first;
 
-    // Get the post from bluesky, we assume we already know the post exists
-    // and don't bother adding to the database or anything.
-    final uri = bsky.AtUri.parse(postRecord!.uri);
-    final response = await bluesky.feeds.findPosts(uris: [uri]);
-    final post = response.data.posts.first;
+  final mastodonPost = await databaseTransaction(
+    () => MastodonPost.fromBlueSkyPost(post),
+  );
 
-    final mastodonPost = await databaseTransaction(
-      () => MastodonPost.fromBlueSkyPost(post),
-    );
-
-    // Process replies.
-    final processedPost = await processParentPosts(bluesky, [mastodonPost]);
+  // Process replies.
+  final processedPost = await processParentPosts(bluesky, [mastodonPost]);
 
   if (context.request.method == HttpMethod.get) {
     return threadedJsonResponse(
@@ -51,7 +50,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
     );
   } else if (context.request.method == HttpMethod.delete) {
     // Delete the post from bluesky.
-    await bluesky.repositories.deleteRecord(uri: uri);
+    await bluesky.repo.deleteRecord(uri: uri);
 
     return threadedJsonResponse(
       body: processedPost.first,

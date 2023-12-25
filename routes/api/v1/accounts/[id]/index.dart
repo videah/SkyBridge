@@ -26,7 +26,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
     return Response(statusCode: HttpStatus.notFound);
   }
 
-  final profile = await bluesky.actors.findProfile(actor: user.did);
+  final profile = await bluesky.actor.getProfile(actor: user.did);
 
   final account = await databaseTransaction(
     () => MastodonAccount.fromActorProfile(profile.data),

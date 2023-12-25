@@ -36,7 +36,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
   }
 
   // Get the users posts.
-  final feed = await bluesky.feeds.findFeed(actor: user.did, limit: 40);
+  final feed = await bluesky.feed.getAuthorFeed(actor: user.did, limit: 40);
 
   // Take all the posts and convert them to MastodonPost futures
   // Await all the futures, getting any necessary data from the database.

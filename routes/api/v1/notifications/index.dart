@@ -25,7 +25,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
 
   final limit = encodedParams.limit <= 100 ? encodedParams.limit : 100;
   // Fetch the notifications with the given parameters.
-  final response = await bluesky.notifications.findNotifications(
+  final response = await bluesky.notification.listNotifications(
     limit: limit,
   );
 

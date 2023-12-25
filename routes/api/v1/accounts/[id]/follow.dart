@@ -38,11 +38,11 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   if (did == null) Response(statusCode: HttpStatus.notFound);
 
   // Check if we're already following the account.
-  final profile = await bluesky.actors.findProfile(actor: did!);
+  final profile = await bluesky.actor.getProfile(actor: did!);
   final alreadyFollowing = profile.data.viewer.following != null;
 
   // If we're not following the account, create a follow record.
-  if (!alreadyFollowing) await bluesky.graphs.createFollow(did: did);
+  if (!alreadyFollowing) await bluesky.graph.follow(did: did);
 
   final rel = await MastodonRelationship.getActorRelationship(bluesky, record!);
 

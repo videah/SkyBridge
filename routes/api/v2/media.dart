@@ -85,7 +85,7 @@ Future<Response> onRequest(RequestContext context) async {
     }
 
     // Upload the image file to bluesky.
-    final response = await bluesky.repositories.uploadBlob(imageFileBytes);
+    final response = await bluesky.repo.uploadBlob(imageFileBytes);
     final blob = response.data.blob;
 
     // We need to store the blob info in the database so it can be retrieved

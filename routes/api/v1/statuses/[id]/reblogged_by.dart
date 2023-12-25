@@ -35,7 +35,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   );
   if (postRecord == null) Response(statusCode: HttpStatus.notFound);
 
-  final response = await bluesky.feeds.findRepostedBy(
+  final response = await bluesky.feed.getRepostedBy(
     uri: bsky.AtUri.parse(postRecord!.uri),
   );
 
@@ -47,7 +47,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final profiles = await chunkResults<bsky.ActorProfile, String>(
     items: handles,
     callback: (chunk) async {
-      final response = await bluesky.actors.findProfiles(actors: chunk);
+      final response = await bluesky.actor.getProfiles(actors: chunk);
       return response.data.profiles;
     },
   );

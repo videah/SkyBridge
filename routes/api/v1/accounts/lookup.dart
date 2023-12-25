@@ -18,7 +18,7 @@ Future<Response> onRequest(RequestContext context) async {
   if (bluesky == null) return authError();
 
   // Get the profile for the given handle.
-  final profile = await bluesky.actors.findProfile(actor: encodedParams.acct);
+  final profile = await bluesky.actor.getProfile(actor: encodedParams.acct);
   final account = await databaseTransaction(
     () => MastodonAccount.fromActorProfile(profile.data),
   );
