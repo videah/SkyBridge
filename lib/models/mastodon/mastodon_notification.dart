@@ -83,7 +83,7 @@ class MastodonNotification {
     final posts = await chunkResults<bsky.Post, bsky.AtUri>(
       items: postUris,
       callback: (chunk) async {
-        final response = await bluesky.feeds.findPosts(uris: chunk);
+        final response = await bluesky.feed.getPosts(uris: chunk);
         return response.data.posts;
       },
     );

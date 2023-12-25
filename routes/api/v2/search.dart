@@ -30,7 +30,6 @@ Future<Response> onRequest<T>(RequestContext context) async {
   if (params.limit == 1 &&
       params.resolve == true &&
       params.type == SearchType.statuses) {
-
     // If the query is attempting to find a quote post, Ivory will send
     // a query with the SkyBridge instance URI in the query in a format
     // that Mastodon uses.
@@ -60,7 +59,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
       // Get the post from bluesky, we assume we already know the post exists
       // and don't bother adding to the database or anything.
       final uri = bsky.AtUri.parse(postRecord!.uri);
-      final response = await bluesky.feeds.findPosts(uris: [uri]);
+      final response = await bluesky.feed.getPosts(uris: [uri]);
       final post = response.data.posts.first;
 
       final mastodonPost = await databaseTransaction(
@@ -82,12 +81,12 @@ Future<Response> onRequest<T>(RequestContext context) async {
     // Check if the query is an attempted repost to a different account.
     if (repostHandle != null && repostPostId != null) {
       // We resolve the DID and try and find the post directly from bluesky.
-      final did = await bluesky.identities.findDID(handle: repostHandle);
+      final did = await bluesky.identity.resolveHandle(handle: repostHandle);
       final uri = bsky.AtUri.parse(
         'at://${did.data.did}/app.bsky.feed.post/$repostPostId',
       );
 
-      final response = await bluesky.feeds.findPosts(uris: [uri]);
+      final response = await bluesky.feed.getPosts(uris: [uri]);
       final post = response.data.posts.first;
 
       final mastodonPost = await databaseTransaction(

@@ -35,7 +35,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   if (record == null) Response(statusCode: HttpStatus.notFound);
 
   // Get up to date profile information and convert it to a [MastodonAccount].
-  final response = await bluesky.actors.findProfile(actor: record!.did);
+  final response = await bluesky.actor.getProfile(actor: record!.did);
   final profile = await databaseTransaction(
     () => MastodonAccount.fromActorProfile(response.data),
   );

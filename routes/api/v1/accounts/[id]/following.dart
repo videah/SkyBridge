@@ -25,7 +25,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
   );
   if (userRecord == null) return Response(statusCode: HttpStatus.notFound);
 
-  final response = await bluesky.graphs.findFollows(actor: userRecord.did);
+  final response = await bluesky.graph.getFollows(actor: userRecord.did);
 
   // Get all the handles from the results and grab the full profile info.
   final handles = response.data.follows.map((actor) => actor.handle).toList();
@@ -35,7 +35,7 @@ Future<Response> onRequest(RequestContext context, String id) async {
   final profiles = await chunkResults<bsky.ActorProfile, String>(
     items: handles,
     callback: (chunk) async {
-      final response = await bluesky.actors.findProfiles(actors: chunk);
+      final response = await bluesky.actor.getProfiles(actors: chunk);
       return response.data.profiles;
     },
   );

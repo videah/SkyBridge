@@ -40,7 +40,7 @@ class MastodonRelationship {
   ) async {
     // Get the profile for the account and check the relationship with the
     // current user.
-    final profile = await bluesky.actors.findProfile(actor: account.did);
+    final profile = await bluesky.actor.getProfile(actor: account.did);
     final blocking = profile.data.viewer.blocking != null;
     final blockedBy = profile.data.viewer.isBlockedBy;
     final muting = profile.data.viewer.isMuted;

@@ -315,7 +315,7 @@ class MastodonPost {
       final createdAt = DateTime.now().toUtc();
 
       // Create the appropriate bluesky record.
-      await bluesky.repositories.createRecord(
+      await bluesky.repo.createRecord(
         collection: at.NSID.create('feed.bsky.app', 'repost'),
         record: {
           'subject': {
@@ -516,7 +516,7 @@ Future<List<MastodonPost>> processParentPosts(
   final results = await chunkResults<bsky.Post, bsky.AtUri>(
     items: uris,
     callback: (chunk) async {
-      final response = await bluesky.feeds.findPosts(uris: chunk);
+      final response = await bluesky.feed.getPosts(uris: chunk);
       return response.data.posts;
     },
   );
