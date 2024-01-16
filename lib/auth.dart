@@ -3,11 +3,15 @@ import 'dart:convert';
 import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:http/http.dart' as http;
 import 'package:sky_bridge/crypto.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/oauth/oauth_access_token.dart';
 import 'package:sky_bridge/models/preferences.dart';
 import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
+
+/// Global client
+final httpClient = http.Client();
 
 /// Takes an IP address and ensures that authentication attempts are not
 /// being made too frequently. Bluesky now has quite aggressive rate limiting
@@ -157,7 +161,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
 
         // Credentials are just straight up invalid. Bail.
         if (newSession == null) {
-          incrementFailedAuthAttempt(context);
+          await incrementFailedAuthAttempt(context);
           return null;
         }
 
@@ -170,6 +174,7 @@ Future<bsky.Session?> sessionFromContext(RequestContext context) async {
         // try to refresh the session.
         final refreshedSession = await bsky.refreshSession(
           refreshJwt: session.refreshJwt,
+          mockedPostClient: httpClient.post,
         );
 
         // Update the session in the database.
@@ -224,7 +229,10 @@ SkybridgePreferences preferencesFromContext(RequestContext context) {
 Future<bsky.Bluesky?> blueskyFromContext(RequestContext context) async {
   final session = await sessionFromContext(context);
   if (session == null) return null;
-  return bsky.Bluesky.fromSession(session);
+  return bsky.Bluesky.fromSession(session,
+    mockedGetClient: httpClient.get,
+    mockedPostClient: httpClient.post,
+  );
 }
 
 /// A helper function to return a 401 response for an invalid bearer token.
@@ -262,6 +270,7 @@ Future<bsky.Session?> createBlueskySession({
     final session = await bsky.createSession(
       identifier: identifier,
       password: appPassword,
+      mockedPostClient: httpClient.post,
     );
 
     // If we've gotten this far, the credentials are valid.

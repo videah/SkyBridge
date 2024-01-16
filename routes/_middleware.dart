@@ -11,7 +11,6 @@ Handler middleware(Handler handler) {
   return (RequestContext context) async {
     try {
       final response = await handler(context);
-
       // Reset Cache-Control so that we don't cache responses.
       return response.copyWith(
         headers: Map.of(response.headers)
@@ -53,6 +52,24 @@ Handler middleware(Handler handler) {
             },
           ),
       );
+    } on bsky.XRPCException catch (e) {
+      if (e.response.status.code == HttpStatus.tooManyRequests) {
+        final response = Response.json(
+          statusCode: HttpStatus.tooManyRequests,
+          body: {'error': 'Rate limit exceeded'},
+        );
+
+        return response.copyWith(
+          headers: Map.of(response.headers)
+            ..addAll(
+              {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+              },
+            ),
+        );
+      } else {
+        rethrow;
+      }
     }
   }.use(requestLogger()).use(
         // Temporary middleware that print requests.
