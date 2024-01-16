@@ -112,12 +112,26 @@ Future<Response> onRequest<T>(RequestContext context) async {
   );
 
   // Get our newly created post.
-  final response = await bluesky.feed.getPosts(uris: [newPost.data.uri]);
-  final postData = response.data.posts.first;
+  // If it fails, we try again three times before bailing out.
+  bsky.Post? postData;
+  for (var i = 0; i < 3; i++) {
+    try {
+      final response = await bluesky.feed.getPosts(uris: [newPost.data.uri]);
+      postData = response.data.posts.first;
+      break;
+    } catch (_) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+  }
+
+  // If we still don't have a post, bail out with a 500 error.
+  if (postData == null) {
+    return Response(statusCode: HttpStatus.internalServerError);
+  }
 
   // Construct and return the new post as a [MastodonPost].
   final mastodonPost = await databaseTransaction(
-    () => MastodonPost.fromBlueSkyPost(postData),
+    () => MastodonPost.fromBlueSkyPost(postData!),
   );
 
   return threadedJsonResponse(
