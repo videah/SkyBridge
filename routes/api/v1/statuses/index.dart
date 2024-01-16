@@ -108,6 +108,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
     facets: facets.map(bsky.Facet.fromJson).toList(),
     reply: postReplyRef,
     embed: embed,
+    languageTags: form.language != null ? [form.language!] : null,
   );
 
   // Get our newly created post.

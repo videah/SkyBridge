@@ -12,6 +12,7 @@ NewPostForm _$NewPostFormFromJson(Map<String, dynamic> json) => NewPostForm(
           ?.map((e) => e as String)
           .toList(),
       inReplyToId: handleReplyId(json['in_reply_to_id']),
+      language: json['language'] as String?,
     );
 
 Map<String, dynamic> _$NewPostFormToJson(NewPostForm instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$NewPostFormToJson(NewPostForm instance) =>
       'status': blueskyToString(instance.status),
       'media_ids': instance.mediaIds,
       'in_reply_to_id': instance.inReplyToId,
+      'language': instance.language,
     };

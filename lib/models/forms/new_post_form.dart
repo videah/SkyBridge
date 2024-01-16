@@ -11,6 +11,7 @@ class NewPostForm {
     required this.status,
     required this.mediaIds,
     required this.inReplyToId,
+    required this.language,
   });
 
   /// Converts JSON into a [NewPostForm] instance.
@@ -33,6 +34,9 @@ class NewPostForm {
   /// The ID of the post being replied to.
   @JsonKey(name: 'in_reply_to_id', fromJson: handleReplyId)
   final int? inReplyToId;
+
+  /// ISO 639 language code for this post.
+  final String? language;
 }
 
 BlueskyText stringToBluesky(String? value) =>

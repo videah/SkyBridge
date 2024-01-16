@@ -91,7 +91,7 @@ class MastodonPost {
     var repostCount = post.repostCount;
     var replyCount = post.replyCount;
     final mediaAttachments = <MastodonMediaAttachment>[];
-    String? language = 'en';
+    String? language = post.record.langs?.first ?? 'en';
 
     // Handle embedded content.
     final embed = post.embed;
@@ -273,7 +273,7 @@ class MastodonPost {
       sensitive: false,
       spoilerText: '',
       visibility: PostVisibility.public,
-      language: 'en',
+      language: post.record.langs?.first ?? 'en',
       uri: url,
       url: url,
       repliesCount: post.replyCount,
