@@ -98,15 +98,6 @@ Future<Response> onRequest(RequestContext context) async {
       nextCursor: nextCursor ?? '',
       getId: (post) => BigInt.parse(post.id),
     );
-
-    // final ids = processedPosts.map((post) => BigInt.parse(post.id)).toList();
-    // final highestID = ids.reduce((a, b) => a > b ? a : b);
-    //
-    // final prevParams = {'min_id': highestID.toString()};
-    // final nextParams = {'cursor': nextCursor};
-    // final prevURI = uri.replace(queryParameters: prevParams);
-    // final nextURI = uri.replace(queryParameters: nextParams);
-    // headers['Link'] = '<$prevURI>; rel="prev", <$nextURI>; rel="next"';
   }
 
   // If the user prefers not to see replies, we need to filter them out.

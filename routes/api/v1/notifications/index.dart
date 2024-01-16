@@ -38,6 +38,12 @@ Future<Response> onRequest<T>(RequestContext context) async {
     bluesky,
   );
 
+  // If we have a min_id, filter out any notifications that are older than it.
+  if (encodedParams.minId != null) {
+    final minId = BigInt.parse(encodedParams.minId!);
+    notifs.removeWhere((notif) => BigInt.parse(notif.id) <= minId);
+  }
+
   var headers = <String, String>{};
   if (notifs.isNotEmpty) {
     headers = generatePaginationHeaders(

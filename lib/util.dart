@@ -262,6 +262,8 @@ String stringifyModifiedUri(Uri uri, String originalUri) {
   return host + uri.toString().substring(host.length);
 }
 
+/// Generates pagination headers for a Mastodon feed like a timeline or
+/// notifications.
 Map<String, String> generatePaginationHeaders<T>({
   required List<T> items,
   required Uri requestUri,
@@ -272,5 +274,5 @@ Map<String, String> generatePaginationHeaders<T>({
   final prevURI = requestUri.replace(queryParameters: {'min_id': highestID.toString()});
   final nextURI = requestUri.replace(queryParameters: {'cursor': nextCursor});
 
-  return {'Link': '<$prevURI>; rel="prev", <$nextURI>; rel="next"'};
+  return {'Link': '<$nextURI>; rel="next", <$prevURI>; rel="prev"'};
 }
