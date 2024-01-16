@@ -21,15 +21,14 @@ class MastodonMediaAttachment {
   /// Converts a [bsky.EmbedViewImagesView] to a [MastodonMediaAttachment].
   factory MastodonMediaAttachment.fromEmbed(
     bsky.EmbedViewImagesView embed,
-    bsky.Image? image,
   ) {
     // If embed.alt is empty, we return null instead.
     final description = embed.alt.isEmpty ? null : embed.alt;
 
     final meta = MediaAttachmentMetadata(
       original: Metadata(
-        width: image?.aspectRatio?.width ?? 1,
-        height: image?.aspectRatio?.height ?? 1,
+        width: embed.aspectRatio?.width ?? 1,
+        height: embed.aspectRatio?.height ?? 1,
       ),
     );
 

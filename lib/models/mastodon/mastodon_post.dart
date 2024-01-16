@@ -98,19 +98,25 @@ class MastodonPost {
     if (embed != null) {
       if (embed.data is bsky.EmbedViewImages) {
         final embedded = embed.data as bsky.EmbedViewImages;
-        final embeddedImages = post.record.embed!.data as bsky.EmbedImages;
 
-        // Loop through both lists and match both based on index.
-        for (var i = 0; i < embedded.images.length; i++) {
-          final imageView = embedded.images[i];
-          final imageData = embeddedImages.images[i];
-
-          final attachment = MastodonMediaAttachment.fromEmbed(
-            imageView,
-            imageData,
-          );
+        // Add the images to the list of media attachments.
+        for (final image in embedded.images) {
+          final attachment = MastodonMediaAttachment.fromEmbed(image);
           mediaAttachments.add(attachment);
         }
+      } else if (embed.data is bsky.EmbedViewRecordWithMedia) {
+        final embedded = embed.data as bsky.EmbedViewRecordWithMedia;
+
+        // When there are other types of embeds, we need to grab the
+        // images with EmbedViewRecordWithMedia.
+        embedded.media.mapOrNull(
+          images: (media) {
+            for (final image in media.data.images) {
+              final attachment = MastodonMediaAttachment.fromEmbed(image);
+              mediaAttachments.add(attachment);
+            }
+          },
+        );
       }
     }
 
@@ -139,14 +145,24 @@ class MastodonPost {
     const base = 'https://bsky.app';
     final url = '$base/profile/${account.username}/post/$postId';
 
-    final card = await MastodonCard.fromEmbed(post.embed);
+    var card = await MastodonCard.fromEmbed(post.embed);
 
     // If there is a card but no link to it in the content, add it.
     if (card != null) {
       if (!text.contains(card.url)) {
         content +=
-            ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
+        '\n\n<a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${mediaAttachments.isEmpty ? card.url : 'View Quote Post ⤵'}</a>';
+
+        if (mediaAttachments.isNotEmpty) {
+          content += '<p>"${card.description}" — @${card.authorName}</p>';
+        }
       }
+    }
+
+    // If there's an image attached to the post we drop the card and instead
+    // include a link to the card url in the post content.
+    if (mediaAttachments.isNotEmpty) {
+      card = null;
     }
 
     final baseUrl = env.getOrElse(
@@ -206,23 +222,30 @@ class MastodonPost {
     final mediaAttachments = <MastodonMediaAttachment>[];
     final account = await MastodonAccount.fromActor(post.author.toActor());
 
+    // Handle embedded content.
     final embed = post.embed;
     if (embed != null) {
       if (embed.data is bsky.EmbedViewImages) {
         final embedded = embed.data as bsky.EmbedViewImages;
-        final embeddedImages = post.record.embed!.data as bsky.EmbedImages;
 
-        // Loop through both lists and match both based on index.
-        for (var i = 0; i < embedded.images.length; i++) {
-          final imageView = embedded.images[i];
-          final imageData = embeddedImages.images[i];
-
-          final attachment = MastodonMediaAttachment.fromEmbed(
-            imageView,
-            imageData,
-          );
+        // Add the images to the list of media attachments.
+        for (final image in embedded.images) {
+          final attachment = MastodonMediaAttachment.fromEmbed(image);
           mediaAttachments.add(attachment);
         }
+      } else if (embed.data is bsky.EmbedViewRecordWithMedia) {
+        final embedded = embed.data as bsky.EmbedViewRecordWithMedia;
+
+        // When there are other types of embeds, we need to grab the
+        // images with EmbedViewRecordWithMedia.
+        embedded.media.mapOrNull(
+          images: (media) {
+            for (final image in media.data.images) {
+              final attachment = MastodonMediaAttachment.fromEmbed(image);
+              mediaAttachments.add(attachment);
+            }
+          },
+        );
       }
     }
 
@@ -241,14 +264,24 @@ class MastodonPost {
     var content = processed.htmlText;
     final text = post.record.text;
 
-    final card = await MastodonCard.fromEmbed(post.embed);
+    var card = await MastodonCard.fromEmbed(post.embed);
 
     // If there is a card but no link to it in the content, add it.
     if (card != null) {
       if (!text.contains(card.url)) {
         content +=
-            ' <a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${card.url}</a>';
+            '\n\n<a href="${card.url}" rel="nofollow noopener noreferrer" target="_blank">${mediaAttachments.isEmpty ? card.url : 'View Quote Post ⤵'}</a>';
+
+        if (mediaAttachments.isNotEmpty) {
+          content += '<p>"${card.description}" — @${card.authorName}</p>';
+        }
       }
+    }
+
+    // If there's an image attached to the post we drop the card and instead
+    // include a link to the card url in the post content.
+    if (mediaAttachments.isNotEmpty) {
+      card = null;
     }
 
     final baseUrl = env.getOrElse(

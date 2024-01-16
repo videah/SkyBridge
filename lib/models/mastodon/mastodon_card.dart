@@ -79,6 +79,7 @@ class MastodonCard {
 
     var title = 'Quote Post';
     var handle = '@unknown.bsky.social';
+    var description = '';
     var clickableUrl = base;
 
     // Ivory expects an image to render a card so we pass a 1x1 transparent
@@ -91,6 +92,7 @@ class MastodonCard {
       record: (post) {
         handle = post.data.author.handle;
         title = 'Quote Post - (@$handle) \n ${post.data.value.text}';
+        description = post.data.value.text;
         clickableUrl = 'https://$base/@$handle/${dbRecord.id}';
 
         // If the record has a media attachment, we can use that instead.
@@ -120,9 +122,9 @@ class MastodonCard {
     return MastodonCard(
       url: clickableUrl,
       title: title,
-      description: '',
+      description: description,
       type: CardType.link,
-      authorName: '',
+      authorName: handle,
       authorUrl: '',
       providerName: '',
       providerUrl: '',
