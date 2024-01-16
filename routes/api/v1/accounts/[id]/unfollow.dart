@@ -36,14 +36,14 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   final did = record?.did;
   if (did == null) Response(statusCode: HttpStatus.notFound);
 
-  final profile = await bluesky.actors.findProfile(actor: did!);
+  final profile = await bluesky.actor.getProfile(actor: did!);
 
   // Check if we are actually following the account and get the follow uri
   // so we can delete it. Otherwise we just skip this step and return
   // the relationship.
   final followUri = profile.data.viewer.following;
   if (followUri != null) {
-    await bluesky.repositories.deleteRecord(uri: followUri);
+    await bluesky.repo.deleteRecord(uri: followUri);
   }
 
   final rel = await MastodonRelationship.getActorRelationship(bluesky, record!);

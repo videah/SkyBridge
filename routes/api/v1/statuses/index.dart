@@ -48,7 +48,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
     if (record == null) return Response(statusCode: HttpStatus.notFound);
 
     final uri = bsky.AtUri.parse(record.uri);
-    final post = (await bluesky.feeds.findPosts(uris: [uri])).data.posts.first;
+    final post = (await bluesky.feed.getPosts(uris: [uri])).data.posts.first;
 
     final parentRef = bsky.StrongRef(
       cid: post.cid,
@@ -94,14 +94,16 @@ Future<Response> onRequest<T>(RequestContext context) async {
   }
 
   // Construct an embed if we have any images to attach.
-  final embed = images.isEmpty ? null : bsky.Embed.images(
-    data: bsky.EmbedImages(
-      images: images,
-    ),
-  );
+  final embed = images.isEmpty
+      ? null
+      : bsky.Embed.images(
+          data: bsky.EmbedImages(
+            images: images,
+          ),
+        );
 
   // Create a new post with attached entities.
-  final newPost = await bluesky.feeds.createPost(
+  final newPost = await bluesky.feed.post(
     text: form.status?.value ?? '',
     facets: facets.map(bsky.Facet.fromJson).toList(),
     reply: postReplyRef,
@@ -109,7 +111,7 @@ Future<Response> onRequest<T>(RequestContext context) async {
   );
 
   // Get our newly created post.
-  final response = await bluesky.feeds.findPosts(uris: [newPost.data.uri]);
+  final response = await bluesky.feed.getPosts(uris: [newPost.data.uri]);
   final postData = response.data.posts.first;
 
   // Construct and return the new post as a [MastodonPost].

@@ -39,7 +39,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   // Get the post from bluesky, we assume we already know the post exists
   // and don't bother adding to the database or anything.
   final uri = bsky.AtUri.parse(postRecord!.uri);
-  final response = await bluesky.feeds.findPosts(uris: [uri]);
+  final response = await bluesky.feed.getPosts(uris: [uri]);
   final post = response.data.posts.first;
 
   // Get the user who posted this from the database.

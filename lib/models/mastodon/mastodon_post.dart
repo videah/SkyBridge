@@ -128,9 +128,9 @@ class MastodonPost {
       // the account that reposted it.
       id = (await repostToDatabase(view)).id;
 
-      account = await MastodonAccount.fromActor(repost.data.by);
+      account = await MastodonAccount.fromActor(repost.data.by.toActor());
     } else {
-      account = await MastodonAccount.fromActor(post.author);
+      account = await MastodonAccount.fromActor(post.author.toActor());
     }
 
     // Construct URL/URI
@@ -204,7 +204,7 @@ class MastodonPost {
   /// Converts a [bsky.Post] to a [MastodonPost].
   static Future<MastodonPost> fromBlueSkyPost(bsky.Post post) async {
     final mediaAttachments = <MastodonMediaAttachment>[];
-    final account = await MastodonAccount.fromActor(post.author);
+    final account = await MastodonAccount.fromActor(post.author.toActor());
 
     final embed = post.embed;
     if (embed != null) {
@@ -315,7 +315,7 @@ class MastodonPost {
       final createdAt = DateTime.now().toUtc();
 
       // Create the appropriate bluesky record.
-      await bluesky.repositories.createRecord(
+      await bluesky.repo.createRecord(
         collection: at.NSID.create('feed.bsky.app', 'repost'),
         record: {
           'subject': {
@@ -516,7 +516,7 @@ Future<List<MastodonPost>> processParentPosts(
   final results = await chunkResults<bsky.Post, bsky.AtUri>(
     items: uris,
     callback: (chunk) async {
-      final response = await bluesky.feeds.findPosts(uris: chunk);
+      final response = await bluesky.feed.getPosts(uris: chunk);
       return response.data.posts;
     },
   );

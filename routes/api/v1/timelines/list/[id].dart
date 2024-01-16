@@ -35,7 +35,7 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   );
   if (record == null) return Response(statusCode: HttpStatus.notFound);
 
-  final feed = await bluesky.feeds.findCustomFeed(
+  final feed = await bluesky.feed.getFeed(
     generatorUri: bsky.AtUri.parse(record.uri),
   );
 

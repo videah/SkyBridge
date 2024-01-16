@@ -31,7 +31,7 @@ Future<Response> onRequest(RequestContext context) async {
       );
 
       final handle = encodedParams.query.replaceFirst('@$base', '');
-      profile = (await bluesky.actors.findProfile(actor: handle)).data;
+      profile = (await bluesky.actor.getProfile(actor: handle)).data;
     } catch (e) {
       // We just assume no account exists for now.
       print('Could not find profile with handle: ${encodedParams.query}');
@@ -47,7 +47,7 @@ Future<Response> onRequest(RequestContext context) async {
     );
   } else {
     // We assume that the query is a general search query.
-    final results = await bluesky.actors.searchActors(
+    final results = await bluesky.actor.searchActors(
       term: encodedParams.query,
       limit: encodedParams.limit,
     );
@@ -58,7 +58,7 @@ Future<Response> onRequest(RequestContext context) async {
     final profiles = await chunkResults<bsky.ActorProfile, String>(
       items: handles,
       callback: (chunk) async {
-        final response = await bluesky.actors.findProfiles(actors: chunk);
+        final response = await bluesky.actor.getProfiles(actors: chunk);
         return response.data.profiles;
       },
     );

@@ -35,7 +35,7 @@ Future<Response> onRequest(RequestContext context) async {
     var done = false;
 
     while (!done) {
-      final feed = await bluesky.feeds.findTimeline(
+      final feed = await bluesky.feed.getTimeline(
         limit: 100,
         cursor: prevCursor,
       );
@@ -75,7 +75,7 @@ Future<Response> onRequest(RequestContext context) async {
     nextCursor = prevCursor;
   } else {
     // Make a single, standard request
-    final feed = await bluesky.feeds.findTimeline(
+    final feed = await bluesky.feed.getTimeline(
       limit: encodedParams.limit,
       cursor: encodedParams.cursor,
     );
