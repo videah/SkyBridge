@@ -27,7 +27,9 @@ Future<Response> onRequest<T>(RequestContext context) async {
   // Fetch the notifications with the given parameters.
   final response = await bluesky.notification.listNotifications(
     limit: limit,
+    cursor: encodedParams.cursor,
   );
+  final nextCursor = response.data.cursor;
 
   // Convert the response into a list of MastodonNotification objects with
   // the appropriate types and data.
@@ -36,7 +38,18 @@ Future<Response> onRequest<T>(RequestContext context) async {
     bluesky,
   );
 
+  var headers = <String, String>{};
+  if (notifs.isNotEmpty) {
+    headers = generatePaginationHeaders(
+      items: notifs,
+      requestUri: context.request.uri,
+      nextCursor: nextCursor ?? '',
+      getId: (notification) => BigInt.parse(notification.id),
+    );
+  }
+
   return threadedJsonResponse(
     body: notifs,
+    headers: headers,
   );
 }

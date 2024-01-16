@@ -14,6 +14,7 @@ class NotificationParams {
     this.types,
     this.excludeTypes,
     this.accountId,
+    this.cursor,
   });
 
   /// Converts JSON into a [NotificationParams] instance.
@@ -49,4 +50,8 @@ class NotificationParams {
   /// Return only notifications related from this account.
   @JsonKey(name: 'account_id')
   final String? accountId;
+
+  /// Arbitrary cursor string. This is not present in the Mastodon API, and
+  /// is only used by SkyBridge to make pagination easier.
+  final String? cursor;
 }

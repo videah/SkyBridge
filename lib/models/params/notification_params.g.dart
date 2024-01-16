@@ -18,6 +18,7 @@ NotificationParams _$NotificationParamsFromJson(Map<String, dynamic> json) =>
           ?.map((e) => e as String)
           .toList(),
       accountId: json['account_id'] as String?,
+      cursor: json['cursor'] as String?,
     );
 
 Map<String, dynamic> _$NotificationParamsToJson(NotificationParams instance) =>
@@ -29,4 +30,5 @@ Map<String, dynamic> _$NotificationParamsToJson(NotificationParams instance) =>
       'types': instance.types,
       'exclude_types': instance.excludeTypes,
       'account_id': instance.accountId,
+      'cursor': instance.cursor,
     };

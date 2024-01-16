@@ -257,6 +257,20 @@ String sanitizeText(String text) {
 /// [Uri.toString] lowercases the host, which breaks the URI
 /// for some clients. This is just a simple function that preserves the casing.
 String stringifyModifiedUri(Uri uri, String originalUri) {
-  final host = originalUri.substring(0, uri.scheme.length + uri.host.length + 3);
+  final host =
+      originalUri.substring(0, uri.scheme.length + uri.host.length + 3);
   return host + uri.toString().substring(host.length);
+}
+
+Map<String, String> generatePaginationHeaders<T>({
+  required List<T> items,
+  required Uri requestUri,
+  required String nextCursor,
+  required BigInt Function(T) getId,
+}) {
+  final highestID = items.map(getId).reduce((a, b) => a > b ? a : b);
+  final prevURI = requestUri.replace(queryParameters: {'min_id': highestID.toString()});
+  final nextURI = requestUri.replace(queryParameters: {'cursor': nextCursor});
+
+  return {'Link': '<$prevURI>; rel="prev", <$nextURI>; rel="next"'};
 }

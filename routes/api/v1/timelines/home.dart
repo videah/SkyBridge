@@ -90,27 +90,23 @@ Future<Response> onRequest(RequestContext context) async {
   // Get the parent posts for each post.
   final processedPosts = await processParentPosts(bluesky, allPosts);
 
-  final headers = <String, Object>{};
-  if (processedPosts.isNotEmpty && backfillAllowed == 'true') {
-    final uri = context.request.uri;
+  var headers = <String, String>{};
+  if (processedPosts.isNotEmpty) {
+    headers = generatePaginationHeaders(
+      items: processedPosts,
+      requestUri: context.request.uri,
+      nextCursor: nextCursor ?? '',
+      getId: (post) => BigInt.parse(post.id),
+    );
 
-    var lowestID = BigInt.parse('99999999999999999999');
-    var highestID = BigInt.from(0);
-    for (final post in processedPosts) {
-      final id = BigInt.parse(post.id);
-      if (id < lowestID) {
-        lowestID = id;
-      }
-      if (id > highestID) {
-        highestID = id;
-      }
-    }
-
-    final prevParams = {'min_id': highestID.toString()};
-    final nextParams = {'cursor': nextCursor};
-    final prevURI = uri.replace(queryParameters: prevParams);
-    final nextURI = uri.replace(queryParameters: nextParams);
-    headers['Link'] = '<$prevURI>; rel="prev", <$nextURI>; rel="next"';
+    // final ids = processedPosts.map((post) => BigInt.parse(post.id)).toList();
+    // final highestID = ids.reduce((a, b) => a > b ? a : b);
+    //
+    // final prevParams = {'min_id': highestID.toString()};
+    // final nextParams = {'cursor': nextCursor};
+    // final prevURI = uri.replace(queryParameters: prevParams);
+    // final nextURI = uri.replace(queryParameters: nextParams);
+    // headers['Link'] = '<$prevURI>; rel="prev", <$nextURI>; rel="next"';
   }
 
   // If the user prefers not to see replies, we need to filter them out.
