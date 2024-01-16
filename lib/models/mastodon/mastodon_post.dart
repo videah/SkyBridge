@@ -183,11 +183,16 @@ class MastodonPost {
         .toList();
 
     // First, take the labels and remove duplicate values.
-    final labels = post.labels?.map((label) => label.value).toSet();
+    final labelValues = post.labels?.map((label) => label.value).toSet();
 
     // Then all the labels, capitalize the first letter, and join them
     // with a comma.
-    final labelsString = labels?.map(toBeginningOfSentenceCase).join(', ');
+    final labels = labelValues?.map(toBeginningOfSentenceCase).join(', ');
+
+    // Add a 'CW:' prefix to the labels string.
+    final labelsString = labels != null && labels.isNotEmpty
+        ? 'CW: $labels'
+        : null;
 
     return MastodonPost(
       id: id.toString(),
@@ -309,11 +314,16 @@ class MastodonPost {
         .toList();
 
     // First, take the labels and remove duplicate values.
-    final labels = post.labels?.map((label) => label.value).toSet();
+    final labelValues = post.labels?.map((label) => label.value).toSet();
 
     // Then all the labels, capitalize the first letter, and join them
     // with a comma.
-    final labelsString = labels?.map(toBeginningOfSentenceCase).join(', ');
+    final labels = labelValues?.map(toBeginningOfSentenceCase).join(', ');
+
+    // Add a 'CW:' prefix to the labels string.
+    final labelsString = labels != null && labels.isNotEmpty
+        ? 'CW: $labels'
+        : null;
 
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),
