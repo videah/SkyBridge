@@ -54,8 +54,22 @@ dart pub get
 dart_frog dev
 ```
 
-SkyBridge isn't ready to be deployed to production yet, when it is there will be instructions
-on how to do so here.
+## Self Hosting
+The instance of SkyBridge hosted at [skybridge.fly.dev](https://skybridge.fly.dev) is provided as a free public service
+but currently faces heavy rate limiting from Bluesky due to all the requests coming from a single IPv4 address.
+If you want a more consistent experience you can host your own instance to avoid this.
+
+### Docker
+The easiest way to run SkyBridge yourself is with Docker. The image [videah/skybridge](https://hub.docker.com/r/videah/skybridge)
+is kept up to date with the main branch of this repo.
+
+You can use the [docker-compose.yml](docker-compose.yml) file in the root of the project to get started.
+Simply change the environment variables in the file, and tweak it to suit your setup. You probably want to stick a reverse proxy
+like [nginx](https://nginx.org) or [caddy](https://caddyserver.com) in front of it.
+
+### Fly.io
+The public instance of SkyBridge is hosted on [Fly.io](https://fly.io). For a single user it is likely possible to
+host an instance here for free. A [fly.toml](fly.toml) file is included in the root of the project to help you get started.
 
 ## Credits
 Huge thanks to [Ninji](https://github.com/Treeki) for their [BirdBridge](https://github.com/Treeki/BirdBridge) project
