@@ -4,6 +4,7 @@ import 'package:bluesky/bluesky.dart' as bsky;
 import 'package:bluesky_text/bluesky_text.dart';
 import 'package:collection/collection.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/facets.dart';
@@ -181,11 +182,18 @@ class MastodonPost {
         )
         .toList();
 
+    // First, take the labels and remove duplicate values.
+    final labels = post.labels?.map((label) => label.value).toSet();
+
+    // Then all the labels, capitalize the first letter, and join them
+    // with a comma.
+    final labelsString = labels?.map(toBeginningOfSentenceCase).join(', ');
+
     return MastodonPost(
       id: id.toString(),
       createdAt: post.indexedAt.toUtc(),
-      sensitive: false,
-      spoilerText: '',
+      sensitive: post.labels?.isNotEmpty ?? false,
+      spoilerText: labelsString ?? '',
       visibility: PostVisibility.public,
       language: language,
       uri: url,
@@ -300,11 +308,18 @@ class MastodonPost {
         )
         .toList();
 
+    // First, take the labels and remove duplicate values.
+    final labels = post.labels?.map((label) => label.value).toSet();
+
+    // Then all the labels, capitalize the first letter, and join them
+    // with a comma.
+    final labelsString = labels?.map(toBeginningOfSentenceCase).join(', ');
+
     return MastodonPost(
       id: (await postToDatabase(post)).id.toString(),
       createdAt: post.indexedAt.toUtc(),
-      sensitive: false,
-      spoilerText: '',
+      sensitive: post.labels?.isNotEmpty ?? false,
+      spoilerText: labelsString ?? '',
       visibility: PostVisibility.public,
       language: post.record.langs?.first ?? 'en',
       uri: url,
