@@ -3,6 +3,7 @@ import 'package:sky_bridge/database.dart';
 import 'package:sky_bridge/models/mastodon/mastodon_instance.dart';
 import 'package:sky_bridge/src/generated/prisma/prisma_client.dart';
 import 'package:sky_bridge/util.dart';
+import 'package:sky_bridge/videah_account.dart';
 
 /// Obtain general information about the server.
 /// GET /api/v2/instance HTTP/1.1
@@ -18,7 +19,7 @@ Future<Response> onRequest(RequestContext context) async {
   return threadedJsonResponse(
     body: MastodonInstance(
       domain: url,
-      title: 'SkyBridge',
+      title: 'SkyBridgey',
       version: '4.1.2',
       sourceUrl: 'https://github.com/videah/SkyBridge',
       description: 'A Mastodon bridge for Bluesky.',
@@ -74,6 +75,7 @@ Future<Response> onRequest(RequestContext context) async {
       ),
       contact: ContactInfo(
         email: 'videah@selfish.systems',
+        account: getPlaceholderVideahAccount(),
       ),
       rules: [
         Rule(id: '1', text: 'Report all issues to the SkyBridge repo!'),

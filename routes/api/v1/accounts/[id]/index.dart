@@ -27,7 +27,6 @@ Future<Response> onRequest<T>(RequestContext context, String id) async {
   }
 
   final profile = await bluesky.actor.getProfile(actor: user.did);
-
   final account = await databaseTransaction(
     () => MastodonAccount.fromActorProfile(profile.data),
   );
