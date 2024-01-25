@@ -49,7 +49,7 @@ class MastodonInstance {
   final UsageInfo usage;
 
   /// An image used to represent this instance.
-  final Map<String, dynamic> thumbnail;
+  final InstanceThumbnail thumbnail;
 
   /// Primary languages of this instance and its staff.
   final List<String> languages;
@@ -65,6 +65,56 @@ class MastodonInstance {
 
   /// An itemized list of [Rule]s for this website.
   final List<Rule> rules;
+}
+
+/// An image used to represent an instance.
+@JsonSerializable()
+class InstanceThumbnail {
+  /// Constructs an instance of [MastodonInstance].
+  InstanceThumbnail({
+    required this.url,
+    required this.blurhash,
+    required this.versions,
+  });
+
+  /// Converts JSON into a [InstanceThumbnail] instance.
+  factory InstanceThumbnail.fromJson(Map<String, dynamic> json) =>
+      _$InstanceThumbnailFromJson(json);
+
+  /// Converts a [InstanceThumbnail] instance into JSON.
+  Map<String, dynamic> toJson() => _$InstanceThumbnailToJson(this);
+
+  /// The URL for the thumbnail image.
+  final String url;
+
+  /// A hash computed by the BlurHash algorithm, for generating
+  /// colorful preview thumbnails when media has not been downloaded yet.
+  final String blurhash;
+
+  /// Links to scaled resolution images, for high DPI screens.
+  final ThumbnailVersions versions;
+}
+
+/// Links to scaled resolution images, for high DPI screens.
+@JsonSerializable()
+class ThumbnailVersions {
+  /// Constructs an instance of [ThumbnailVersions].
+  ThumbnailVersions({required this.oneTimes, required this.twoTimes});
+
+  /// Converts JSON into a [ThumbnailVersions] instance.
+  factory ThumbnailVersions.fromJson(Map<String, dynamic> json) =>
+      _$ThumbnailVersionsFromJson(json);
+
+  /// Converts a [ThumbnailVersions] instance into JSON.
+  Map<String, dynamic> toJson() => _$ThumbnailVersionsToJson(this);
+
+  /// The URL for the thumbnail image at 1x resolution.
+  @JsonKey(name: '@1x')
+  final String oneTimes;
+
+  /// The URL for the thumbnail image at 2x resolution.
+  @JsonKey(name: '@2x')
+  final String twoTimes;
 }
 
 /// Configured values and limits for an instance.
@@ -283,7 +333,6 @@ class RegistrationConfiguration {
 /// Hints related to contacting a representative of an instance.
 @JsonSerializable()
 class ContactInfo {
-
   /// Constructs an instance of [ContactInfo].
   ContactInfo({
     required this.email,

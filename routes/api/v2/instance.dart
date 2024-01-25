@@ -27,7 +27,14 @@ Future<Response> onRequest(RequestContext context) async {
           activeMonth: userCount,
         ),
       ),
-      thumbnail: {},
+      thumbnail: InstanceThumbnail(
+        url: 'https://$url/og.png',
+        blurhash: 'LHBG1I=p5uMgS.X6VF%ZD.xT-MTJ',
+        versions: ThumbnailVersions(
+          oneTimes: 'https://$url/og.png',
+          twoTimes: 'https://$url/og.png',
+        ),
+      ),
       languages: ['en'],
       configuration: InstanceConfiguration(
         urls: {},

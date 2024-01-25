@@ -14,7 +14,8 @@ MastodonInstance _$MastodonInstanceFromJson(Map<String, dynamic> json) =>
       sourceUrl: json['source_url'] as String,
       description: json['description'] as String,
       usage: UsageInfo.fromJson(json['usage'] as Map<String, dynamic>),
-      thumbnail: json['thumbnail'] as Map<String, dynamic>,
+      thumbnail:
+          InstanceThumbnail.fromJson(json['thumbnail'] as Map<String, dynamic>),
       languages:
           (json['languages'] as List<dynamic>).map((e) => e as String).toList(),
       configuration: InstanceConfiguration.fromJson(
@@ -41,6 +42,33 @@ Map<String, dynamic> _$MastodonInstanceToJson(MastodonInstance instance) =>
       'registrations': instance.registrations,
       'contact': instance.contact,
       'rules': instance.rules,
+    };
+
+InstanceThumbnail _$InstanceThumbnailFromJson(Map<String, dynamic> json) =>
+    InstanceThumbnail(
+      url: json['url'] as String,
+      blurhash: json['blurhash'] as String,
+      versions:
+          ThumbnailVersions.fromJson(json['versions'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$InstanceThumbnailToJson(InstanceThumbnail instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+      'blurhash': instance.blurhash,
+      'versions': instance.versions,
+    };
+
+ThumbnailVersions _$ThumbnailVersionsFromJson(Map<String, dynamic> json) =>
+    ThumbnailVersions(
+      oneTimes: json['@1x'] as String,
+      twoTimes: json['@2x'] as String,
+    );
+
+Map<String, dynamic> _$ThumbnailVersionsToJson(ThumbnailVersions instance) =>
+    <String, dynamic>{
+      '@1x': instance.oneTimes,
+      '@2x': instance.twoTimes,
     };
 
 InstanceConfiguration _$InstanceConfigurationFromJson(
