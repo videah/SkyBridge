@@ -21,8 +21,10 @@ Future<Response> onRequest(RequestContext context) async {
 
     if (type.contains('application/json')) {
       body = await request.json() as Map<String, dynamic>;
-    } else {
+    } else if (type.contains('application/x-www-form-urlencoded') || type.contains('multipart/form-data')) {
       body = await request.formData();
+    } else {
+      body = request.uri.queryParameters;
     }
 
     // If the body is empty, we'll try to get the query parameters.
