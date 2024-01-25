@@ -19,7 +19,7 @@ Future<Response> onRequest(RequestContext context) async {
   return threadedJsonResponse(
     body: MastodonInstance(
       domain: url,
-      title: 'SkyBridgey',
+      title: 'SkyBridge',
       version: '4.1.2',
       sourceUrl: 'https://github.com/videah/SkyBridge',
       description: 'A Mastodon bridge for Bluesky.',
