@@ -232,5 +232,12 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
     'public, max-age=15552000',
   );
 
+  // Some apps might check for the server header when checking
+  // if it's a valid instance.
+  server.defaultResponseHeaders.add(
+    'Server',
+    'Mastodon',
+  );
+
   return server;
 }
