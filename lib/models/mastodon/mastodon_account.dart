@@ -19,6 +19,7 @@ class MastodonAccount {
     required this.displayName,
     required this.locked,
     required this.bot,
+    required this.group,
     required this.createdAt,
     required this.note,
     required this.url,
@@ -71,6 +72,7 @@ class MastodonAccount {
       displayName: profile.displayName ?? profile.handle,
       locked: false,
       bot: false,
+      group: false,
       createdAt: profile.indexedAt ?? DateTime.now().toUtc(),
       note: await processProfileDescription(profile.description ?? ''),
       url: 'https://bsky.social/${profile.handle}',
@@ -113,6 +115,7 @@ class MastodonAccount {
       displayName: profile.displayName ?? profile.handle,
       locked: false,
       bot: false,
+      group: false,
       createdAt: profile.indexedAt ?? DateTime.now().toUtc(),
       note: await processProfileDescription(profile.description ?? user.description),
       url: 'https://bsky.social/${profile.handle}',
@@ -147,6 +150,9 @@ class MastodonAccount {
 
   /// Whether or not the user's account is a bot.
   final bool bot;
+
+  /// Whether or not the user's account is a group.
+  final bool group;
 
   /// The date and time the user's account was created.
   @JsonKey(
