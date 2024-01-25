@@ -229,7 +229,8 @@ SkybridgePreferences preferencesFromContext(RequestContext context) {
 Future<bsky.Bluesky?> blueskyFromContext(RequestContext context) async {
   final session = await sessionFromContext(context);
   if (session == null) return null;
-  return bsky.Bluesky.fromSession(session,
+  return bsky.Bluesky.fromSession(
+    session,
     mockedGetClient: httpClient.get,
     mockedPostClient: httpClient.post,
   );

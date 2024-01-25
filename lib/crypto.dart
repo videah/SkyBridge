@@ -39,7 +39,7 @@ String packObject(Map<String, dynamic> object) {
 /// Unpacks a JSON object from a string and verifies the signature.
 Map<String, dynamic>? unpackObject(String str) {
   try {
-    final bits = str.split('|');
+    final bits = str.replaceAll(' ', '').split('|');
     if (bits.length == 2) {
       final json = utf8.decode(base64.decode(bits[0]));
       final bytes = Uint8List.fromList(utf8.encode(json)).buffer;
